@@ -48,6 +48,17 @@
         {{ Form::password('password_confirmation', array('class'=>'form-control', 'placeholder'=>'Confirm Password')) }}
         </div>
     </div>
+    <div>
+test
+    {{Form::select('size', array('L' => 'Large', 'S' => 'Small'));}}
+
+
+
+
+    </div>
 
     {{ Form::submit('Register', array('class'=>'btn btn-large btn-primary btn-block'))}}
+
+
+
 {{ Form::close() }}

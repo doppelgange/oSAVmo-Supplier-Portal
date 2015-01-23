@@ -13,10 +13,18 @@
 
 Route::get('/', function(){return View::make('hello');});
 
+//Route::get('/erply', function(){return View::make('test/erply');});
 
 Route::controller('users', 'UsersController');
 
 Route::filter('auth', function()
 {
-    if (Auth::guest()) return Redirect::guest('users/login');
+    if (Auth::guest()) return Redirect::guest('/users/login');
 });
+
+
+
+Route::get('erply', array('before' => 'auth', function()
+{
+    return View::make('test/erply');
+}));

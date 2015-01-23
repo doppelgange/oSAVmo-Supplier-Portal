@@ -7,6 +7,11 @@ class UsersController extends BaseController {
 
     protected $layout = "layouts.main";
     public function getRegister() {
+    	//get the supliers in Erply
+    	
+
+
+
 	    $this->layout->content = View::make('users.register');
 	}
 
