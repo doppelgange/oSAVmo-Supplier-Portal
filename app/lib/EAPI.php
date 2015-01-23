@@ -2,16 +2,20 @@
 
 class EAPI {
 
-    public $url="";
+    //Testing Env
     public $clientCode="400206";
     public $username="doppelganger";
     public $password="3792565Jj";
+    public $url="https://400206.erply.com/api/";
 
+    /*
+    //Product Env
+    public $clientCode="284954";
+    public $username="bsun";
+    public $password="3792565Jj";
+    public $url="https://284954.erply.com/api/";
+    */
 
-    $api->clientCode = "";
-$api->username = "";
-$api->password = "";
-$api->url = "https://".$api->clientCode.".erply.com/api/";
 
     // Sends POST request to API
     public function sendRequest($request, $parameters = array()){
