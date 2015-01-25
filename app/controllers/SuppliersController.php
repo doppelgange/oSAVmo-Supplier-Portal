@@ -6,13 +6,53 @@ class SuppliersController extends BaseController {
 	}
 
     protected $layout = "layouts.main";
-    public function getRegister() {
-    	//get the supliers in Erply
 
-	    $this->layout->content = View::make('users.register');
+	public function getNew(){
+		$this->layout->content = View::make('suppliers.new'); 
 	}
 
-	public function postSync() {
+	public function getEnquire(){
+		$suppliers = Supplier::all();
+		$this->layout->content = View::make('suppliers.enquire',array('suppliers'=>$suppliers)); 
+	}
+
+
+	public function getSync(){
+		$api = new EAPI();
+		$erplySuppliers = json_decode(
+			$api->sendRequest(
+				"getSuppliers", 
+				array(
+				    "recordsOnPage" =>100,
+				    "responseMode" => "detail"
+				    //"displayedInWebshop" => 1,	
+				)
+			), 
+			true
+		)['records'];
+		if(is_null($erplySuppliers)){
+			return Redirect::to('suppliers/enquire')->with('message', 'Cannot connect to ERPLY!');
+		}else{
+			foreach ($erplySuppliers as $erplySupplier) {
+				$supplier = Supplier::where('supplierID', '=', $erplySupplier['supplierID'])->first();
+				if (is_null($supplier)){
+					$supplier = new Supplier;
+					$supplier->supplierID = $erplySupplier['supplierID'];
+				}
+				$supplier->erplyid = $erplySupplier['id'];
+			    $supplier->supplierType = $erplySupplier['supplierType'];
+			    $supplier->fullName = $erplySupplier['fullName'];
+			    $supplier->companyName = $erplySupplier['companyName'];
+			    $supplier->groupID = $erplySupplier['groupID'];
+			    $supplier->erplyAdded = $erplySupplier['added'];
+			    $supplier->erplyLastModified = $erplySupplier['lastModified'];
+			    $supplier->save();
+			}
+			return Redirect::to('suppliers/enquire')->with('message', 'Sync to ERPLY Successfuly!');	
+		}
+	}
+
+	public function postCreate() {
 		$validator = Validator::make(Input::all(), User::$rules);
 	    if ($validator->passes()) {
 		    $supplier = new Supplier;
@@ -25,9 +65,9 @@ class SuppliersController extends BaseController {
 		    $supplier->erplyAdded = Input::get('erplyAdded');
 		    $supplier->erplyLastModified = Input::get('erplyLastModified');
 		    $supplier->save();
-		    return Redirect::to('suppliers/Enquie')->with('message', 'Thanks for registering!');
+		    return Redirect::to('suppliers/enquire')->with('message', 'Thanks for registering!');
 		} else {
-		    return Redirect::to('suppliers/Enquie')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
+		    return Redirect::to('suppliers/enquire')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
 		}
 	}
 

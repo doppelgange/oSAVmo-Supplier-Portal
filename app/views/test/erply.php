@@ -45,7 +45,9 @@ function simplifySuppliers($s){
 }
 
 
-
+foreach($suppliers as $supplier){
+	echo $supplier['fullName'];
+}
 
 print "<pre>";
 //print_r(array_map("simplifySuppliers",$suppliers));

@@ -14,6 +14,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
     'password'=>'required|alpha_num|between:6,12|confirmed',
     'password_confirmation'=>'required|alpha_num|between:6,12'
     );
+    protected $fillable = ['lastname','firstname','suppliername','password','email'];
 
 	use UserTrait, RemindableTrait;
 

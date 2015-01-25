@@ -11,14 +11,12 @@
 |
 */
 
-Route::get('/', function(){return View::make('hello');});
-
-//Route::get('/erply', function(){return View::make('test/erply');});
+Route::get('/', 'HomeController@showWelcome');
 
 Route::controller('users', 'UsersController');
+Route::controller('suppliers','SuppliersController');
 
-Route::filter('auth', function()
-{
+Route::filter('auth', function(){
     if (Auth::guest()) return Redirect::guest('/users/login');
 });
 
