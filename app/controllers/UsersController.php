@@ -7,14 +7,15 @@ class UsersController extends BaseController {
 
     protected $layout = "layouts.main";
 
-    public function getRegister() {
-    	$suppliers= Supplier::all(); 
+    public function getNew() {
+    	$suppliers= Supplier::where('manageable','=','Yes')->get(); 
+    	//return $suppliers;
     	$suppliersSelect = array();
 		foreach ($suppliers as $supplier){
 			$suppliersSelect[$supplier->supplierID] = $supplier->fullName;
 		}
     	//return $suppliersSelect;
-	    $this->layout->content = View::make('users.register',array('suppliersSelect'=>$suppliersSelect));
+	    $this->layout->content = View::make('users.new',array('suppliersSelect'=>$suppliersSelect));
 	}
 
 	public function postCreate() {
@@ -27,9 +28,9 @@ class UsersController extends BaseController {
 		    $user->email = Input::get('email');
 		    $user->password = Hash::make(Input::get('password'));
 		    $user->save();
-		    return Redirect::to('users/login')->with('message', 'Thanks for registering!');
+		    return Redirect::to('users/login')->with('message', 'New user is created successfully!');
 		} else {
-		    return Redirect::to('users/register')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
+		    return Redirect::to('users/new')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
 		}
 	}
 

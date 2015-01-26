@@ -1,5 +1,5 @@
-{{ Form::open(array('url'=>'users/create', 'class'=>'form-register form-horizontal')) }}
-    <h2 class="form-signup-heading text-center">Please Register</h2>
+{{ Form::open(array('url'=>'users/create', 'class'=>'form-new form-horizontal')) }}
+    <h2 class="form-signup-heading text-center">Please input the user information:</h2>
  
     <ul>
         @foreach($errors->all() as $error)
@@ -53,7 +53,7 @@
 
     </div>
 
-    {{ Form::submit('Register', array('class'=>'btn btn-large btn-primary btn-block'))}}
+    {{ Form::submit('Create', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 
 

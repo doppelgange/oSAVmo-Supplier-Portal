@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AddManageableAttributeForSupplier' => $baseDir . '/app/database/migrations/2015_01_26_023933_add-manageable-attribute-for-supplier.php',
     'AddRememberTokenToUserTable' => $baseDir . '/app/database/migrations/2015_01_23_003613_add_rememberToken_to_user_table.php',
     'AlterUsersTableChangeSupplierNameToId' => $baseDir . '/app/database/migrations/2015_01_25_202236_alter-users-table-change-supplier-name-to-id.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',

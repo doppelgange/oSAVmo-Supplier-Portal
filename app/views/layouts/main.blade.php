@@ -3,8 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-    <title>Authentication App With Laravel 4</title>
+    <title>oSAVmo - Management your online store</title>
     {{ HTML::style('packages/bootstrap/css/bootstrap.css') }}
     {{ HTML::style('css/main.css')}}
   </head>

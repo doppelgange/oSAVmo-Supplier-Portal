@@ -1,7 +1,7 @@
 body {
 }
  
-.form-signup, .form-signin,.form-register {
+.form-signup, .form-signin,.form-new {
     width: 50%;
     margin: 0 auto;
 }

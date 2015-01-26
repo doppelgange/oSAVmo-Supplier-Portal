@@ -52,6 +52,19 @@ class SuppliersController extends BaseController {
 		}
 	}
 
+	public function postAmend(){
+		$manageables = Input::get('manageable');
+		$erplyids = Input::get('erplyid');
+		$reslut='';
+		foreach($manageables as $k => $v){
+			$supplier = Supplier::where('supplierID', '=', $erplyids[$k])->first();
+			$supplier -> manageable = $v;
+			$supplier -> save();
+		}
+
+		// return $reslut;
+		return Redirect::to('suppliers/enquire')->with('message', 'Sync to ERPLY Successfuly!');	
+	}
 
 
 }

@@ -1,7 +1,10 @@
+	<div> <a class="btn btn-primary" href="sync" role="button">Sync Suppliers from ERPLY</a> </div>
 @if (count($suppliers) === 0)
-
 	<div>There is no record for suppliers, you can sync from ERPLY to get the latest data! </div>
 @else
+
+{{ Form::open(array('url'=>'suppliers/amend')) }}
+
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -17,10 +20,11 @@
 			<th> erplyAdded </th> -->
 			<th> created_at </th>
 			<th> updated_at </th>
+			<th> Manageable </th>
 		</tr>
 	</thead>
 	<tbody>
-	@foreach ($suppliers as $supplier)
+	@foreach($suppliers as $supplier)
 	    <tr>
 	    	<td>{{ $supplier->id }}</td>
 	    	<td>{{ $supplier->erplyid }}</td>
@@ -34,11 +38,19 @@
 	    	<td>{{ $supplier->erplyAdded }}</td> -->
 	    	<td>{{ $supplier->created_at }}</td>
 	    	<td>{{ $supplier->updated_at }}</td>
+	    	<td> {{ Form::select('manageable['.$supplier->id.']',array('Yes'=>'Yes','No'=>'No'),$supplier->manageable)}} 
+
+	    	{{ Form::hidden('erplyid['.$supplier->id.']', $supplier->erplyid) }}
+	    	</td>
 	    </tr>
 	@endforeach
 	</tbody>
 </table>
+{{ Form::submit('amend', array('class'=>'btn btn-large btn-primary btn-block'))}}
+
+
+{{ Form::close() }}
  @endif
-	<div> <a class="btn btn-primary" href="sync" role="button">Sync Suppliers from ERPLY</a> </div>
+
 
 
