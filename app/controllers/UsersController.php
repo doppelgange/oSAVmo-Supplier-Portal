@@ -6,9 +6,15 @@ class UsersController extends BaseController {
 	}
 
     protected $layout = "layouts.main";
-    
+
     public function getRegister() {
-	    $this->layout->content = View::make('users.register');
+    	$suppliers= Supplier::all(); 
+    	$suppliersSelect = array();
+		foreach ($suppliers as $supplier){
+			$suppliersSelect[$supplier->supplierID] = $supplier->fullName;
+		}
+    	//return $suppliersSelect;
+	    $this->layout->content = View::make('users.register',array('suppliersSelect'=>$suppliersSelect));
 	}
 
 	public function postCreate() {
@@ -17,7 +23,7 @@ class UsersController extends BaseController {
 		    $user = new User;
 		    $user->firstname = Input::get('firstname');
 		    $user->lastname = Input::get('lastname');
-		    $user->suppliername = Input::get('suppliername');
+		    $user->suppliername = Input::get('supplierID');
 		    $user->email = Input::get('email');
 		    $user->password = Hash::make(Input::get('password'));
 		    $user->save();

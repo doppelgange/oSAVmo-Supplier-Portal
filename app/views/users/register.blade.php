@@ -24,9 +24,10 @@
     <div class="form-group">
     {{ Form::label('suppliername', 'Supplier Name',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-8">
-        {{ Form::text('suppliername', null, array('class'=>'form-control', 'placeholder'=>'Supplier Name')) }}
+        {{ Form::select('suppliersSelect', $suppliersSelect, null, array('class'=>'form-control')) }}
         </div>
     </div>
+
 
     <div class="form-group">
     {{ Form::label('email', 'Email',array('class'=>'col-sm-4 control-label'));}}
@@ -49,19 +50,6 @@
         </div>
     </div>
     <div>
-test
-    {{Form::select('size', array('L' => 'Large', 'S' => 'Small'));}}
-
-{{Form::select('animal', array(
-    'Cats' => array('leopard' => 'Leopard'),
-    'Dogs' => array('spaniel' => 'Spaniel'),
-));}}
-
-
-{{Form::selectRange('number', 10, 20);}}
-
-
-{{Form::selectMonth('month');}}
 
     </div>
 
