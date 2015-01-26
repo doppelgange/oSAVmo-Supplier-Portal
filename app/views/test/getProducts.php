@@ -29,11 +29,13 @@ $result = $api->sendRequest("getProducts", $inputParameters);
 // Default output format is JSON, so we'll decode it into a PHP array
 $suppliers = json_decode(
 	$api->sendRequest(
-		"getSuppliers", 
+		"getProducts", 
 		array(
-		    "recordsOnPage" =>100,
-		    "responseMode" => "detail"
-		    //"displayedInWebshop" => 1,	
+		    "getStockInfo"=>1,
+			"recordsOnPage" =>1000,
+			//"pageNo"=>$page,
+			"active"=>1,
+			"supplierID"=>2613
 		)
 	), 
 	true
@@ -44,10 +46,6 @@ function simplifySuppliers($s){
 	return array($s["id"],$s["companyName"]);
 }
 
-
-foreach($suppliers as $supplier){
-	echo $supplier['fullName'];
-}
 
 print "<pre>";
 //print_r(array_map("simplifySuppliers",$suppliers));

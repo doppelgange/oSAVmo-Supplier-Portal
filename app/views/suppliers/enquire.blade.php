@@ -38,7 +38,7 @@
 	    	<td>{{ $supplier->erplyAdded }}</td> -->
 	    	<td>{{ $supplier->created_at }}</td>
 	    	<td>{{ $supplier->updated_at }}</td>
-	    	<td> {{ Form::select('manageable['.$supplier->id.']',array('Yes'=>'Yes','No'=>'No'),$supplier->manageable)}} 
+	    	<td> {{ Form::select('manageable['.$supplier->id.']',array('Yes'=>'Yes','No'=>'No'),$supplier->manageable, array('class'=>'form-control'))}} 
 
 	    	{{ Form::hidden('erplyid['.$supplier->id.']', $supplier->erplyid) }}
 	    	</td>

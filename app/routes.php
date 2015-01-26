@@ -22,7 +22,12 @@ Route::filter('auth', function(){
 
 
 
-Route::get('erply', array('before' => 'auth', function()
+Route::get('getSuppliers', array('before' => 'auth', function()
 {
-    return View::make('test/erply');
+    return View::make('test/getSuppliers');
+}));
+
+Route::get('getProducts', array('before' => 'auth', function()
+{
+    return View::make('test/getProducts');
 }));
