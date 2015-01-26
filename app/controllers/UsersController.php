@@ -23,7 +23,7 @@ class UsersController extends BaseController {
 		    $user = new User;
 		    $user->firstname = Input::get('firstname');
 		    $user->lastname = Input::get('lastname');
-		    $user->suppliername = Input::get('supplierID');
+		    $user->supplierID = Input::get('supplierID');
 		    $user->email = Input::get('email');
 		    $user->password = Hash::make(Input::get('password'));
 		    $user->save();
