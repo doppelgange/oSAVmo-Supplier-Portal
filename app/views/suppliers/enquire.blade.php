@@ -46,7 +46,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{ Form::submit('amend', array('class'=>'btn btn-large btn-primary btn-block'))}}
+{{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 
 {{ Form::close() }}
