@@ -18,6 +18,7 @@ class UsersController extends BaseController {
 	    $this->layout->content = View::make('users.new',array('suppliersSelect'=>$suppliersSelect));
 	}
 
+
 	public function postCreate() {
 		$validator = Validator::make(Input::all(), User::$rules);
 	    if ($validator->passes()) {

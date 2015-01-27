@@ -32,6 +32,7 @@ return array(
     'ClassPreloader\\Parser\\DirVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/DirVisitor.php',
     'ClassPreloader\\Parser\\FileVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/FileVisitor.php',
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
+    'CreateProductsTable' => $baseDir . '/app/database/migrations/2015_01_27_220524_create_products_table.php',
     'CreateSuppliersTable' => $baseDir . '/app/database/migrations/2015_01_23_090647_create-suppliers-table.php',
     'CreateUsersTable' => $baseDir . '/app/database/migrations/2015_01_21_034224_create-users-table.php',
     'Crypt_AES' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/AES.php',

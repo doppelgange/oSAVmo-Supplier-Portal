@@ -39,12 +39,8 @@ $suppliers = json_decode(
 		)
 	), 
 	true
-)['records'];
-
-
-function simplifySuppliers($s){
-	return array($s["id"],$s["companyName"]);
-}
+);
+//['records'];
 
 
 print "<pre>";

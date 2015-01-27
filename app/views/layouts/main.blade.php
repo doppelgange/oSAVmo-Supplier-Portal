@@ -17,6 +17,8 @@
             <li>{{ HTML::link('users/new', 'Create User') }}</li>
             <li>{{ HTML::link('users/login', 'Login') }}</li>  
             <li>{{ HTML::link('users/logout', 'Logout') }}</li>  
+            <li>{{ HTML::link('suppliers/index', 'Suppliers') }}</li>
+            <li>{{ HTML::link('products/index', 'Products') }}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

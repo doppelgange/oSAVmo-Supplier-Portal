@@ -15,6 +15,7 @@ Route::get('/', 'HomeController@showWelcome');
 
 Route::controller('users', 'UsersController');
 Route::controller('suppliers','SuppliersController');
+Route::controller('products','ProductsController');
 
 Route::filter('auth', function(){
     if (Auth::guest()) return Redirect::guest('/users/login');
@@ -27,7 +28,7 @@ Route::get('getSuppliers', array('before' => 'auth', function()
     return View::make('test/getSuppliers');
 }));
 
-Route::get('getProducts', array('before' => 'auth', function()
+Route::get('test', array(function()
 {
-    return View::make('test/getProducts');
+    return View::make('test/test');
 }));
