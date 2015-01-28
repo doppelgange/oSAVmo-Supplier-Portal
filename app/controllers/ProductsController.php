@@ -26,7 +26,8 @@ class ProductsController extends \BaseController {
 	public function getIndex()
 	{
 		$supplierID = Auth::user()->supplierID;
-		$products = Product::where('supplierID','=',$supplierID);
+		$products = Product::where('supplierID','=',$supplierID)->get();
+		//return $products;
 		$this->layout->content = View::make('products.index',array('products'=>$products)); 
 	}
 	/**
