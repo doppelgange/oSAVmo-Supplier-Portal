@@ -1,6 +1,10 @@
 <?php
 
 class ProductsController extends \BaseController {
+	public function __construct() {
+	    //$this->beforeFilter('csrf', array('on'=>'post'));
+	    $this->beforeFilter('auth');
+	}
 
 	protected $layout = "layouts.main";
 
@@ -10,12 +14,21 @@ class ProductsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
+
+	/*
 	public function getIndex()
 	{
 		$products = Product::all();
 		$this->layout->content = View::make('products.index',array('products'=>$products)); 
 	}
+	*/
 
+	public function getIndex()
+	{
+		$supplierID = Auth::user()->supplierID;
+		$products = Product::where('supplierID','=',$supplierID);
+		$this->layout->content = View::make('products.index',array('products'=>$products)); 
+	}
 	/**
 	 * Show the form for syncing products from erply for supplier.
 	 * GET /products/sync

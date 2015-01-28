@@ -48,7 +48,7 @@ class UsersController extends BaseController {
 		unset($currentRules['password'],$currentRules['password_confirmation']);
 		$validator = Validator::make(Input::all(), $currentRules);
 	    if ($validator->passes()) {
-		    $user = User::find(Input::get('id'))->first();
+		    $user = User::find(Input::get('id'));
 		    $user->firstname = Input::get('firstname');
 		    $user->lastname = Input::get('lastname');
 		    $user->supplierID = Input::get('supplierID');
