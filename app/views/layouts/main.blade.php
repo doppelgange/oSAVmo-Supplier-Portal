@@ -19,6 +19,7 @@
             <li>{{ HTML::link('users/logout', 'Logout') }}</li>  
             <li>{{ HTML::link('suppliers/index', 'Suppliers') }}</li>
             <li>{{ HTML::link('products/index', 'Products') }}</li>
+            <li>{{ HTML::link('users/enquire', 'User List') }}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

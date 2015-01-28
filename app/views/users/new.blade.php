@@ -24,7 +24,7 @@
     <div class="form-group">
     {{ Form::label('suppliername', 'Supplier Name',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-8">
-        {{ Form::select('supplierID', $suppliersSelect, null, array('class'=>'form-control')) }}
+        {{ Form::select('supplierID', $suppliers, null, array('class'=>'form-control')) }}
         </div>
     </div>
 
