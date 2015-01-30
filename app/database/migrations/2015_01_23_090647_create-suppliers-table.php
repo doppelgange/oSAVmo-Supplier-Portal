@@ -15,12 +15,12 @@ class CreateSuppliersTable extends Migration {
 		Schema::create('suppliers', function($table)
 	    {
 		    $table->increments('id');
-		    $table->string('erplyid', 10);
-			$table->string('supplierID', 10)->unique();
+		    $table->integer('erplyID');
+			$table->integer('supplierID')->unique();
 			$table->string('supplierType', 100);
 			$table->string('fullName', 100)->nullable();
 			$table->string('companyName', 100)->nullable();
-			$table->string('groupID', 10)->nullable();
+			$table->integer('groupID')->nullable();
 			$table->string('groupName', 10)->nullable();
 			$table->string('manageable',10)->default('No');
 			$table->timestamp('erplyLastModified')->nullable();

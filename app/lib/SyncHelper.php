@@ -7,8 +7,9 @@ class SyncHelper {
 				"getSuppliers", 
 				array(
 				    "recordsOnPage" =>100,
-				    "responseMode" => "detail"
-				    //"displayedInWebshop" => 1,	
+				    "responseMode" => "detail",
+				    //"displayedInWebshop" => 1,
+				    //"productID" => 2306	
 				)
 			), 
 			true
@@ -22,7 +23,7 @@ class SyncHelper {
 					$supplier = new Supplier;
 					$supplier->supplierID = $erplySupplier['supplierID'];
 				}
-				$supplier->erplyid = $erplySupplier['id'];
+				$supplier->erplyID = $erplySupplier['id'];
 			    $supplier->supplierType = $erplySupplier['supplierType'];
 			    $supplier->fullName = $erplySupplier['fullName'];
 			    $supplier->companyName = $erplySupplier['companyName'];
@@ -59,7 +60,7 @@ class SyncHelper {
 			return false;
 		}else{
 			foreach ($erplyProducts as $erplyProduct) {
-				$product = Product::where('productID', '=', $erplyProduct['productID'])->first();
+				$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
 				if (is_null($product)){
 					$product = new Product;
 					$product->productID = $erplyProduct['productID'];

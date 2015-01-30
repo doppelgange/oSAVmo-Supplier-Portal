@@ -27,10 +27,10 @@ class SuppliersController extends BaseController {
 
 	public function postAmend(){
 		$manageables = Input::get('manageable');
-		$erplyids = Input::get('erplyid');
+		$erplyIDs = Input::get('erplyID');
 		$reslut='';
 		foreach($manageables as $k => $v){
-			$supplier = Supplier::where('supplierID', '=', $erplyids[$k])->first();
+			$supplier = Supplier::where('supplierID', '=', $erplyIDs[$k])->first();
 			$supplier -> manageable = $v;
 			$supplier -> save();
 		}

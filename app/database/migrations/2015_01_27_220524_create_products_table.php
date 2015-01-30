@@ -15,20 +15,20 @@ class CreateProductsTable extends Migration {
 		Schema::create('products', function(Blueprint $table)
 		{
 			$table->increments('id');
-			$table->string('productID', 10)->unique();
+			$table->integer('productID')->unique();
 			$table->string('name')->nullable();
 			$table->string('code')->nullable();
 			$table->string('ean')->nullable();
 			$table->string('nameCN')->nullable();
-			$table->string('supplierID', 10)->nullable();
+			$table->integer('supplierID')->nullable();
 			$table->string('supplierName')->nullable();
-			$table->string('groupID', 10)->nullable();
+			$table->integer('groupID')->nullable();
 			$table->string('groupName')->nullable();
-			$table->string('categoryID', 10)->nullable();
+			$table->integer('categoryID')->nullable();
 			$table->string('categoryName')->nullable();
-			$table->string('seriesID', 10)->nullable();
+			$table->integer('seriesID')->nullable();
 			$table->string('seriesName')->nullable();
-			$table->string('unitID', 10)->nullable();
+			$table->integer('unitID')->nullable();
 			$table->string('unitName')->nullable();
 			$table->float('price')->nullable();
 			$table->float('priceWithVat')->nullable();

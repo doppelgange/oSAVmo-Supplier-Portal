@@ -8,9 +8,9 @@
     </ul>
 
     <div class="form-group">
-    {{ Form::label('erplyid', 'erplyid',array('class'=>'col-sm-4 control-label'));}}
+    {{ Form::label('erplyID', 'erplyID',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-8">
-        {{ Form::text('erplyid', null, array('class'=>'form-control','placeholder'=>'erplyid')) }}
+        {{ Form::text('erplyID', null, array('class'=>'form-control','placeholder'=>'erplyID')) }}
         </div>
     </div>
 

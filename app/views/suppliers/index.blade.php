@@ -9,7 +9,7 @@
 	<thead>
 		<tr>
 			<th> id </th>
-			<th> erplyid </th>
+			<th> erplyID </th>
 			<th> supplierID </th>
 			<!-- <th> supplierType </th> -->
 			<th> fullName </th>
@@ -27,7 +27,7 @@
 	@foreach($suppliers as $supplier)
 	    <tr>
 	    	<td>{{ $supplier->id }}</td>
-	    	<td>{{ $supplier->erplyid }}</td>
+	    	<td>{{ $supplier->erplyID }}</td>
 	    	<td>{{ $supplier->supplierID }}</td>
 	    	<!-- <td>{{ $supplier->supplierType }}</td> -->
 	    	<td>{{ $supplier->fullName }}</td>
@@ -40,7 +40,7 @@
 	    	<td>{{ $supplier->updated_at }}</td> -->
 	    	<td> {{ Form::select('manageable['.$supplier->id.']',array('Yes'=>'Yes','No'=>'No'),$supplier->manageable, array('class'=>'form-control'))}} 
 
-	    	{{ Form::hidden('erplyid['.$supplier->id.']', $supplier->erplyid) }}
+	    	{{ Form::hidden('erplyID['.$supplier->id.']', $supplier->erplyID) }}
 	    	</td>
 	    </tr>
 	@endforeach
