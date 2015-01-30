@@ -27,8 +27,8 @@ class SyncHelper {
 			    $supplier->fullName = $erplySupplier['fullName'];
 			    $supplier->companyName = $erplySupplier['companyName'];
 			    $supplier->groupID = $erplySupplier['groupID'];
-			    $supplier->erplyAdded = $erplySupplier['added'];
-			    $supplier->erplyLastModified = $erplySupplier['lastModified'];
+			    $supplier->erplyAdded = '1409606928'//$erplySupplier['added'];
+			    $supplier->erplyLastModified = '0000-00-00 00:00:00' $erplySupplier['lastModified'];
 			    $supplier->save();
 			}
 			return true;	
