@@ -27,8 +27,8 @@ class SyncHelper {
 			    $supplier->fullName = $erplySupplier['fullName'];
 			    $supplier->companyName = $erplySupplier['companyName'];
 			    $supplier->groupID = $erplySupplier['groupID'];
-			    $supplier->erplyAdded = '1409606928'//$erplySupplier['added'];
-			    $supplier->erplyLastModified = '0000-00-00 00:00:00' $erplySupplier['lastModified'];
+			    $supplier->erplyAdded = date('y-m-d h:i:s',$erplySupplier['added']) ;
+			    $supplier->erplyLastModified = date('y-m-d h:i:s',$erplySupplier['lastModified']); 
 			    $supplier->save();
 			}
 			return true;	
@@ -39,15 +39,18 @@ class SyncHelper {
 	public static function syncProducts($supplierID){
 		$api = new EAPI();
 		$supplierIDstr= $supplierID==null?'':'"supplierID"=>'.$supplierID;
+
+
+		$pageNo=1;
 		$erplyProducts = json_decode(
 			$api->sendRequest(
 				"getProducts", 
 				array(
 				    "getStockInfo"=>1,
 					"recordsOnPage" =>100,
-					"active"=>1,
-					$supplierIDstr
-					//"pageNo"=>$page
+					//"active"=>1,
+					$supplierIDstr,
+					"pageNo"=>$pageNo
 				)
 			), 
 			true
@@ -89,8 +92,8 @@ class SyncHelper {
 				$product->grossWeight = $erplyProduct['grossWeight'];
 				$product->volume = $erplyProduct['volume'];
 				$product->longdesc = $erplyProduct['longdesc'];
-				$product->erplyAdded = date('Y-M-D H:i:s',$erplyProduct['added']);
-				$product->erplyLastModified = $erplyProduct['lastModified'];
+				$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
+			    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
 			    $product->save();
 			}
 			return true;	
