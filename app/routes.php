@@ -28,6 +28,11 @@ Route::get('getSuppliers', array('before' => 'auth', function()
     return View::make('test/getSuppliers');
 }));
 
+Route::get('getProducts', array( function()
+{
+    return View::make('test/getProducts');
+}));
+
 Route::get('test', array(function()
 {
     return View::make('test/test');

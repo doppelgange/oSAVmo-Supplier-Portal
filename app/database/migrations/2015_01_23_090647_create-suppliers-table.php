@@ -16,14 +16,15 @@ class CreateSuppliersTable extends Migration {
 	    {
 		    $table->increments('id');
 		    $table->string('erplyid', 10);
-			$table->string('supplierID', 10);
+			$table->string('supplierID', 10)->unique();
 			$table->string('supplierType', 100);
-			$table->string('fullName', 100);
-			$table->string('companyName', 100);
-			$table->string('groupID', 10);
-			$table->string('groupName', 10);
-			$table->timestamp('erplyLastModified');
-			$table->timestamp('erplyAdded');
+			$table->string('fullName', 100)->nullable();
+			$table->string('companyName', 100)->nullable();
+			$table->string('groupID', 10)->nullable();
+			$table->string('groupName', 10)->nullable();
+			$table->string('manageable',10)->default('No');
+			$table->timestamp('erplyLastModified')->nullable();
+			$table->timestamp('erplyAdded')->nullable();
 			$table->timestamps();
 		});
 	}

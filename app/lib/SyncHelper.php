@@ -38,6 +38,7 @@ class SyncHelper {
 	//Sync Products only sync the first 100 products now!
 	public static function syncProducts($supplierID){
 		$api = new EAPI();
+		$supplierIDstr= $supplierID==null?'':'"supplierID"=>'.$supplierID;
 		$erplyProducts = json_decode(
 			$api->sendRequest(
 				"getProducts", 
@@ -45,7 +46,7 @@ class SyncHelper {
 				    "getStockInfo"=>1,
 					"recordsOnPage" =>100,
 					"active"=>1,
-					"supplierID"=>$supplierID,
+					$supplierIDstr
 					//"pageNo"=>$page
 				)
 			), 
@@ -88,8 +89,8 @@ class SyncHelper {
 				$product->grossWeight = $erplyProduct['grossWeight'];
 				$product->volume = $erplyProduct['volume'];
 				$product->longdesc = $erplyProduct['longdesc'];
-				$product->erplyAdded = strtotime($erplyProduct['added']);
-				$product->erplyLastModified = strtotime($erplyProduct['lastModified']);
+				$product->erplyAdded = date('Y-M-D H:i:s',$erplyProduct['added']);
+				$product->erplyLastModified = $erplyProduct['lastModified'];
 			    $product->save();
 			}
 			return true;	

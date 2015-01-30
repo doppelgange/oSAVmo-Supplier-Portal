@@ -17,10 +17,11 @@ class CreateUsersTable extends Migration {
 			$table->increments('id');
 		    $table->string('firstname', 100);
 		    $table->string('lastname', 100);
-		    $table->string('suppliername', 100);
-		    $table->string('status', 10);
+		    $table->string('supplierID', 10);
+		    $table->string('status', 10)->nullable();
 		    $table->string('email', 100)->unique();
 		    $table->string('password', 64);
+		    $table->rememberToken();
 		    $table->timestamps();
 		});
 	}
