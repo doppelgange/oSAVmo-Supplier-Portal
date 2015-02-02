@@ -1,4 +1,5 @@
-{{ Form::open(array('url'=>'users/amend', 'class'=>'form-new form-horizontal')) }}
+{{ Form::open(array('url'=>'users/'.$user->id, 'class'=>'form-new form-horizontal')) }}
+    <input type="hidden" name="_method" value="PUT" />
     <h2 class="form-signup-heading text-center">The user information:</h2>
  
     <ul>
@@ -36,7 +37,7 @@
         </div>
     </div>
     {{ form::hidden('id', $user->id)}}
-    {{ Form::submit('Amend', array('class'=>'btn btn-large btn-primary center-block'))}}
+    {{ Form::submit('amend', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 
 

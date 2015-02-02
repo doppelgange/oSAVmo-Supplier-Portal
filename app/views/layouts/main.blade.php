@@ -4,8 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>oSAVmo - Management your online store</title>
-    {{ HTML::style('packages/bootstrap/css/bootstrap.css') }}
+    {{ HTML::style('css/bootstrap.css') }}
     {{ HTML::style('css/main.css')}}
+    {{ HTML::script('js/bootstrap.js') }}
+    {{ HTML::script('js/app.js') }}
   </head>
  
   <body>
@@ -14,12 +16,12 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li>{{ HTML::link('users/new', 'Create User') }}</li>
             <li>{{ HTML::link('users/login', 'Login') }}</li>  
-            <li>{{ HTML::link('users/logout', 'Logout') }}</li>  
-            <li>{{ HTML::link('suppliers/index', 'Suppliers') }}</li>
-            <li>{{ HTML::link('products/index', 'Products') }}</li>
-            <li>{{ HTML::link('users/enquire', 'User List') }}</li>
+            <li>{{ HTML::link('users/logout', 'Logout') }}</li> 
+            <li>{{ HTML::link('users/create', 'Create User') }}</li> 
+            <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
+            <li>{{ HTML::link('products', 'Products') }}</li>
+            <li>{{ HTML::link('users', 'Users') }}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
       </div><!-- /.container-fluid -->

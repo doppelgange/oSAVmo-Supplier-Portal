@@ -7,17 +7,7 @@ class SuppliersController extends BaseController {
 
     protected $layout = "layouts.main";
 
-	public function getNew(){
-		$this->layout->content = View::make('suppliers.new'); 
-	}
-
-	public function getIndex(){
-		$suppliers = Supplier::all();
-		$this->layout->content = View::make('suppliers.index',array('suppliers'=>$suppliers)); 
-	}
-
-
-	public function getSync(){
+	public function sync(){
 		if(SyncHelper::syncSuppliers()){
 			return Redirect::to('suppliers/index')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
@@ -25,7 +15,7 @@ class SuppliersController extends BaseController {
 		}
 	}
 
-	public function postAmend(){
+	public function batchAmend(){
 		$manageables = Input::get('manageable');
 		$erplyIDs = Input::get('erplyID');
 		$reslut='';
@@ -36,7 +26,91 @@ class SuppliersController extends BaseController {
 		}
 
 		// return $reslut;
-		return Redirect::to('suppliers/index')->with('message', 'Sync to ERPLY Successfuly!');	
+		return Redirect::to('suppliers')->with('message', 'Sync to ERPLY Successfuly!');	
+	}
+
+
+
+	 	/**
+	 * Display a listing of the resource.
+	 * GET /suppliers
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		$suppliers = Supplier::orderBy('manageable','desc')->orderBy('fullName','asc')->get();
+		$this->layout->content = View::make('suppliers.index',array('suppliers'=>$suppliers)); 
+	}
+
+	/**
+	 * Show the form for creating a new resource.
+	 * GET /suppliers/create
+	 *
+	 * @return Response
+	 */
+	public function create()
+	{
+		//
+	}
+
+	/**
+	 * Store a newly created resource in storage.
+	 * POST /suppliers
+	 *
+	 * @return Response
+	 */
+	public function store()
+	{
+		//
+	}
+
+	/**
+	 * Display the specified resource.
+	 * GET /suppliers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function show($id)
+	{
+		//
+	}
+
+	/**
+	 * Show the form for editing the specified resource.
+	 * GET /suppliers/{id}/edit
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function edit($id)
+	{
+		//
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 * PUT /suppliers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function update($id)
+	{
+		//
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 * DELETE /suppliers/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function destroy($id)
+	{
+		//
 	}
 
 

@@ -11,17 +11,48 @@
 |
 */
 
-Route::get('/', 'HomeController@showWelcome');
+Route::get('/', 'UsersController@dashboard');
 
-Route::controller('users', 'UsersController');
-Route::controller('suppliers','SuppliersController');
-Route::controller('products','ProductsController');
+
+/*
+|--------------------------------------------------------------------------
+| User related Routes
+|--------------------------------------------------------------------------
+*/
+Route::get('/users/login', 'UsersController@login');
+Route::get('/users/logout', 'UsersController@logout');
+Route::get('/users/dashboard', 'UsersController@dashboard');
+Route::post('/users/signin', 'UsersController@signin');
+Route::resource('users', 'UsersController');
+
+/*
+|--------------------------------------------------------------------------
+| Supplier related Routes
+|--------------------------------------------------------------------------
+*/
+Route::post('/suppliers/batch-amend', 'SuppliersController@batchAmend');
+Route::resource('suppliers','SuppliersController');
+
+/*
+|--------------------------------------------------------------------------
+| Products related Routes
+|--------------------------------------------------------------------------
+*/
+
+Route::get('products/sync', 'ProductsController@sync');
+Route::resource('products','ProductsController');
+
+/*
+|--------------------------------------------------------------------------
+| Other related Routes
+|--------------------------------------------------------------------------
+*/
 
 Route::filter('auth', function(){
     if (Auth::guest()) return Redirect::guest('/users/login');
 });
 
-
+//Used for testing
 
 Route::get('getSuppliers', array('before' => 'auth', function()
 {

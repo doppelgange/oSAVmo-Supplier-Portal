@@ -26,8 +26,8 @@
 				{{ Form::select('supplierID', $suppliers, $user-> supplierID , array('class'=>'form-control')) }}
 			</td>
 			<td>
-				<a href="../users/enquire/{{$user-> id}}"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
-				<a href="../users/amend/{{$user-> id}}"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
+				<a href="users/{{$user-> id}}/edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
+				<a href="users/{{$user-> id}}"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
 			</td>
 	    </tr>
 	@endforeach

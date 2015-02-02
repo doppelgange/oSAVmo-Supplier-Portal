@@ -1,17 +1,19 @@
-	<div> <a class="btn btn-primary" href="sync" role="button">Sync Products from ERPLY</a> </div>
+	<div> <a class="btn btn-primary" href="products/sync" role="button">Sync Products from ERPLY</a> </div>
 @if (count($products) === 0)
 	<div>There is no record for products, you can sync from ERPLY to get the latest data! </div>
 @else
 
-{{ Form::open(array('url'=>'products/amend')) }}
+{{ Form::open(array('url'=>'products/batchAmend')) }}
+<div>
+	Total {{$products->getTotal()}} records are found. 
+	{{$products->count()}} records in this page.
 
+</div>
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
 			<th> ID </th>
-			<th> Name </th>
-			<th> Code </th>
-			<th> EAN </th>
+			<th> Product Name</th>
 			<th> Name CN </th>
 			<!-- <th> supplierID </th>
 			<th> supplierName </th> -->
@@ -31,7 +33,7 @@
 			<th> countryOfOriginID </th>
 			<th> brandName </th>
 			<th> netWeight </th> -->
-			<th> grossWeight </th>
+			<th> Gross Weight </th>
 			<!-- <th> VOL </th> -->
 			<th> Desc </th>
 			<!-- <th> erplyAdded </th> -->
@@ -40,11 +42,17 @@
 	</thead>
 	<tbody>
 	@foreach($products as $product)
-	    <tr>
+	    <tr 
+	    	@if($product->displayedInWebshop==0)
+	    	class="warning" data-toggle="tooltip" title="Item is not show in webstore"
+	    	@endif
+	    >
 			<td> {{ $product -> productID }} </td>
-			<td> {{ $product -> name }} </td>
-			<td> {{ $product -> code }} </td>
-			<td> {{ $product -> ean }} </td>
+			<td> 
+				<div>{{ $product -> name }} </div>
+				<div><label>EAN:</label> {{ $product -> ean }}</div>
+				<div><label>Code:</label> {{ $product -> code }} </div>
+			</td>
 			<td> {{ $product -> nameCN }} </td>
 			<!-- <td> {{ $product -> supplierID }} </td> 
 			<td> {{ $product -> supplierName }} </td>
@@ -77,6 +85,7 @@
 	@endforeach
 	</tbody>
 </table>
+{{$products->links()}}
 {{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 

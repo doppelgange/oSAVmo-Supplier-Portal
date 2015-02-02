@@ -3,7 +3,7 @@
 	<div>There is no record for suppliers, you can sync from ERPLY to get the latest data! </div>
 @else
 
-{{ Form::open(array('url'=>'suppliers/amend')) }}
+{{ Form::open(array('url'=>'suppliers/batch-amend')) }}
 
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
@@ -25,7 +25,7 @@
 	</thead>
 	<tbody>
 	@foreach($suppliers as $supplier)
-	    <tr>
+	    <tr @if($supplier->manageable == 'Yes') class="success" @endif>
 	    	<td>{{ $supplier->id }}</td>
 	    	<td>{{ $supplier->erplyID }}</td>
 	    	<td>{{ $supplier->supplierID }}</td>
@@ -46,6 +46,7 @@
 	@endforeach
 	</tbody>
 </table>
+
 {{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 

@@ -8,45 +8,43 @@ class ProductsController extends \BaseController {
 
 	protected $layout = "layouts.main";
 
-	/**
-	 * Display a listing of the resource.
-	 * GET /products
-	 *
-	 * @return Response
-	 */
 
-	/*
-	public function getIndex()
-	{
-		$products = Product::all();
-		$this->layout->content = View::make('products.index',array('products'=>$products)); 
-	}
-	*/
 
-	public function getIndex()
-	{
-		$supplierID = Auth::user()->supplierID;
-		$products = Product::whereRaw('supplierID ='.$supplierID.' and active = 1')->get();
-		//return $products;
-		$this->layout->content = View::make('products.index',array('products'=>$products)); 
-	}
 	/**
 	 * Show the form for syncing products from erply for supplier.
 	 * GET /products/sync
 	 *
 	 * @return Response
 	 */
-	public function getSync()
+	public function sync()
 	{
 		$supplierID = Auth::user()->supplierID;
 		if(SyncHelper::syncProducts($supplierID)){
-			return Redirect::to('products/index')->with('message', 'Sync to ERPLY Successfuly!');
+			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
-			return Redirect::to('products/index')->with('message', 'Cannot connect to ERPLY!');
+			return Redirect::to('products')->with('message', 'Cannot connect to ERPLY!');
 		}
 	}
 
+	/**
+	 * Display a listing of the resource.
+	 * GET /products
+	 *
+	 * @return Response
+	 */
+	public function index()
+	{
+		// Not ready, allow change paging
+		$pagecount = 10;
+		if(is_numeric(Input::get("pagecount"))){
+			$pagecount = Input::get("pagecount");
+		} ;
 
+		$supplierID = Auth::user()->supplierID;
+		$products = Product::where('supplierID','=',$supplierID)->where('active', '=','1')->paginate($pagecount);
+		//return $products;
+		$this->layout->content = View::make('products.index',array('products'=>$products,'message')); 
+	}
 
 	/**
 	 * Show the form for creating a new resource.
