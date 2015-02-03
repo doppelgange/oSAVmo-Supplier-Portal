@@ -36,72 +36,132 @@ class SyncHelper {
 		}
 	}
 
-	//Sync Products only sync the first 100 products now!
-	public static function syncProducts($supplierID){
+	public static function syncProducts($needFilter,$supplierID){
 		$api = new EAPI();
-		$supplierIDstr= $supplierID==null?'':'"supplierID"=>'.$supplierID;
+
+		$supplierIDstr= ''; 
+
+		if($needFilter&&$supplierID!=null){
+			$supplierIDstr = '"supplierID"=>'.$supplierID;
+		}
+
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			$result = json_decode(
+				$api->sendRequest(
+					"getProducts", 
+					array(
+					    //"getStockInfo"=>1,
+						"recordsOnPage" =>1000,
+						//"active"=>1,
+						$supplierIDstr,
+						"pageNo"=>$pageNo
+					)
+				), 
+				true
+			);
+
+			$erplyProducts = $result['records'];
+			//Get the total records
+			if($result['status']['recordsTotal']!=null){
+				$totalPage = ceil($result['status']['recordsTotal']/1000);
+			}
+			//return $totalPage;
+			if(is_null($erplyProducts)){
+				return false;
+			}else{
+				foreach ($erplyProducts as $erplyProduct) {
+					$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
+					if (is_null($product)){
+						$product = new Product;
+						$product->productID = $erplyProduct['productID'];
+					}
+					//$product->productID = $erplyProduct['productID'];
+					$product->name = $erplyProduct['name'];
+					$product->code = $erplyProduct['code'];
+					$product->ean = $erplyProduct['code2'];
+					$product->nameCN = $erplyProduct['code3'];
+					$product->supplierID = $erplyProduct['supplierID'];
+					$product->supplierName = $erplyProduct['supplierName'];
+					$product->groupID = $erplyProduct['groupID'];
+					$product->groupName = $erplyProduct['groupName'];
+					$product->categoryID = $erplyProduct['categoryID'];
+					$product->categoryName = $erplyProduct['categoryName'];
+					$product->seriesID = $erplyProduct['seriesID'];
+					$product->seriesName = $erplyProduct['seriesName'];
+					$product->unitID = $erplyProduct['unitID'];
+					$product->unitName = $erplyProduct['unitName'];
+					$product->price = $erplyProduct['price'];
+					$product->priceWithVat = $erplyProduct['priceWithVat'];
+					$product->cost = $erplyProduct['cost'];
+					$product->status = $erplyProduct['status'];
+					$product->active = $erplyProduct['active'];
+					$product->displayedInWebshop = $erplyProduct['displayedInWebshop'];
+					$product->vatrate = $erplyProduct['vatrate'];
+					$product->countryOfOriginID = $erplyProduct['countryOfOriginID'];
+					$product->brandName = $erplyProduct['brandName'];
+					$product->netWeight = $erplyProduct['netWeight'];
+					$product->grossWeight = $erplyProduct['grossWeight'];
+					$product->volume = $erplyProduct['volume'];
+					$product->longdesc = $erplyProduct['longdesc'];
+					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
+				    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
+				    $product->save();
+				}
+					
+			}
+		}
+		return true;
+	}
 
 
-		$pageNo=1;
-		$erplyProducts = json_decode(
+
+
+	//Now only warehouse 1 is sync
+	public static function syncProductStocks(){
+		$api = new EAPI();
+		$result = json_decode(
 			$api->sendRequest(
-				"getProducts", 
+				"getProductStock", 
 				array(
-				    "getStockInfo"=>1,
-					"recordsOnPage" =>100,
-					//"active"=>1,
-					$supplierIDstr,
-					"pageNo"=>$pageNo
+				    "warehouseID"=>1,
+					"getAmountReserved" => 1,
+					"getSuggestedPurchasePrice" => 1,
+					"getAveragePrices" => 1,
+					"getFirstPurchaseDate" => 1,
+					"getLastPurchaseDate" => 1,
+					"getLastSoldDate" => 1
 				)
 			), 
 			true
-		)['records'];
-		if(is_null($erplyProducts)){
+		);
+
+		$erplyProductStocks = $result['records'];
+		//return $totalPage;
+		if(is_null($erplyProductStocks)){
 			return false;
 		}else{
-			foreach ($erplyProducts as $erplyProduct) {
-				$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
-				if (is_null($product)){
-					$product = new Product;
-					$product->productID = $erplyProduct['productID'];
+			foreach ($erplyProductStocks as $erplyProductStock) {
+				$productStock = ProductStock::where('productID', '=', (int)$erplyProductStock['productID'])->first();
+				if (is_null($productStock)){
+					$productStock = new ProductStock;
+					$productStock->productID = $erplyProductStock['productID'];
+					$productStock->warehouseID = 1;
 				}
-				//$product->productID = $erplyProduct['productID'];
-				$product->name = $erplyProduct['name'];
-				$product->code = $erplyProduct['code'];
-				$product->ean = $erplyProduct['code2'];
-				$product->nameCN = $erplyProduct['code3'];
-				$product->supplierID = $erplyProduct['supplierID'];
-				$product->supplierName = $erplyProduct['supplierName'];
-				$product->groupID = $erplyProduct['groupID'];
-				$product->groupName = $erplyProduct['groupName'];
-				$product->categoryID = $erplyProduct['categoryID'];
-				$product->categoryName = $erplyProduct['categoryName'];
-				$product->seriesID = $erplyProduct['seriesID'];
-				$product->seriesName = $erplyProduct['seriesName'];
-				$product->unitID = $erplyProduct['unitID'];
-				$product->unitName = $erplyProduct['unitName'];
-				$product->price = $erplyProduct['price'];
-				$product->priceWithVat = $erplyProduct['priceWithVat'];
-				$product->cost = $erplyProduct['cost'];
-				$product->status = $erplyProduct['status'];
-				$product->active = $erplyProduct['active'];
-				$product->displayedInWebshop = $erplyProduct['displayedInWebshop'];
-				$product->vatrate = $erplyProduct['vatrate'];
-				$product->countryOfOriginID = $erplyProduct['countryOfOriginID'];
-				$product->brandName = $erplyProduct['brandName'];
-				$product->netWeight = $erplyProduct['netWeight'];
-				$product->grossWeight = $erplyProduct['grossWeight'];
-				$product->volume = $erplyProduct['volume'];
-				$product->longdesc = $erplyProduct['longdesc'];
-				$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
-			    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
-			    $product->save();
+				//$productStock->productID = $erplyProductStock['productID'];
+				$productStock->amountInStock = $erplyProductStock['amountInStock'];
+				$productStock->amountReserved = $erplyProductStock['amountReserved'];
+				$productStock->suggestedPurchasePrice = $erplyProductStock['suggestedPurchasePrice'];
+				$productStock->averagePurchasePrice = $erplyProductStock['averagePurchasePrice'];
+				$productStock->averageCost = $erplyProductStock['averageCost'];
+				$productStock->firstPurchaseDate = date('Y-m-d H:i:s',strtotime($erplyProductStock['firstPurchaseDate'])) ;
+				$productStock->lastPurchaseDate = date('Y-m-d H:i:s',strtotime($erplyProductStock['lastPurchaseDate'])) ;
+				$productStock->lastSoldDate = date('Y-m-d H:i:s',strtotime($erplyProductStock['lastSoldDate'])) ;
+			    $productStock->save();
 			}
 			return true;	
 		}
 	}
-
-
 
 
 }

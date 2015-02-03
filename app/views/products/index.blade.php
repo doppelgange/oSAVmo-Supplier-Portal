@@ -13,81 +13,53 @@
 	<thead>
 		<tr>
 			<th> ID </th>
-			<th> Product Name</th>
-			<th> Name CN </th>
-			<!-- <th> supplierID </th>
-			<th> supplierName </th> -->
-			<!-- <th> groupID </th>
-			<th> Group </th>
-			<th> categoryID </th> -->
+			<th> Product Name (EN/CN)</th>
+			<th> EAN </th>
 			<th> Category</th>
-			<!-- <th> seriesID </th>
-			<th> seriesName </th>
-			<th> unitID </th> -->
-			<th> Unit </th>
 			<th> Price(VAT), Price, Cost</th>
-			<th> Status </th>
-			<!-- <th> active </th> -->
-			<th> Webshop </th>
-			<!-- <th> vatrate </th>
-			<th> countryOfOriginID </th>
-			<th> brandName </th>
-			<th> netWeight </th> -->
-			<th> Gross Weight </th>
-			<!-- <th> VOL </th> -->
-			<th> Desc </th>
-			<!-- <th> erplyAdded </th> -->
+			<th> eShop </th>
+			<!-- <th> Gross Weight </th> -->
+			<th> In stock</th>
+			<th> Lay-by</th>
 			<th> erply Last Modified </th>
+			<th style="width: 60px;"> Action</th>
 		</tr>
 	</thead>
 	<tbody>
 	@foreach($products as $product)
 	    <tr 
 	    	@if($product->displayedInWebshop==0)
-	    	class="warning" data-toggle="tooltip" title="Item is not show in webstore"
+	    	class="warning" data-toggle="tooltip" title="{{$product -> name}} is not show in webstore"
 	    	@endif
 	    >
 			<td> {{ $product -> productID }} </td>
 			<td> 
-				<div>{{ $product -> name }} </div>
-				<div><label>EAN:</label> {{ $product -> ean }}</div>
-				<div><label>Code:</label> {{ $product -> code }} </div>
+				<div><label>EA:</label>{{ $product -> name }} </div>
+				<div><label>CN:</label>{{ $product -> nameCN }} </div>
+				<!-- <div><label>Code:</label> {{ $product -> code }} </div> -->
 			</td>
-			<td> {{ $product -> nameCN }} </td>
-			<!-- <td> {{ $product -> supplierID }} </td> 
-			<td> {{ $product -> supplierName }} </td>
-			<td> {{ $product -> groupID }} </td>
-			<td> {{ $product -> groupName }} </td>
-			<td> {{ $product -> categoryID }} </td> -->
+			<td>{{ $product -> ean }} </td>
 			<td> {{ $product -> categoryName }} </td>
-			<!-- <td> {{ $product -> seriesID }} </td>
-			<td> {{ $product -> seriesName }} </td>
-			<td> {{ $product -> unitID }} </td> -->
-			<td> {{ $product -> unitName }} </td>
 			<td> 
 				<div> {{ $product -> priceWithVat }}</div>
 				<div> {{ $product -> price }} </div>
 				<div> {{ $product -> cost }} </div>
 			</td>
-			<td> {{ $product -> status }} </td>
-			<!-- <td> {{ $product -> active }} </td> -->
 			<td> {{ $product -> displayedInWebshop }} </td>
-			<!-- <td> {{ $product -> vatrate }} </td>
-			<td> {{ $product -> countryOfOriginID }} </td>
-			<td> {{ $product -> brandName }} </td>
-			<td> {{ $product -> netWeight }} </td> -->
-			<td> {{ $product -> grossWeight }} </td>
-			<!-- <td> {{ $product -> volume }} </td> -->
-			<td> {{ $product -> longdesc }} </td>
-			<!-- <td> {{ $product -> erplyAdded }} </td> -->
+			<!-- <td> {{ $product -> grossWeight }} </td> -->
 			<td> {{ $product -> erplyLastModified }} </td>
+			<td class="action-button">
+				<a href="products/{{$product-> id}}/edit" target="_blank"><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
+				<a href="products/{{$product-> id}}" target="_blank"><span class="glyphicon glyphicon glyphicon-new-window" aria-hidden="true"  data-toggle="tooltip" title="Detail"></span></a>
+			</td>
 	    </tr>
 	@endforeach
 	</tbody>
 </table>
 {{$products->links()}}
+<!--
 {{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
-
+-->
 
 {{ Form::close() }}
  @endif

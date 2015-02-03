@@ -31,11 +31,11 @@ $suppliers = json_decode(
 	$api->sendRequest(
 		"getProducts", 
 		array(
-		    "getStockInfo"=>1,
-			"recordsOnPage" =>1000,
+		    "getStockInfo"=>0,
+			"recordsOnPage" => 1,
 			//"pageNo"=>$page,
-			"active"=>1,
-			"supplierID"=>7242
+			//"active"=>1,
+			//"supplierID"=>7242
 		)
 	), 
 	true

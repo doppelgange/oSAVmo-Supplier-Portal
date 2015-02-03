@@ -10,4 +10,10 @@ class Supplier extends \Eloquent {
 		}
 		return $suppliersSelect;
 	}
+
+
+	public function users()
+    {
+        return $this->hasMany('User','supplierID','supplierID');
+    }
 }

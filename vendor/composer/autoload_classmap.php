@@ -6,6 +6,7 @@ $vendorDir = dirname(dirname(__FILE__));
 $baseDir = dirname($vendorDir);
 
 return array(
+    'AdminController' => $baseDir . '/app/controllers/AdminController.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',
     'Boris\\CLIOptionsHandler' => $vendorDir . '/d11wtq/boris/lib/Boris/CLIOptionsHandler.php',
@@ -28,6 +29,7 @@ return array(
     'ClassPreloader\\Parser\\DirVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/DirVisitor.php',
     'ClassPreloader\\Parser\\FileVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/FileVisitor.php',
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
+    'CreateProductStocksTable' => $baseDir . '/app/database/migrations/2015_02_02_214407_create_product_stocks_table.php',
     'CreateProductsTable' => $baseDir . '/app/database/migrations/2015_01_27_220524_create_products_table.php',
     'CreateSuppliersTable' => $baseDir . '/app/database/migrations/2015_01_23_090647_create-suppliers-table.php',
     'CreateUsersTable' => $baseDir . '/app/database/migrations/2015_01_21_034224_create-users-table.php',
@@ -593,7 +595,6 @@ return array(
     'Jeremeamia\\SuperClosure\\Visitor\\MagicConstantVisitor' => $vendorDir . '/jeremeamia/SuperClosure/src/Jeremeamia/SuperClosure/Visitor/MagicConstantVisitor.php',
     'Math_BigInteger' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Math/BigInteger.php',
     'Mochaka\\Shopify\\Facades\\Shopify' => $baseDir . '/app/lib/shopify/src/Facades/Shopify.php',
-    'Mochaka\\Shopify\\Shopify' => $baseDir . '/app/lib/shopify/src/Shopify.php',
     'Mochaka\\Shopify\\ShopifyServiceProvider' => $baseDir . '/app/lib/shopify/src/ShopifyServiceProvider.php',
     'Monolog\\ErrorHandler' => $vendorDir . '/monolog/monolog/src/Monolog/ErrorHandler.php',
     'Monolog\\Formatter\\ChromePHPFormatter' => $vendorDir . '/monolog/monolog/src/Monolog/Formatter/ChromePHPFormatter.php',
@@ -1129,6 +1130,8 @@ return array(
     'Predis\\Transaction\\AbortedMultiExecException' => $vendorDir . '/predis/predis/lib/Predis/Transaction/AbortedMultiExecException.php',
     'Predis\\Transaction\\MultiExecContext' => $vendorDir . '/predis/predis/lib/Predis/Transaction/MultiExecContext.php',
     'Product' => $baseDir . '/app/models/Product.php',
+    'ProductStock' => $baseDir . '/app/models/ProductStock.php',
+    'ProductStocksController' => $baseDir . '/app/controllers/ProductStocksController.php',
     'ProductsController' => $baseDir . '/app/controllers/ProductsController.php',
     'Psr\\Log\\AbstractLogger' => $vendorDir . '/psr/log/Psr/Log/AbstractLogger.php',
     'Psr\\Log\\InvalidArgumentException' => $vendorDir . '/psr/log/Psr/Log/InvalidArgumentException.php',
@@ -1139,6 +1142,8 @@ return array(
     'Psr\\Log\\LoggerTrait' => $vendorDir . '/psr/log/Psr/Log/LoggerTrait.php',
     'Psr\\Log\\NullLogger' => $vendorDir . '/psr/log/Psr/Log/NullLogger.php',
     'SessionHandlerInterface' => $vendorDir . '/symfony/http-foundation/Symfony/Component/HttpFoundation/Resources/stubs/SessionHandlerInterface.php',
+    'SessionsController' => $baseDir . '/app/controllers/SessionsController.php',
+    'Shopify' => $baseDir . '/app/lib/shopify/src/Shopify.php',
     'Stack\\Builder' => $vendorDir . '/stack/builder/src/Stack/Builder.php',
     'Stack\\StackedHttpKernel' => $vendorDir . '/stack/builder/src/Stack/StackedHttpKernel.php',
     'Supplier' => $baseDir . '/app/models/Supplier.php',

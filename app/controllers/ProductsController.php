@@ -11,15 +11,22 @@ class ProductsController extends \BaseController {
 
 
 	/**
-	 * Show the form for syncing products from erply for supplier.
+	 * Syncing products from erply.
 	 * GET /products/sync
 	 *
 	 * @return Response
 	 */
-	public function sync()
+	public function sync($s)
 	{
+		//return $s;
 		$supplierID = Auth::user()->supplierID;
-		if(SyncHelper::syncProducts($supplierID)){
+		$needFilter= true;
+		if($s=='all'){
+			$needFilter=false;
+			$supplierID = null;
+		}
+		//return SyncHelper::syncProducts(null,null);
+		if(SyncHelper::syncProducts($needFilter,$supplierID)){
 			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
 			return Redirect::to('products')->with('message', 'Cannot connect to ERPLY!');
@@ -77,7 +84,20 @@ class ProductsController extends \BaseController {
 	 */
 	public function show($id)
 	{
-		//
+		$product = Product::find($id);
+		// get previous product id
+	    $previous = Product::where('id', '<', $product->id)->max('id');
+
+	    // get next product id
+	    $next = Product::where('id', '>', $product->id)->min('id');
+		// return array($product,$product->productStocks,DB::getQueryLog());
+		//$product->productStocks;
+		//return array($product->productStocks->$amountInStock);
+		$this->layout->content = View::make('products.show',array(
+			'product'=>$product,
+			'next'=>$next,
+			'previous'=>$previous
+		)); 
 	}
 
 	/**

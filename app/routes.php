@@ -14,57 +14,39 @@
 Route::get('/', 'UsersController@dashboard');
 
 
-/*
-|--------------------------------------------------------------------------
-| User related Routes
-|--------------------------------------------------------------------------
-*/
+//User related Routes
 Route::get('/users/login', 'UsersController@login');
 Route::get('/users/logout', 'UsersController@logout');
 Route::get('/users/dashboard', 'UsersController@dashboard');
 Route::post('/users/signin', 'UsersController@signin');
 Route::resource('users', 'UsersController');
 
-/*
-|--------------------------------------------------------------------------
-| Supplier related Routes
-|--------------------------------------------------------------------------
-*/
+//Supplier related Routes
 Route::post('/suppliers/batch-amend', 'SuppliersController@batchAmend');
 Route::resource('suppliers','SuppliersController');
 
-/*
-|--------------------------------------------------------------------------
-| Products related Routes
-|--------------------------------------------------------------------------
-*/
-
+//Products related Routes
 Route::get('products/sync', 'ProductsController@sync');
 Route::resource('products','ProductsController');
 
-/*
-|--------------------------------------------------------------------------
-| Other related Routes
-|--------------------------------------------------------------------------
-*/
+//ProductStocks 
+Route::get('productStocks/sync', 'ProductStocksController@sync');
+Route::resource('productStocks', 'ProductStocksController');
 
+//Admin page 
+Route::get('products/sync/{all}','ProductsController@sync');
+Route::resource('admin','AdminController');
+
+//Other related Routes
 Route::filter('auth', function(){
     if (Auth::guest()) return Redirect::guest('/users/login');
 });
 
 //Used for testing
 
-Route::get('getSuppliers', array('before' => 'auth', function()
-{
-    return View::make('test/getSuppliers');
-}));
+Route::get('getProductStock', array(function(){return View::make('test/getProductStock');}));
+Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers');}));
 
-Route::get('getProducts', array( function()
-{
-    return View::make('test/getProducts');
-}));
+Route::get('getProducts', array( function(){return View::make('test/getProducts');}));
 
-Route::get('test', array(function()
-{
-    return View::make('test/test');
-}));
+Route::get('test', array(function(){return View::make('test/test');}));

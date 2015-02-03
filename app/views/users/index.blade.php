@@ -25,9 +25,9 @@
 			<td>
 				{{ Form::select('supplierID', $suppliers, $user-> supplierID , array('class'=>'form-control')) }}
 			</td>
-			<td>
-				<a href="users/{{$user-> id}}/edit"><span class="glyphicon glyphicon-edit" aria-hidden="true"></span></a>
-				<a href="users/{{$user-> id}}"><span class="glyphicon glyphicon-share" aria-hidden="true"></span></a>
+			<td class="action-button">
+				<a href="users/{{$user-> id}}/edit" target="_blank"><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
+				<a href="users/{{$user-> id}}" target="_blank"><span class="glyphicon glyphicon glyphicon-new-window" aria-hidden="true"  data-toggle="tooltip" title="Detail"></span></a>
 			</td>
 	    </tr>
 	@endforeach
