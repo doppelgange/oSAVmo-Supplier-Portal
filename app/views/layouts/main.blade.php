@@ -31,9 +31,22 @@
     </nav>
 
     <div class="container">
+    <!-- Message from session -->
         @if(Session::has('message'))
-            <p class="alert">{{ Session::get('message') }}</p>
+        <div class="alert
+          @if(Session::has('alert-class'))
+            {{Session::get('alert-class')}}
+          @else
+            alert-info
+          @endif
+        " role="alert">
+          {{ Session::get('message') }}
+        </div>
         @endif
+
+
+
+
 
         {{$content}}
         

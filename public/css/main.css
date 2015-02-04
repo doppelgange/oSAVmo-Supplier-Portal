@@ -9,3 +9,35 @@ body {
 .action-button{
 	font-size:20px;
 }
+
+.pagination{
+	margin-top: 0px;
+	margin-bottom: 0px;
+}
+.table{
+	margin-bottom: 5px;
+}
+
+.table > thead > tr > th {
+  vertical-align: middle;
+  text-align: center;
+}
+
+.login-logo{
+	width: 400px;
+	height: 200px;
+	width: 300px;
+	height: 100px;
+	margin: auto;
+	background-image: url(../img/logo.png);
+	background-size: 300px auto;
+	background-position: 0 0;
+}
+
+.headline{
+	height: 140px;
+	margin: 0px;
+}
+.headline h2{margin: 0px;
+	vertical-align: middle;
+	line-height: 100px;padding: 5px;}

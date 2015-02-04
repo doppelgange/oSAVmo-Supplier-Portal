@@ -65,7 +65,12 @@ class UsersController extends BaseController {
 	public function show($id)
 	{
 		$user = User::find($id);
-		$supplierName= Supplier::getManageable()[$user->supplierID]; 
+
+		if($user->supplierID==0){
+			$supplierName= 'All Supplier';
+		}else{
+			$supplierName= Supplier::getManageable()[$user->supplierID]; 
+		}
 		$this->layout->content = View::make('users.show',array('user'=>$user,'supplierName'=>$supplierName)); 
 		
 	}

@@ -11,36 +11,43 @@
 |
 */
 
-Route::get('/', 'UsersController@dashboard');
-
-
-//User related Routes
-Route::get('/users/login', 'UsersController@login');
-Route::get('/users/logout', 'UsersController@logout');
-Route::get('/users/dashboard', 'UsersController@dashboard');
-Route::post('/users/signin', 'UsersController@signin');
-Route::resource('users', 'UsersController');
-
-//Supplier related Routes
-Route::post('/suppliers/batch-amend', 'SuppliersController@batchAmend');
-Route::resource('suppliers','SuppliersController');
-
-//Products related Routes
-Route::get('products/sync', 'ProductsController@sync');
-Route::resource('products','ProductsController');
-
-//ProductStocks 
-Route::get('productStocks/sync', 'ProductStocksController@sync');
-Route::resource('productStocks', 'ProductStocksController');
-
+//No Need auth pages
 //Admin page 
 Route::get('products/sync/{all}','ProductsController@sync');
 Route::resource('admin','AdminController');
+Route::get('init', 'AdminController@initiate');
 
-//Other related Routes
-Route::filter('auth', function(){
-    if (Auth::guest()) return Redirect::guest('/users/login');
+Route::get('users/login', 'UsersController@login');
+Route::get('users/logout', 'UsersController@logout');
+Route::post('users/signin', 'UsersController@signin');
+
+Route::group(array('before' => 'auth'), function()
+{
+    //User related Routes
+	Route::get('/', 'ProductsController@index');
+	Route::get('users/dashboard', 'UsersController@dashboard');
+	Route::resource('users', 'UsersController');
+
+	//Supplier related Routes
+	Route::post('/suppliers/batch-amend', 'SuppliersController@batchAmend');
+	Route::resource('suppliers','SuppliersController');
+
+	//Products related Routes
+	Route::get('products/sync', 'ProductsController@sync');
+	Route::resource('products','ProductsController');
+
+	//ProductStocks 
+	Route::get('productStocks/sync', 'ProductStocksController@sync');
+	Route::resource('productStocks', 'ProductStocksController');
+
+	
+
+	//Other related Routes
+	Route::filter('auth', function(){
+	    if (Auth::guest()) return Redirect::guest('/users/login');
+	});
 });
+
 
 //Used for testing
 

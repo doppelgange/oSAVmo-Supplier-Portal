@@ -9,6 +9,7 @@
 	{{$products->count()}} records in this page.
 
 </div>
+{{$products->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -16,7 +17,7 @@
 			<th> Product Name (EN/CN)</th>
 			<th> EAN </th>
 			<th> Category</th>
-			<th> Price(VAT), Price, Cost</th>
+			<th> Price(VAT)<br/> / Price / Cost</th>
 			<th> eShop </th>
 			<!-- <th> Gross Weight </th> -->
 			<th> In stock</th>
@@ -27,26 +28,52 @@
 	</thead>
 	<tbody>
 	@foreach($products as $product)
-	    <tr 
-	    	@if($product->displayedInWebshop==0)
-	    	class="warning" data-toggle="tooltip" title="{{$product -> name}} is not show in webstore"
-	    	@endif
-	    >
+	    <tr>
 			<td> {{ $product -> productID }} </td>
 			<td> 
 				<div><label>EA:</label>{{ $product -> name }} </div>
 				<div><label>CN:</label>{{ $product -> nameCN }} </div>
 				<!-- <div><label>Code:</label> {{ $product -> code }} </div> -->
 			</td>
-			<td>{{ $product -> ean }} </td>
+			<td><a href="products/{{$product-> id}}/edit" target="_blank"> {{ $product -> ean }} </a></td>
 			<td> {{ $product -> categoryName }} </td>
 			<td> 
-				<div> {{ $product -> priceWithVat }}</div>
-				<div> {{ $product -> price }} </div>
-				<div> {{ $product -> cost }} </div>
+				<span class="text-primary" data-toggle="tooltip" title="Price with VAT"> {{ $product -> priceWithVat }}</span>
+				<span class="text-muted"  data-toggle="tooltip" title="Price without VAT"> /  {{ $product -> price }} </span>
+				<span class="text-muted"  data-toggle="tooltip" title="Cost">
+				@if($product -> cost!=0)
+				 / {{ $product -> cost }} 
+				@else
+				/ Not set
+				@endif
+				</span>
 			</td>
-			<td> {{ $product -> displayedInWebshop }} </td>
-			<!-- <td> {{ $product -> grossWeight }} </td> -->
+
+	    	@if($product->displayedInWebshop==0)
+	    	<td  class="warning">
+	    		<div data-toggle="tooltip" title="{{$product -> name}} is not show in webstore">No</div>
+	    	</td>
+	    	@else 
+			<td> Yes </td>
+	    	@endif
+			<td class="text-right"> 
+				@if(is_null($product -> productStocks()-> first())==false)
+					@if($product -> productStocks()-> first()->amountInStock != 0)
+					{{ number_format($product -> productStocks()-> first()->amountInStock,0, '', ',') }}
+					@endif
+				@endif
+			</td>
+			<td class="text-right"> 
+				@if(is_null($product -> productStocks()-> first())==false)
+					@if($product -> productStocks()-> first()->amountReserved != 0)
+					<div class="text-warning">
+					{{ number_format($product -> productStocks()-> first()->amountReserved,0, '', ',') }}	
+					</div>
+					@endif
+				@endif
+				
+			</td>
+
 			<td> {{ $product -> erplyLastModified }} </td>
 			<td class="action-button">
 				<a href="products/{{$product-> id}}/edit" target="_blank"><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>

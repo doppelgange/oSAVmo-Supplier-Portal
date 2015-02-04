@@ -109,7 +109,7 @@ class ProductsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//
+		$this->show($id);
 	}
 
 	/**

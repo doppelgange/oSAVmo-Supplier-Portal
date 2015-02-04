@@ -1,6 +1,8 @@
 {{ Form::open(array('url'=>'users/signin', 'class'=>'form-signin  form-horizontal')) }}
-    <h2 class="form-signin-heading text-center">Please Login</h2>
- 
+    <div class="clearfix headline">
+        <div class='login-logo col-sm-5'></div>
+        <h2 class="form-signin-heading text-center col-sm-5">Supplier Portal</h2>
+    </div>
  	<div class="form-group">
  	{{ Form::label('email', 'Email',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-6">
