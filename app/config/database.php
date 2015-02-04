@@ -58,7 +58,7 @@ return array(
 			'port'		=> '3306',
 			'database'  => 'osavmo',
 			'username'  => 'root',
-			'password'  => 'root',
+			'password'  => '3792565Jj',
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
