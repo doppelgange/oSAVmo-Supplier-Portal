@@ -26,7 +26,7 @@ class AdminController extends \BaseController {
 				'lastname' => 'Admin',
 				'firstname' => 'User',
 				'supplierID' => 0,
-				'password' => Hash::make('Passord1'),
+				'password' => Hash::make('Password1'),
 				'email' => 'admin@osavmo.com'
 			));
 			$message .= "Admin user is created for you: <label>User: </label> admin@osavmo.com, <label>Password: </label>Passord1";

@@ -49,9 +49,6 @@
         {{ Form::password('password_confirmation', array('class'=>'form-control', 'placeholder'=>'Confirm Password')) }}
         </div>
     </div>
-    <div>
-
-    </div>
 
     {{ Form::submit('Create', array('class'=>'btn btn-large btn-primary center-block'))}}
 
