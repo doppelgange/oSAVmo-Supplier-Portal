@@ -203,12 +203,14 @@
       <td><label> invoiceLink  </label></td>
       <td> 
           <a href="{{ $salesDocument -> invoiceLink }}">
-          <span class="glyphicon glyphicon glyphicon-print" aria-hidden="true"></span>
+          <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
           </a>
        </td>
       <td><label> receiptLink  </label></td>
       <td>
-          
+          <a href="{{ $salesDocument -> receiptLink }}">
+          <span class="glyphicon glyphicon-file" aria-hidden="true"></span>
+          </a>
       </td>
     </tr>
   </tbody>
