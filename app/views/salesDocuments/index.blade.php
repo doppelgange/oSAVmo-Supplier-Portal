@@ -11,75 +11,15 @@
 	<thead>
 		<tr>
 			<th> id </th>
-			<!-- <th> salesDocumentID </th> -->
 			<th> No. (Status)</th>
-			<!-- <th> Type </th>
-			<th> Source </th>
-			<th> exportInvoiceType </th> -->
-			<!-- <th> Currency </th> -->
-			<!-- <th> currencyRate </th>
-			<th> warehouseID </th>
-			<th> warehouseName </th>
-			<th> pointOfSaleID </th>
-			<th> pointOfSaleName </th>
-			<th> pricelistID </th> -->
-			<!-- <th> clientID </th> -->
 			<th> Customer Name </th>
-			<!-- <th> clientCardNumber </th>
-			<th> addressID </th> -->
-			<!-- <th> clientPaysViaFactoring </th>
-			<th> payerID </th>
-			<th> payerName </th>
-			<th> payerAddressID </th>
-			<th> payerAddress </th>
-			<th> payerPaysViaFactoring </th>
-			<th> contactID </th>
-			<th> contactName </th>
-			<th> employeeID </th>
-			<th> employeeName </th>
-			<th> projectID </th>  -->
-			<!-- <th> invoiceState </th> -->
-			<!-- <th> paymentType </th>
-			<th> paymentTypeID </th>
-			<th> paymentDays </th>
-			<th> paymentStatus </th>
-			<th> previousReturnsExist </th>
-			<th> confirmed </th> -->
-			<!-- <th> netTotal </th>
-			<th> vatTotal </th>
-			<th> rounding </th> -->
 			<th> Total Price / Paid </th>
-			<!-- <th> externalNetTotal </th>
-			<th> externalVatTotal </th>
-			<th> externalRounding </th>
-			<th> externalTotal </th>
-			<th> taxExemptCertificateNumber </th>
-			<th> packerID </th> -->
-			<!-- <th> Ref Number </th> -->
-			<!-- <th> cost </th> -->
-			<!-- <th> reserveGoods </th>
-			<th> reserveGoodsUntilDate </th> -->
-			<!-- <th> deliveryDate </th>
-			<th> deliveryTypeID </th> -->
 			<th> Delivery </th>
 			<th> Address </th>
-			<!-- <th> packingUnitsDescription </th>
-			<th> triangularTransaction </th>
-			<th> purchaseOrderDone </th>
-			<th> transactionTypeID </th>
-			<th> transactionTypeName </th>
-			<th> transportTypeID </th>
-			<th> transportTypeName </th>
-			<th> deliveryTerms </th>
-			<th> deliveryTermsLocation </th>
-			<th> euInvoiceType </th>
-			<th> deliveryOnlyWhenAllItemsInStock </th> -->
 			<th> Customer Notes </th>
-			<!-- <th> Notes </th> -->
 			<th style="width:85px"> Order Date </th>
 			<th style="width:85px"> Last Modified </th>
 			<th> Last Update by </th>
-			<!-- <th> added </th> -->
 			<th> Invoice Receipt</th>
 			<th> Action </th>
 		</tr>
