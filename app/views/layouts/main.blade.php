@@ -24,6 +24,8 @@
             <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
             <li>{{ HTML::link('products', 'Products') }}</li>
             <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
+            <li>{{ HTML::link('salesDocuments', 'Order') }}</li>
+            <li>{{ HTML::link('actionLogs', 'Logs') }}</li>
             <li>{{ HTML::link('admin', 'Admin') }}</li>
           </ul>
         </div><!-- /.navbar-collapse -->

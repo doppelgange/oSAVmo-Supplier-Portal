@@ -1,0 +1,1 @@
+/Users/sunnyyang/Documents/Code Playground/osavmo-console/app/views/logs/show.blade.php

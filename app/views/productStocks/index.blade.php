@@ -1,14 +1,14 @@
-	<div> <a class="btn btn-primary" href="productStocks/sync" role="button">Sync Product Stock from ERPLY</a> </div>
-@if (count($productStocks) === 0)
-	<div>There is no record for products, you can sync from ERPLY to get the latest data! </div>
-@else
 
+@if (count($productStocks) === 0)
+	<div>There is no record for products, you can sync get the latest data! </div>
+@else
 {{ Form::open(array('url'=>'productStocks/batchAmend')) }}
 <div>
 	Total {{$productStocks->getTotal()}} records are found. 
 	{{$productStocks->count()}} records in this page.
 
 </div>
+{{$productStocks->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>

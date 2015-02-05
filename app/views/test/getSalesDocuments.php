@@ -1,54 +1,36 @@
 <?php 
 session_start();
 
-
-// include ERPLY API class
-//include('../vendor/Erply/EAPI.php');
-
-// Initialise class
 $api = new EAPI();
+$pageNo = 1;
 
-// Configuration settings
-/*
-$api->clientCode = "400206";
-$api->username = "doppelganger";
-$api->password = "3792565Jj";
-$api->url = "https://".$api->clientCode.".erply.com/api/";
-*/
-/*
-$inputParameters= array(
-    "active" => 1,
-    "recordsOnPage" =>1,
-    "categoryID"=>4
-    //"displayedInWebshop" => 1,	
-);
-
-$result = $api->sendRequest("getProducts", $inputParameters);
-*/
-
-// Default output format is JSON, so we'll decode it into a PHP array
-$suppliers = json_decode(
+$salesDocuments = json_decode(
 	$api->sendRequest(
-		"getProducts", 
+		"getSalesDocuments", 
 		array(
 		    "recordsOnPage" =>100,
-		    "responseMode" => "detail"
-		    //"displayedInWebshop" => 1,	
+		    "getRowsForAllInvoices" => 1,
+		    "getAddedTimestamp" => 1,
+		    "getReturnedPayments" =>1,
+		    "getCOGS" => 1,
+			"pageNo"=>$pageNo,
+			'employeeID' =>0,
+			"dateFrom" => Date('Y-m-d', strtotime("-10 days"))
 		)
 	), 
 	true
-)['records'];
+);
 
+ActionLog::Create(array(
+	'module' => 'SalesDocument',
+	'type' => 'Sync',
+	'notes' => 'Total'.$salesDocuments['status']['recordsTotal'].'Records, sync '.$salesDocuments['status']['recordsInResponse'].' records on page '.$pageNo.'From Date '.Date('Y-m-d', strtotime("-10 days")).' , To Date '.Date('Y-m-d'), 
+	'user' => 'System'
+));
 
-function simplifySuppliers($s){
-	return array($s["id"],$s["companyName"]);
-}
-
-
-
+//['records']
 print "<pre>";
-//print_r(array_map("simplifySuppliers",$suppliers));
-print_r($suppliers);
+print_r($salesDocuments);
 print "</pre>";
 
 ?>

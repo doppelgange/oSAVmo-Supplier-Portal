@@ -1,6 +1,5 @@
-	<div> <a class="btn btn-primary" href="products/sync" role="button">Sync Products from ERPLY</a> </div>
 @if (count($products) === 0)
-	<div>There is no record for products, you can sync from ERPLY to get the latest data! </div>
+	<div>There is no record for products, you can sync to get the latest data! </div>
 @else
 
 {{ Form::open(array('url'=>'products/batchAmend')) }}

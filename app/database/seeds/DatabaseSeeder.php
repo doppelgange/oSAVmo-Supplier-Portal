@@ -11,7 +11,8 @@ class DatabaseSeeder extends Seeder {
 	{
 		Eloquent::unguard();
 
-		// $this->call('UserTableSeeder');
+		$this->call('SalesDocumentsTableSeeder');
+        $this->command->info('SalesDocument table seeded!');
 	}
 
 }

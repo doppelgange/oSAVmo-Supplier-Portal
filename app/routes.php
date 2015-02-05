@@ -40,7 +40,12 @@ Route::group(array('before' => 'auth'), function()
 	Route::get('productStocks/sync', 'ProductStocksController@sync');
 	Route::resource('productStocks', 'ProductStocksController');
 
-	
+	//SalsDocument
+	Route::get('salesDocuments/sync', 'SalesDocumentsController@sync');
+	Route::resource('salesDocuments', 'SalesDocumentsController');
+
+	//Log
+	Route::resource('actionLogs', 'ActionLogsController');
 
 	//Other related Routes
 	Route::filter('auth', function(){
@@ -50,7 +55,7 @@ Route::group(array('before' => 'auth'), function()
 
 
 //Used for testing
-
+Route::get('getSalesDocuments', array(function(){return View::make('test/getSalesDocuments');}));
 Route::get('getProductStock', array(function(){return View::make('test/getProductStock');}));
 Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers');}));
 

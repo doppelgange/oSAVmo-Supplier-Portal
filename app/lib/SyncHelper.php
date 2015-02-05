@@ -114,9 +114,6 @@ class SyncHelper {
 		return true;
 	}
 
-
-
-
 	//Now only warehouse 1 is sync
 	public static function syncProductStocks(){
 		$api = new EAPI();
@@ -139,8 +136,24 @@ class SyncHelper {
 		$erplyProductStocks = $result['records'];
 		//return $totalPage;
 		if(is_null($erplyProductStocks)){
+			//Add Log
+			ActionLog::Create(array(
+				'module' => 'ProductStock',
+				'type' => 'Sync',
+				'notes' => 'page '.$pageNo.' has error, no record returned', 
+				'user' => 'System'
+			));
 			return false;
 		}else{
+
+			//Add action log
+			ActionLog::Create(array(
+				'module' => 'ProductStock',
+				'type' => 'Sync',
+				'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo, 
+				'user' => 'System'
+			));
+
 			foreach ($erplyProductStocks as $erplyProductStock) {
 				$productStock = ProductStock::where('productID', '=', (int)$erplyProductStock['productID'])->first();
 				if (is_null($productStock)){
@@ -162,6 +175,170 @@ class SyncHelper {
 			return true;	
 		}
 	}
+
+
+	public static function syncSalesDocuments(){
+		$api = new EAPI();
+
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			$result = json_decode(
+				$api->sendRequest(
+					"getSalesDocuments", 
+					array(
+						"recordsOnPage" =>100,
+					    "getRowsForAllInvoices" => 1,
+					    "getAddedTimestamp" => 1,
+					    "getReturnedPayments" =>1,
+					    "getCOGS" => 1,
+						"pageNo"=>$pageNo,
+						"employeeID" => 0,
+						"dateFrom" => Date('Y-m-d', strtotime("-10 days"))
+					)
+				), 
+				true
+			);
+			$erplySalesDocuments = $result['records'];
+			//Get the total records
+			/**/
+			if($result['status']['recordsTotal']!=null){
+				$totalPage = ceil($result['status']['recordsTotal']/100);
+			}
+
+			if(is_null($erplySalesDocuments)){
+				//Add Log
+				ActionLog::Create(array(
+					'module' => 'SalesDocument',
+					'type' => 'Sync',
+					'notes' => 'page '.$pageNo.' has error, no record returned', 
+					'user' => 'System'
+				));
+				return false;
+			}else{
+
+				//Add action log
+				ActionLog::Create(array(
+					'module' => 'SalesDocument',
+					'type' => 'Sync',
+					'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo.' , Data is from '.Date('Y-m-d', strtotime("-10 days")).' , to '.Date('Y-m-d'), 
+					'user' => 'System'
+				));
+
+
+				foreach ($erplySalesDocuments as $erplySalesDocument) {
+					$salesDocument = SalesDocument::where('salesDocumentID', '=', (int)$erplySalesDocument['id'])->first();
+					if (is_null($salesDocument)){
+						$salesDocument = new SalesDocument;
+						$salesDocument->salesDocumentID = $erplySalesDocument['id'];
+					}
+					$salesDocument->type = $erplySalesDocument['type'];
+					
+					if($erplySalesDocument['employeeID']==0){
+						$salesDocument->source = 'eShop';
+					}else{
+						$salesDocument->source = 'Store';
+					}
+					
+					
+
+					if(array_key_exists('exportInvoiceType',$erplySalesDocument)){
+						$salesDocument->exportInvoiceType = $erplySalesDocument['exportInvoiceType'];
+					}
+					$salesDocument->currencyCode = $erplySalesDocument['currencyCode'];
+					$salesDocument->currencyRate = $erplySalesDocument['currencyRate'];
+					$salesDocument->warehouseID = $erplySalesDocument['warehouseID'];
+					$salesDocument->warehouseName = $erplySalesDocument['warehouseName'];
+					$salesDocument->pointOfSaleID = $erplySalesDocument['pointOfSaleID'];
+					$salesDocument->pointOfSaleName = $erplySalesDocument['pointOfSaleName'];
+					$salesDocument->pricelistID = $erplySalesDocument['pricelistID'];
+					$salesDocument->number = $erplySalesDocument['number'];
+					$salesDocument->date = date('y-m-d h:i:s',strtotime($erplySalesDocument['date'].' '.$erplySalesDocument['time']));
+					$salesDocument->clientID = $erplySalesDocument['clientID'];
+					$salesDocument->clientName = $erplySalesDocument['clientName'];
+					$salesDocument->clientEmail = $erplySalesDocument['clientEmail'];
+					$salesDocument->clientCardNumber = $erplySalesDocument['clientCardNumber'];
+					$salesDocument->addressID = $erplySalesDocument['addressID'];
+					if(array_key_exists('address',$erplySalesDocument)){
+						$salesDocument->address = $erplySalesDocument['address'];
+					}
+					$salesDocument->clientPaysViaFactoring = $erplySalesDocument['clientPaysViaFactoring'];
+					if(array_key_exists('payerID',$erplySalesDocument)){
+						$salesDocument->payerID = $erplySalesDocument['payerID'];
+						$salesDocument->payerName = $erplySalesDocument['payerName'];
+						$salesDocument->payerAddressID = $erplySalesDocument['payerAddressID'];
+						$salesDocument->payerAddress = $erplySalesDocument['payerAddress'];
+						$salesDocument->payerPaysViaFactoring = $erplySalesDocument['payerPaysViaFactoring'];
+
+					}
+					$salesDocument->contactID = $erplySalesDocument['contactID'];
+					$salesDocument->contactName = $erplySalesDocument['contactName'];
+					$salesDocument->employeeID = $erplySalesDocument['employeeID'];
+					$salesDocument->employeeName = $erplySalesDocument['employeeName'];
+					$salesDocument->projectID = $erplySalesDocument['projectID'];
+					$salesDocument->invoiceState = $erplySalesDocument['invoiceState'];
+					$salesDocument->paymentType = $erplySalesDocument['paymentType'];
+					$salesDocument->paymentTypeID = $erplySalesDocument['paymentTypeID'];
+					$salesDocument->paymentDays = $erplySalesDocument['paymentDays'];
+					$salesDocument->paymentStatus = $erplySalesDocument['paymentStatus'];
+					if(array_key_exists('previousReturnsExist',$erplySalesDocument)){
+						$salesDocument->previousReturnsExist = $erplySalesDocument['previousReturnsExist'];
+					}
+					$salesDocument->confirmed = $erplySalesDocument['confirmed'];
+					$salesDocument->notes = trim($erplySalesDocument['notes'], ",");
+					$salesDocument->internalNotes = trim($erplySalesDocument['internalNotes'], ",");
+					$salesDocument->netTotal = $erplySalesDocument['netTotal'];
+					$salesDocument->vatTotal = $erplySalesDocument['vatTotal'];
+					$salesDocument->rounding = $erplySalesDocument['rounding'];
+					$salesDocument->total = $erplySalesDocument['total'];
+					$salesDocument->paid = $erplySalesDocument['paid'];
+					if(array_key_exists('externalNetTotal',$erplySalesDocument)){
+						$salesDocument->externalNetTotal = $erplySalesDocument['externalNetTotal'];
+						$salesDocument->externalVatTotal = $erplySalesDocument['externalVatTotal'];
+						$salesDocument->externalRounding = $erplySalesDocument['externalRounding'];
+						$salesDocument->externalTotal = $erplySalesDocument['externalTotal'];
+					}
+					$salesDocument->taxExemptCertificateNumber = $erplySalesDocument['taxExemptCertificateNumber'];
+					$salesDocument->packerID = $erplySalesDocument['packerID'];
+					$salesDocument->referenceNumber = $erplySalesDocument['referenceNumber'];
+					$salesDocument->cost = $erplySalesDocument['cost'];
+					$salesDocument->reserveGoods = $erplySalesDocument['reserveGoods'];
+					$salesDocument->reserveGoodsUntilDate = date('y-m-d h:i:s',strtotime($erplySalesDocument['reserveGoodsUntilDate']));
+					$salesDocument->deliveryDate = date('y-m-d h:i:s',strtotime($erplySalesDocument['deliveryDate']));
+					$salesDocument->deliveryTypeID = $erplySalesDocument['deliveryTypeID'];
+					$salesDocument->deliveryTypeName = $erplySalesDocument['deliveryTypeName'];
+					$salesDocument->packingUnitsDescription = $erplySalesDocument['packingUnitsDescription'];
+					$salesDocument->triangularTransaction = $erplySalesDocument['triangularTransaction'];
+					$salesDocument->purchaseOrderDone = $erplySalesDocument['purchaseOrderDone'];
+					$salesDocument->transactionTypeID = $erplySalesDocument['transactionTypeID'];
+					$salesDocument->transactionTypeName = $erplySalesDocument['transactionTypeName'];
+					$salesDocument->transportTypeID = $erplySalesDocument['transportTypeID'];
+					$salesDocument->transportTypeName = $erplySalesDocument['transportTypeName'];
+					$salesDocument->deliveryTerms = $erplySalesDocument['deliveryTerms'];
+					$salesDocument->deliveryTermsLocation = $erplySalesDocument['deliveryTermsLocation'];
+					$salesDocument->euInvoiceType = $erplySalesDocument['euInvoiceType'];
+					if(array_key_exists('deliveryOnlyWhenAllItemsInStock',$erplySalesDocument)){
+						$salesDocument->deliveryOnlyWhenAllItemsInStock = $erplySalesDocument['deliveryOnlyWhenAllItemsInStock'];	
+					}
+					$salesDocument->lastModified = date('y-m-d h:i:s',$erplySalesDocument['lastModified']);
+					$salesDocument->lastModifierUsername = $erplySalesDocument['lastModifierUsername'];
+					$salesDocument->added = date('y-m-d h:i:s',$erplySalesDocument['added']);
+					$salesDocument->invoiceLink = $erplySalesDocument['invoiceLink'];
+					$salesDocument->receiptLink = $erplySalesDocument['receiptLink'];
+					$salesDocument->save();
+
+			
+				    //$salesDocument->erplyLastModified = date('y-m-d h:i:s',$erplySalesDocument['lastModified']); 
+				    
+				}
+					
+			}
+		}
+		return true;
+	}
+
+	
+
+
 
 
 }
