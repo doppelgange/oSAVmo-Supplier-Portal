@@ -4,18 +4,18 @@ session_start();
 $api = new EAPI();
 $pageNo = 1;
 
+$dateFrom = 10;
 $salesDocuments = json_decode(
 	$api->sendRequest(
 		"getSalesDocuments", 
 		array(
-		    "recordsOnPage" =>100,
+		    "recordsOnPage" =>1,
 		    "getRowsForAllInvoices" => 1,
 		    "getAddedTimestamp" => 1,
 		    "getReturnedPayments" =>1,
 		    "getCOGS" => 1,
 			"pageNo"=>$pageNo,
-			'employeeID' =>0,
-			"dateFrom" => Date('Y-m-d', strtotime("-10 days"))
+			"dateFrom" => Date('Y-m-d', strtotime("-".$dateFrom." days"))
 		)
 	), 
 	true

@@ -2,7 +2,7 @@
 class SyncHelper {
 	public static function syncSuppliers(){
 		$api = new EAPI();
-		$erplySuppliers = json_decode(
+		$result = json_decode(
 			$api->sendRequest(
 				"getSuppliers", 
 				array(
@@ -13,10 +13,29 @@ class SyncHelper {
 				)
 			), 
 			true
-		)['records'];
+		);
+		$erplySuppliers = $result['records'];
 		if(is_null($erplySuppliers)){
+			//Start: Add action log for sync error
+			ActionLog::Create(array(
+				'module' => 'Supplier',
+				'type' => 'Sync',
+				'notes' => 'Sync error, no record returned', 
+				'user' => 'System'
+			));
+			//End: Add action log for sync error
 			return false;
 		}else{
+
+				//Start: Add action log
+				ActionLog::Create(array(
+					'module' => 'Supplier',
+					'type' => 'Sync',
+					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records', 
+					'user' => 'System'
+				));
+				//End: Add action log
+
 			foreach ($erplySuppliers as $erplySupplier) {
 				$supplier = Supplier::where('supplierID', '=', $erplySupplier['supplierID'])->first();
 				if (is_null($supplier)){
@@ -68,8 +87,25 @@ class SyncHelper {
 			}
 			//return $totalPage;
 			if(is_null($erplyProducts)){
+				//Start: Add Log for sync error
+				ActionLog::Create(array(
+					'module' => 'Product',
+					'type' => 'Sync',
+					'notes' => 'Page '.$pageNo.' has error, no record returned', 
+					'user' => 'System'
+				));
+				//End: Add Log for sync error
 				return false;
 			}else{
+				//Start: Add action log for sync success
+				ActionLog::Create(array(
+					'module' => 'Product',
+					'type' => 'Sync',
+					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo.' , Data is from '.Date('Y-m-d', strtotime("-10 days")).' , to '.Date('Y-m-d'), 
+					'user' => 'System'
+				));
+				//End:  Add action log for sync success
+
 				foreach ($erplyProducts as $erplyProduct) {
 					$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
 					if (is_null($product)){
@@ -136,23 +172,26 @@ class SyncHelper {
 		$erplyProductStocks = $result['records'];
 		//return $totalPage;
 		if(is_null($erplyProductStocks)){
-			//Add Log
+			//Start: Add action log for sync error
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
-				'notes' => 'page '.$pageNo.' has error, no record returned', 
+				'notes' => 'Sync error, no record returned', 
 				'user' => 'System'
 			));
+			//End: Add action log for sync error
+
 			return false;
 		}else{
 
-			//Add action log
+			//Start: Add action log
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
-				'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo, 
+				'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records', 
 				'user' => 'System'
 			));
+			//End: Add action log
 
 			foreach ($erplyProductStocks as $erplyProductStock) {
 				$productStock = ProductStock::where('productID', '=', (int)$erplyProductStock['productID'])->first();
@@ -177,8 +216,11 @@ class SyncHelper {
 	}
 
 
-	public static function syncSalesDocuments(){
+	public static function syncSalesDocuments($option = array()){
 		$api = new EAPI();
+		//Set parameter
+		$dateFrom = array_key_exists('dateFrom',$option)? $option['dateFrom']:10;
+
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
@@ -192,8 +234,7 @@ class SyncHelper {
 					    "getReturnedPayments" =>1,
 					    "getCOGS" => 1,
 						"pageNo"=>$pageNo,
-						"employeeID" => 0,
-						"dateFrom" => Date('Y-m-d', strtotime("-10 days"))
+						"dateFrom" => Date('Y-m-d', strtotime("-".$dateFrom." days"))
 					)
 				), 
 				true
@@ -206,23 +247,25 @@ class SyncHelper {
 			}
 
 			if(is_null($erplySalesDocuments)){
-				//Add Log
+				//Start: Add Log for sync error
 				ActionLog::Create(array(
 					'module' => 'SalesDocument',
 					'type' => 'Sync',
-					'notes' => 'page '.$pageNo.' has error, no record returned', 
+					'notes' => 'Page '.$pageNo.' has error, no record returned', 
 					'user' => 'System'
 				));
+				//End: Add Log for sync error
 				return false;
 			}else{
 
-				//Add action log
+				//Start: Add action log for sync success
 				ActionLog::Create(array(
 					'module' => 'SalesDocument',
 					'type' => 'Sync',
-					'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo.' , Data is from '.Date('Y-m-d', strtotime("-10 days")).' , to '.Date('Y-m-d'), 
+					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo.' , Data is from '.Date('Y-m-d', strtotime("-".$dateFrom." days")).' , to '.Date('Y-m-d'), 
 					'user' => 'System'
 				));
+				//End:  Add action log for sync success
 
 
 				foreach ($erplySalesDocuments as $erplySalesDocument) {

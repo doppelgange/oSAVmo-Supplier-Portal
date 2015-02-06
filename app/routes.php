@@ -14,8 +14,9 @@
 //No Need auth pages
 //Admin page 
 Route::get('products/sync/{all}','ProductsController@sync');
+
+Route::get('admin/init', 'AdminController@init');
 Route::resource('admin','AdminController');
-Route::get('init', 'AdminController@initiate');
 
 Route::get('users/login', 'UsersController@login');
 Route::get('users/logout', 'UsersController@logout');

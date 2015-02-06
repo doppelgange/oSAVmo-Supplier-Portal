@@ -1,5 +1,5 @@
 
-<a href="init" class="btn btn-primary"> Initiate system</a>
+<a href="admin/init" class="btn btn-primary"> Initiate system</a>
 
 <a href="suppliers/sync" class="btn btn-primary"> Sync All Suppliers</a>
 <a class="btn btn-primary" href="products/sync" role="button">Sync Products for Current Supplier</a>
@@ -8,4 +8,7 @@
 
 <a href="salesDocuments/sync" class="btn btn-primary"> Sync All Sales Documents</a>
 
+
+
+<a href="users/create" class="btn btn-primary"> Create User</a>
 

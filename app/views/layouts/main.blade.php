@@ -17,15 +17,15 @@
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
-            <li>{{ HTML::link('users', 'Users') }}</li>
             <li>{{ HTML::link('users/login', 'Login') }}</li>  
             <li>{{ HTML::link('users/logout', 'Logout') }}</li> 
-            <li>{{ HTML::link('users/create', 'Create User') }}</li> 
             <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
             <li>{{ HTML::link('products', 'Products') }}</li>
             <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
             <li>{{ HTML::link('salesDocuments', 'Order') }}</li>
             <li>{{ HTML::link('actionLogs', 'Logs') }}</li>
+
+            <li>{{ HTML::link('users', 'Users') }}</li>
             <li>{{ HTML::link('admin', 'Admin') }}</li>
           </ul>
         </div><!-- /.navbar-collapse -->
@@ -35,7 +35,7 @@
     <div class="container">
     <!-- Message from session -->
         @if(Session::has('message'))
-        <div class="alert
+        <div class="alert  fade in 
           @if(Session::has('alert-class'))
             {{Session::get('alert-class')}}
           @else
@@ -43,6 +43,10 @@
           @endif
         " role="alert">
           {{ Session::get('message') }}
+
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         @endif
 
