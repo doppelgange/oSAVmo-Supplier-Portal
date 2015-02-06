@@ -78,6 +78,17 @@ class AdminController extends \BaseController {
 	}
 
 
+
+	public function sync(){
+		if(SyncHelper::syncSalesDocuments(array('dateFrom'=>365))){
+				$message ='<br/>Sync sales document successfully!';
+			}else{
+				$message ='<br/>Sync sales document failed!';
+			}
+		return Redirect::to('admin')->with(array('message'=>$message,'alert-class'=> $alertClass));
+	}
+
+
 	/**
 	 * Display a listing of the resource.
 	 * GET /admin

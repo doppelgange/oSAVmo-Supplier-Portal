@@ -16,6 +16,7 @@
 Route::get('products/sync/{all}','ProductsController@sync');
 
 Route::get('admin/init', 'AdminController@init');
+Route::get('admin/sync', 'AdminController@sync');
 Route::resource('admin','AdminController');
 
 Route::get('users/login', 'UsersController@login');
