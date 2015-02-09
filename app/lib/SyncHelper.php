@@ -224,6 +224,7 @@ class SyncHelper {
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			
 			$result = json_decode(
 				$api->sendRequest(
 					"getSalesDocuments", 
@@ -239,9 +240,11 @@ class SyncHelper {
 				), 
 				true
 			);
+			/*
+			$result = json_decode(file_get_contents("SalesDocuments.json"),true);
+			*/
 			$erplySalesDocuments = $result['records'];
 			//Get the total records
-			/**/
 			if($result['status']['recordsTotal']!=null){
 				$totalPage = ceil($result['status']['recordsTotal']/100);
 			}
@@ -267,7 +270,7 @@ class SyncHelper {
 				));
 				//End:  Add action log for sync success
 
-
+				//Save salesDocument information
 				foreach ($erplySalesDocuments as $erplySalesDocument) {
 					$salesDocument = SalesDocument::where('salesDocumentID', '=', (int)$erplySalesDocument['id'])->first();
 					if (is_null($salesDocument)){
@@ -302,7 +305,6 @@ class SyncHelper {
 					$salesDocument->clientCardNumber = $erplySalesDocument['clientCardNumber'];
 					$salesDocument->addressID = $erplySalesDocument['addressID'];
 					if(array_key_exists('address',$erplySalesDocument)){
-						$salesDocument->address = $erplySalesDocument['address'];
 					}
 					$salesDocument->clientPaysViaFactoring = $erplySalesDocument['clientPaysViaFactoring'];
 					if(array_key_exists('payerID',$erplySalesDocument)){
@@ -368,10 +370,46 @@ class SyncHelper {
 					$salesDocument->invoiceLink = $erplySalesDocument['invoiceLink'];
 					$salesDocument->receiptLink = $erplySalesDocument['receiptLink'];
 					$salesDocument->save();
+					//sync SalesDocumentItem
+					if(array_key_exists('rows',$erplySalesDocument)){
+						$item=$erplySalesDocument['rows'];
+						$salesDocumentID = $salesDocument->salesDocumentID;
+						//$salesDocumentItems = SalesDocumentItem::where('salesDocumentID', '=',$salesDocumentID )->get();
+						//return var_dump($salesDocumentItems);
 
-			
-				    //$salesDocument->erplyLastModified = date('y-m-d h:i:s',$erplySalesDocument['lastModified']); 
-				    
+
+						for($line=0;$line<count($item);$line++){
+							//No exisitng item in system
+							$salesDocumentItem = SalesDocumentItem::where('salesDocumentID', '=',$salesDocumentID )->where('line', '=', $line)->first();
+							//if line item is not exist
+							if(is_null($salesDocumentItem)){
+								$salesDocumentItem = new SalesDocumentItem;
+								$salesDocumentItem->salesDocumentID = $salesDocument->salesDocumentID;
+								$salesDocumentItem->line = $line;
+							}
+							$salesDocumentItem->productID= $item[$line]['productID'];
+							$salesDocumentItem->serviceID= $item[$line]['serviceID'];
+							$salesDocumentItem->itemName= $item[$line]['itemName'];
+							$salesDocumentItem->code= array_key_exists('code',$item[$line])?$item[$line]['code']:'';
+							$salesDocumentItem->vatrateID= $item[$line]['vatrateID'];
+							$salesDocumentItem->amount= $item[$line]['amount'];
+							$salesDocumentItem->price= $item[$line]['price'];
+							$salesDocumentItem->discount= $item[$line]['discount'];
+							$salesDocumentItem->finalNetPrice= $item[$line]['finalNetPrice'];
+							$salesDocumentItem->finalPriceWithVAT= $item[$line]['finalPriceWithVAT'];
+							$salesDocumentItem->rowNetTotal= $item[$line]['rowNetTotal'];
+							$salesDocumentItem->rowVAT= $item[$line]['rowVAT'];
+							$salesDocumentItem->rowTotal= $item[$line]['rowTotal'];
+							$salesDocumentItem->deliveryDate= $item[$line]['deliveryDate'];
+							$salesDocumentItem->returnReasonID= $item[$line]['returnReasonID'];
+							$salesDocumentItem->employeeID= $item[$line]['employeeID'];
+							$salesDocumentItem->campaignIDs= $item[$line]['campaignIDs'];
+							$salesDocumentItem->containerID= $item[$line]['containerID'];
+							$salesDocumentItem->containerAmount= $item[$line]['containerAmount'];
+							$salesDocumentItem->originalPriceIsZero= $item[$line]['originalPriceIsZero'];
+							$salesDocumentItem->save();
+						}
+					}    
 				}
 					
 			}

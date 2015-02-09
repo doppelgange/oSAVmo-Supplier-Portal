@@ -15,11 +15,14 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function sync()
 	{
+		//return SyncHelper::syncSalesDocuments();
+		/**/
 		if(SyncHelper::syncSalesDocuments()){
 			return Redirect::to('salesDocuments')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
 			return Redirect::to('salesDocuments')->with('message', 'Cannot connect to ERPLY!');
 		}
+		
 	}
 
 	/**
@@ -68,10 +71,10 @@ class SalesDocumentsController extends \BaseController {
 		$salesDocument = SalesDocument::find($id);
 		//return $salesDocument;
 		// get previous product id
-	    $previous = SalesDocument::where('id', '<', $salesDocument->id)->max('id');
+	    $previous = SalesDocument::where('source', '=', 'eShop')->where('id', '<', $salesDocument->id)->max('id');
 
 	    // get next product id
-	    $next = SalesDocument::where('id', '>', $salesDocument->id)->min('id');
+	    $next = SalesDocument::where('source', '=', 'eShop')->where('id', '>', $salesDocument->id)->min('id');
 		$this->layout->content = View::make('salesDocuments.show',array(
 			'salesDocument'=>$salesDocument,
 			'next'=>$next,

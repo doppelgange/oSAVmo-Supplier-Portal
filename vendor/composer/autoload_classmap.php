@@ -33,6 +33,7 @@ return array(
     'CreateProductStocksTable' => $baseDir . '/app/database/migrations/2015_02_02_214407_create_product_stocks_table.php',
     'CreateProductsTable' => $baseDir . '/app/database/migrations/2015_01_27_220524_create_products_table.php',
     'CreateSalesDocumentsTable' => $baseDir . '/app/database/migrations/2015_02_04_213410_create_sales_documents_table.php',
+    'CreateSalesDocumentItemsTable' => $baseDir . '/app/database/migrations/2015_02_09_100906_create_sales_document_items_table.php',
     'CreateSuppliersTable' => $baseDir . '/app/database/migrations/2015_01_23_090647_create-suppliers-table.php',
     'CreateUsersTable' => $baseDir . '/app/database/migrations/2015_01_21_034224_create-users-table.php',
     'Crypt_AES' => $vendorDir . '/phpseclib/phpseclib/phpseclib/Crypt/AES.php',

@@ -13,29 +13,7 @@ class AdminController extends \BaseController {
 	{
 		$message='';
 		$alertClass = 'alert-info';
-		if(User::all()->count() ==0 ){
-			
-			User::where('email','=','admin@osavmo.com')->delete();
-			User::create(array(
-				'lastname' => 'Admin',
-				'firstname' => 'User',
-				'supplierID' => 0,
-				'password' => Hash::make('Password1'),
-				'email' => 'admin@osavmo.com'
-			));
-
-			//Start: Add Log for user create
-			ActionLog::Create(array(
-				'module' => 'Product',
-				'type' => 'Sync',
-				'notes' => 'Admin User is added', 
-				'user' => 'System'
-			));
-			//End: Add Log for user create
-
-
-			$message .= "Admin user is created for you: <label>User: </label> admin@osavmo.com, <label>Password: </label>Passord1";
-		}
+		//Sync Supplier
 		if(Supplier::all()->count() ==0 ){
 			if(SyncHelper::syncSuppliers()){
 				$message .='<br/>Sync suppliers successfully!';
@@ -43,6 +21,45 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync suppliers failed!';
 			}
 		}
+
+		if(User::all()->count() ==0 ){
+			//Create User
+			$userInfo=array(array(
+				'lastname' => 'Bob',
+				'firstname' => 'Sun',
+				'supplierID' => 0,
+				'password' => Hash::make('3792565Jj'),
+				'email' => 'bob@osavmo.com'
+			),array(
+				'lastname' => 'Sunny',
+				'firstname' => 'Sun',
+				'supplierID' => 0,
+				'password' => Hash::make('sun72xin'),
+				'email' => 'ssun@osavmo.com'
+			),array(
+				'lastname' => 'Jinbo',
+				'firstname' => 'Chi',
+				'supplierID' => 0,
+				'password' => Hash::make('Password1'),
+				'email' => 'jinbo@osavmo.com'
+			));
+
+			foreach($userInfo as $user){
+				User::create($user);
+				//Start: Add Log for user create
+				ActionLog::Create(array(
+					'module' => 'User',
+					'type' => 'Sync',
+					'notes' => 'User '.$user['lastname'].' is added.', 
+					'user' => 'System'
+				));
+				//End: Add Log for user create
+			$message .= "User Name:".$user['lastname']." is created for you: <label>Email: </label>".$user['email']."<br/>";
+			}
+		}
+
+
+		//Sync Products
 		if(Product::all()->count() ==0 ){
 			if(SyncHelper::syncProducts(false,null)){
 				$message .='<br/>Sync products successfully!';
@@ -50,6 +67,8 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync products failed!';
 			}
 		}
+
+		//Sync Stocks
 		if(ProductStock::all()->count()==0 ){
 			if(SyncHelper::syncProductStocks()){
 				$message .='<br/>Sync stocks successfully!';
@@ -57,7 +76,7 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync stocks failed!';
 			}
 		}
-
+		//Sync Orders
 		if(SalesDocument::all()->count()==0){
 			if(SyncHelper::syncSalesDocuments(array('dateFrom'=>365))){
 				$message .='<br/>Sync sales document successfully!';
@@ -66,6 +85,7 @@ class AdminController extends \BaseController {
 			}
 		}
 
+		//Setup message to display
 		if($message ==''){
 			$message = 'No initiation operation is need at all!';
 			$alertClass = 'alert-warning';
@@ -76,7 +96,6 @@ class AdminController extends \BaseController {
 		// $this->layout->content = View::make('admin.index'); 
 		return Redirect::to('admin')->with(array('message'=>$message,'alert-class'=> $alertClass));
 	}
-
 
 
 	public function sync(){

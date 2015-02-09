@@ -215,6 +215,74 @@
     </tr>
   </tbody>
 </table>
+<!-- below is order items -->
+
+@if(count($salesDocument->salesDocumentItems) === 0)
+No Order items
+@else
+<table class="table table-striped table-bordered table-hover table-condensed">
+  <thead>
+    <tr>
+      <th> Line# </th>
+      <!-- <th> productID </th>
+      <th> serviceID </th> -->
+      <th> Name </th>
+      <th> code </th>
+      <!-- <th> vatrateID </th> -->
+      <th> Amount </th>
+      <th> Price </th>
+      <!-- <th> Discount </th> -->
+      <th> Final Net Price </th>
+      <th> Final Price With VAT </th>
+      <th> Net Total </th>
+      <th> VAT </th>
+      <th> Total </th>
+      <!-- <th> Delivery Date </th>
+      <th> return Reason ID </th>
+      <th> employeeID </th>
+      <th> campaignIDs </th>
+      <th> containerID </th>
+      <th> containerAmount </th>
+      <th> originalPriceIsZero </th> -->
+    </tr>
+  </thead>
+  <tbody>
+  @foreach($salesDocument->salesDocumentItems as $salesDocumentItem )
+      <tr>
+        <td> {{ $salesDocumentItem->line+1 }} </td>
+        <!-- <td> {{ $salesDocumentItem->productID }} </td>
+        <td> {{ $salesDocumentItem->serviceID }} </td> -->
+        <td> {{ $salesDocumentItem->itemName }} <br/> 
+        @if($salesDocumentItem->productID!=0)
+        {{$salesDocumentItem->product->nameCN}}
+        @endif
+        </td>
+        <td> {{ $salesDocumentItem->code }} </td>
+        <!-- <td> {{ $salesDocumentItem->vatrateID }} </td> -->
+        <td> {{ number_format($salesDocumentItem->amount)}} </td>
+        <td> {{ $salesDocumentItem->price }} </td>
+        <!-- <td> {{ $salesDocumentItem->discount }} </td> -->
+        <td> {{ $salesDocumentItem->finalNetPrice }} </td>
+        <td> {{ $salesDocumentItem->finalPriceWithVAT }} </td>
+        <td> {{ $salesDocumentItem->rowNetTotal }} </td>
+        <td> {{ $salesDocumentItem->rowVAT }} </td>
+        <td> {{ $salesDocumentItem->rowTotal }} </td>
+        <!-- <td> {{ $salesDocumentItem->deliveryDate }} </td>
+        <td> {{ $salesDocumentItem->returnReasonID }} </td>
+        <td> {{ $salesDocumentItem->employeeID }} </td>
+        <td> {{ $salesDocumentItem->campaignIDs }} </td>
+        <td> {{ $salesDocumentItem->containerID }} </td>
+        <td> {{ $salesDocumentItem->containerAmount }} </td>
+        <td> {{ $salesDocumentItem->originalPriceIsZero }} </td> -->
+      </tr>
+  @endforeach
+      <tr>
+        
+      </tr>
+  </tbody>
+</table>
+@endif
+
 <nav>
   <ul class="pager">
     <li><a href="{{ URL::to( 'salesDocuments/' . $previous ) }}" class="">Previous</a></li>

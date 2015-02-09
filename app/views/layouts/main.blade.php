@@ -24,6 +24,7 @@
             <li>{{ HTML::link('products', 'Products') }}</li>
             <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
             <li>{{ HTML::link('salesDocuments', 'Order') }}</li>
+            <li>{{ HTML::link('salesDocumentItems', 'Order Item') }}</li>
             <li>{{ HTML::link('actionLogs', 'Logs') }}</li>
 
             <li>{{ HTML::link('users', 'Users') }}</li>

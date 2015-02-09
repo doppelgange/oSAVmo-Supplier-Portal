@@ -45,6 +45,8 @@ Route::group(array('before' => 'auth'), function()
 	//SalsDocument
 	Route::get('salesDocuments/sync', 'SalesDocumentsController@sync');
 	Route::resource('salesDocuments', 'SalesDocumentsController');
+	//SalesDocumentItem
+	Route::resource('salesDocumentItems', 'SalesDocumentItemsController');
 
 	//Log
 	Route::resource('actionLogs', 'ActionLogsController');
