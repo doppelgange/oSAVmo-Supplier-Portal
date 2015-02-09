@@ -1,7 +1,8 @@
 <nav>
   <ul class="pager">
-    <li><a href="{{ URL::to( 'salesDocuments/' . $previous ) }}" class="">Previous</a></li>
-    <li><a href="{{ URL::to( 'salesDocuments/' . $next ) }}">Next</a></li>
+    <li @if($previous=='#')class="disabled"@endif><a href="{{ $previous}}"> Previous</a></li>
+  
+    <li @if($next=='#')class="disabled"@endif><a href="{{ $next }}">Next</a></li>
   </ul>
 </nav>
 
@@ -103,6 +104,7 @@ No Order items
   </thead>
   <tbody>
   @foreach($salesDocument->salesDocumentItems as $salesDocumentItem )
+  @if(Auth::user()->supplierID==0 ||($salesDocumentItem->productID!=0&&$salesDocumentItem->product->supplierID == Auth::user()->supplierID))
       <tr>
         <td> {{ $salesDocumentItem->line+1 }} </td>
         <!-- <td> {{ $salesDocumentItem->productID }} </td>-->
@@ -119,7 +121,7 @@ No Order items
           {{ $salesDocumentItem->product->ean }} 
         </td>
         <td>
-          {{ $salesDocumentItem->product->supplier }} 
+          {{ $salesDocumentItem->product->supplier->fullName }} 
         </td>
         @else
         </td>
@@ -133,6 +135,7 @@ No Order items
         <td class="text-right"> {{ $salesDocumentItem->rowVAT }} </td>
         <td class="text-right"> {{ $salesDocumentItem->rowTotal }} </td>
       </tr>
+  @endif
   @endforeach
       <tr class="">
         <td colspan="9">  </td>
@@ -146,7 +149,8 @@ No Order items
 
 <nav>
   <ul class="pager">
-    <li><a href="{{ URL::to( 'salesDocuments/' . $previous ) }}" class="">Previous</a></li>
-    <li><a href="{{ URL::to( 'salesDocuments/' . $next ) }}">Next</a></li>
+    <li @if($previous=='#')class="disabled"@endif><a href="{{ $previous}}"> Previous</a></li>
+  
+    <li @if($next=='#')class="disabled"@endif><a href="{{ $next }}">Next</a></li>
   </ul>
 </nav>

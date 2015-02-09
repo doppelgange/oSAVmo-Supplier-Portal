@@ -15,8 +15,14 @@ class UsersController extends BaseController {
 	 */
 	public function index()
 	{
-		$users = User::all();
-		$suppliers= Supplier::getManageable(); 
+		if(Auth::user()->isSupplier()){
+			$users = User::where('supplierID','=',Auth::user()->supplierID)->get();
+			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
+		}else{
+			$users = User::all();
+			$suppliers= Supplier::getManageable(); 
+		}
+		
 		$this->layout->content = View::make('users.index',array('users'=>$users,'suppliers'=>$suppliers)); 
 	}
 
@@ -66,10 +72,10 @@ class UsersController extends BaseController {
 	{
 		$user = User::find($id);
 
-		if($user->supplierID==0){
-			$supplierName= 'All Supplier';
-		}else{
+		if(Auth::user()->isSupplier()){
 			$supplierName= Supplier::getManageable()[$user->supplierID]; 
+		}else{
+			$supplierName= 'All Supplier';
 		}
 		$this->layout->content = View::make('users.show',array('user'=>$user,'supplierName'=>$supplierName)); 
 		
@@ -84,9 +90,12 @@ class UsersController extends BaseController {
 	 */
 	public function edit($id)
 	{
-
+		if(Auth::user()->isSupplier()){
+			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
+		}else{
+			$suppliers= Supplier::getManageable(); 
+		}
 		$user = User::find($id);
-		$suppliers= Supplier::getManageable(); 
 		$this->layout->content = View::make('users.edit',array('user'=>$user,'suppliers'=>$suppliers)); 
 	}
 
@@ -99,17 +108,8 @@ class UsersController extends BaseController {
 	 */
 	public function update($id)
 	{
-		//if(''==Input::get('password')) {return 'xxxx';}else{return 'YYY';}
-		$currentRules = User::$rules;
-		$user = User::find(Input::get('id'));
-		//Do validation for password only when user input them
-		if((Input::get('password')=='')&&(Input::get('password_confirmation')=='')){
-			unset($currentRules['password'],$currentRules['password_confirmation']);
-		}{
-			$user->password = Hash::make(Input::get('password'));
-		}
-		
-		$validator = Validator::make(Input::all(), $currentRules);
+		$user = User::find($id);
+		$validator = Validator::make(Input::all(), User::$rulesBasicInfo);
 	    if ($validator->passes()) {
 		    $user->firstname = Input::get('firstname');
 		    $user->lastname = Input::get('lastname');
@@ -121,6 +121,28 @@ class UsersController extends BaseController {
 		    return Redirect::to('users/'.$id)->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
 		}
 	}
+
+	/**
+	 * Change Password
+	 * PUT /users/changePassword/{id}
+	 *
+	 * @param  int  $id
+	 * @return Response
+	 */
+	public function changePassword($id)
+	{
+		//return $id;
+		$user = User::find($id);
+		$validator = Validator::make(Input::all(), User::$rulesPassword);
+	    if ($validator->passes()) {
+		    $user->password = Hash::make(Input::get('password'));
+		    $user->save();
+		    return Redirect::to('users/'.$id)->with('message', 'Password is update successfully!');
+		} else {
+		    return Redirect::to('users/'.$id)->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
+		}
+	}
+
 
 	/**
 	 * Remove the specified resource from storage.
@@ -148,7 +170,7 @@ class UsersController extends BaseController {
 	public function signin() {
 		$rememberMe= Input::get('rememberMe')? true:false;
 		if (Auth::attempt(array('email'=>Input::get('email'), 'password'=>Input::get('password')),$rememberMe)) {
-		    return Redirect::to('users/dashboard')->with('message', 'You are now logged in!');
+		    return Redirect::to('/')->with('message', 'You are now logged in!');
 		} else {
 		    return Redirect::to('users/login')
 		        ->with('message', 'Your username/password combination was incorrect')

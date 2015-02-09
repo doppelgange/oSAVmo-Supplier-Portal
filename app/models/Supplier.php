@@ -16,4 +16,10 @@ class Supplier extends \Eloquent {
     {
         return $this->hasMany('User','supplierID','supplierID');
     }
+    public function products()
+    {
+        return $this->hasMany('Product','productID','productID');
+    }
+
+
 }

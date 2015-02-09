@@ -33,19 +33,12 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		
-
-
-
-
-		$supplierID = Auth::user()->supplierID;
-		if(is_null($supplierID)){
-			$salesDocuments=null;
-		}elseif($supplierID==0){
+		if(Auth::user()->isSupplier()){
 			$salesDocuments = DB::table('sales_documents')
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
             ->select('sales_documents.*')
+            ->where('products.supplierID', '=', Auth::user()->supplierID )
             ->where('sales_documents.source', '=','eShop')
             ->orderBy('sales_documents.date', 'desc')
             ->distinct()
@@ -55,7 +48,6 @@ class SalesDocumentsController extends \BaseController {
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
             ->select('sales_documents.*')
-            ->where('products.supplierID', '=', $supplierID )
             ->where('sales_documents.source', '=','eShop')
             ->orderBy('sales_documents.date', 'desc')
             ->distinct()
@@ -99,24 +91,41 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function show($id)
 	{
+		
+		//$supplierID = Auth::user()->supplierID;
 		$salesDocument = SalesDocument::find($id);
 		//return $salesDocument;
+
 		// get previous product id
-	    $previous = DB::table('sales_documents')
+	    $previousItem = DB::table('sales_documents')
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*')
-            ->where('sales_documents.source', '=','eShop')
+            ->select('sales_documents.*');
+        if(Auth::user()->isSupplier()){
+        	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
+        } 
+        $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
             ->where('sales_documents.date', '<', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'desc')->first()->id;
-	    //SalesDocument::where('source', '=', 'eShop')->where('id', '<', $salesDocument->id)->max('id');
+            ->orderBy('sales_documents.date', 'desc')->first();
+        $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id;
 
 	    // get next product id
-	    $next = SalesDocument::where('source', '=', 'eShop')->where('id', '>', $salesDocument->id)->min('id');
+	    $nextItem = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*');
+        if(Auth::user()->isSupplier()){
+        	$nextItem=$nextItem->where('products.supplierID', '=', Auth::user()->supplierID);
+        } 
+        $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
+            ->where('sales_documents.date', '>', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'asc')->first();
+        $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id;
+
 		$this->layout->content = View::make('salesDocuments.show',array(
 			'salesDocument'=>$salesDocument,
-			'next'=>$next,
-			'previous'=>$previous
+			'next'=>$nextItemID,
+			'previous'=>$previousItemID
 		)); 
 	}
 

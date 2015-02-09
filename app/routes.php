@@ -26,6 +26,7 @@ Route::post('users/signin', 'UsersController@signin');
 Route::group(array('before' => 'auth'), function()
 {
     //User related Routes
+    Route::put('/users/changePassword/{id}', 'UsersController@changePassword');
 	Route::get('/', 'ProductsController@index');
 	Route::get('users/dashboard', 'UsersController@dashboard');
 	Route::resource('users', 'UsersController');

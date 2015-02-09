@@ -7,5 +7,9 @@ class Product extends \Eloquent {
     {
         return $this->hasMany('ProductStock','productID','productID');
     }
+    public function supplier()
+    {
+        return $this->belongsTo('Supplier','supplierID','supplierID');
+    }
 
 }

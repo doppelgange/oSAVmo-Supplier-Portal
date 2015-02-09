@@ -1,6 +1,6 @@
 {{ Form::open(array('url'=>'users/'.$user->id, 'class'=>'form-new form-horizontal')) }}
     <input type="hidden" name="_method" value="PUT" />
-    <h2 class="form-signup-heading text-center">The user information:</h2>
+    <h2 class="form-signup-heading text-center">Amend User Basic Information:</h2>
  
     <ul>
         @foreach($errors->all() as $error)
@@ -35,7 +35,12 @@
         {{ Form::text('email', $user->email, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
         </div>
     </div>
+    {{ Form::submit('Save', array('class'=>'btn btn-large btn-primary center-block'))}}
+{{ Form::close() }}
 
+{{ Form::open(array('url'=>'users/changePassword/'.$user->id, 'class'=>'form-new form-horizontal')) }}
+    <input type="hidden" name="_method" value="PUT" />
+    <h2 class="form-signup-heading text-center">Change Password:</h2>
     <div class="form-group">
     {{ Form::label('password', 'New Password',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-8">
@@ -49,9 +54,7 @@
         {{ Form::password('password_confirmation', array('class'=>'form-control', 'placeholder'=>'Confirm Password')) }}
         </div>
     </div>
-
-    {{ form::hidden('id', $user->id)}}
-    {{ Form::submit('Save', array('class'=>'btn btn-large btn-primary center-block'))}}
+    {{ Form::submit('Change Password', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 {{ Form::close() }}
 
