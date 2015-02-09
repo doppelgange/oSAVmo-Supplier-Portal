@@ -99,10 +99,11 @@ class UsersController extends BaseController {
 	 */
 	public function update($id)
 	{
+		//if(''==Input::get('password')) {return 'xxxx';}else{return 'YYY';}
 		$currentRules = User::$rules;
 		$user = User::find(Input::get('id'));
 		//Do validation for password only when user input them
-		if(is_null(Input::get('password'))&&is_null(Input::get('password_confirmation'))){
+		if((Input::get('password')=='')&&(Input::get('password_confirmation')=='')){
 			unset($currentRules['password'],$currentRules['password_confirmation']);
 		}{
 			$user->password = Hash::make(Input::get('password'));

@@ -33,8 +33,39 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$salesDocuments = SalesDocument::where('source', '=', 'eShop')->orderBy('date','desc')->paginate(10);
+		
+
+
+
+
+		$supplierID = Auth::user()->supplierID;
+		if(is_null($supplierID)){
+			$salesDocuments=null;
+		}elseif($supplierID==0){
+			$salesDocuments = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*')
+            ->where('sales_documents.source', '=','eShop')
+            ->orderBy('sales_documents.date', 'desc')
+            ->distinct()
+            ->paginate(10);
+		}else{
+			$salesDocuments = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*')
+            ->where('products.supplierID', '=', $supplierID )
+            ->where('sales_documents.source', '=','eShop')
+            ->orderBy('sales_documents.date', 'desc')
+            ->distinct()
+            ->paginate(10);
+		}
+		
+        //return $salesDocuments;
+        //$salesDocuments = SalesDocument::where('source', '=', 'eShop')->orderBy('date','desc')->paginate(10);
 		$this->layout->content = View::make('salesDocuments.index',array('salesDocuments'=>$salesDocuments)); 
+
 	}
 
 	/**
@@ -71,7 +102,14 @@ class SalesDocumentsController extends \BaseController {
 		$salesDocument = SalesDocument::find($id);
 		//return $salesDocument;
 		// get previous product id
-	    $previous = SalesDocument::where('source', '=', 'eShop')->where('id', '<', $salesDocument->id)->max('id');
+	    $previous = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*')
+            ->where('sales_documents.source', '=','eShop')
+            ->where('sales_documents.date', '<', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'desc')->first()->id;
+	    //SalesDocument::where('source', '=', 'eShop')->where('id', '<', $salesDocument->id)->max('id');
 
 	    // get next product id
 	    $next = SalesDocument::where('source', '=', 'eShop')->where('id', '>', $salesDocument->id)->min('id');

@@ -42,6 +42,12 @@ class AdminController extends \BaseController {
 				'supplierID' => 0,
 				'password' => Hash::make('Password1'),
 				'email' => 'jinbo@osavmo.com'
+			),array(
+				'lastname' => 'System',
+				'firstname' => 'Admin',
+				'supplierID' => 0,
+				'password' => Hash::make('Password1'),
+				'email' => 'admin@osavmo.com'
 			));
 
 			foreach($userInfo as $user){

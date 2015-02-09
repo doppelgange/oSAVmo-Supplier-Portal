@@ -66,3 +66,10 @@ Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers
 Route::get('getProducts', array( function(){return View::make('test/getProducts');}));
 
 Route::get('test', array(function(){return View::make('test/test');}));
+
+
+// Display all SQL executed in Eloquent
+// Event::listen('illuminate.query', function($query)
+// {
+//     var_dump($query);
+// });

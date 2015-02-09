@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ContentFilters</key>
+	<dict/>
+	<key>auto_connect</key>
+	<true/>
+	<key>data</key>
+	<dict>
+		<key>connection</key>
+		<dict>
+			<key>database</key>
+			<string>osavmo</string>
+			<key>host</key>
+			<string>127.0.0.1</string>
+			<key>kcid</key>
+			<string>5942394375558534516</string>
+			<key>name</key>
+			<string>Local</string>
+			<key>rdbms_type</key>
+			<string>mysql</string>
+			<key>sslCACertFileLocation</key>
+			<string></string>
+			<key>sslCACertFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslCertificateFileLocation</key>
+			<string></string>
+			<key>sslCertificateFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>sslKeyFileLocation</key>
+			<string></string>
+			<key>sslKeyFileLocationEnabled</key>
+			<integer>0</integer>
+			<key>type</key>
+			<string>SPTCPIPConnection</string>
+			<key>useSSL</key>
+			<integer>0</integer>
+			<key>user</key>
+			<string>root</string>
+		</dict>
+		<key>session</key>
+		<dict>
+			<key>connectionEncoding</key>
+			<string>utf8</string>
+			<key>contentFilter</key>
+			<dict/>
+			<key>contentPageNumber</key>
+			<integer>1</integer>
+			<key>contentSelection</key>
+			<data>
+			YnBsaXN0MDDUAQIDBAUGOjtYJHZlcnNpb25YJG9iamVjdHNZJGFy
+			Y2hpdmVyVCR0b3ASAAGGoK8QDwcIFRYXGBkfICEoLDA0OFUkbnVs
+			bNMJCgsMEBRXTlMua2V5c1pOUy5vYmplY3RzViRjbGFzc6MNDg+A
+			AoADgASjERITgAWABoAKgA5UdHlwZVRyb3dzVGtleXNfECZTZWxl
+			Y3Rpb25EZXRhaWxUeXBlUHJpbWFyeUtleWVkRGV0YWlsc9MJCgsa
+			HB6hG4AHoR2ACIAJUjU1CdIiIyQlWiRjbGFzc25hbWVYJGNsYXNz
+			ZXNfEBNOU011dGFibGVEaWN0aW9uYXJ5oyQmJ1xOU0RpY3Rpb25h
+			cnlYTlNPYmplY3TSCgspK6EqgAuADdILLS4vWU5TLnN0cmluZ4AM
+			Umlk0iIjMTJfEA9OU011dGFibGVTdHJpbmejMTMnWE5TU3RyaW5n
+			0iIjNTZeTlNNdXRhYmxlQXJyYXmjNTcnV05TQXJyYXnSIiMmOaIm
+			J18QD05TS2V5ZWRBcmNoaXZlctE8PVRkYXRhgAEACAARABoAIwAt
+			ADIANwBJAE8AVgBeAGkAcAB0AHYAeAB6AH4AgACCAIQAhgCLAJAA
+			lQC+AMUAxwDJAMsAzQDPANIA0wDYAOMA7AECAQYBEwEcASEBIwEl
+			AScBLAE2ATgBOwFAAVIBVgFfAWQBcwF3AX8BhAGHAZkBnAGhAAAA
+			AAAAAgEAAAAAAAAAPgAAAAAAAAAAAAAAAAAAAaM=
+			</data>
+			<key>contentSortColIsAsc</key>
+			<true/>
+			<key>contentViewport</key>
+			<string>{{0, 374}, {1237, 664}}</string>
+			<key>isToolbarVisible</key>
+			<true/>
+			<key>queries</key>
+			<string>select `sales_documents`.* 
+from `sales_documents` inner join `sales_document_items` on `sales_documents`.`salesDocumentID` = `sales_document_items`.`salesDocumentID` inner join `products` on `sales_document_items`.`productID` = `products`.`productID` 
+where `products`.`supplierID` = '4884' and `sales_documents`.`source` = 'eShop'</string>
+			<key>table</key>
+			<string>suppliers</string>
+			<key>view</key>
+			<string>SP_VIEW_CUSTOMQUERY</string>
+			<key>windowVerticalDividerPosition</key>
+			<real>202</real>
+		</dict>
+	</dict>
+	<key>encrypted</key>
+	<false/>
+	<key>format</key>
+	<string>connection</string>
+	<key>queryFavorites</key>
+	<array/>
+	<key>queryHistory</key>
+	<array>
+		<string>select `sales_documents`.* 
+from `sales_documents` ,`sales_document_items`,`products` 
+where `sales_documents`.`salesDocumentID` = `sales_document_items`.`salesDocumentID` and `sales_document_items`.`productID` = `products`.`productID`  and `products`.`supplierID` = '4884' and `sales_documents`.`source` = 'eShop'</string>
+		<string>select `sales_documents`.* 
+from `sales_documents` inner join `sales_document_items` on `sales_documents`.`salesDocumentID` = `sales_document_items`.`salesDocumentID` inner join `products` on `sales_document_items`.`productID` = `products`.`productID` 
+where `products`.`supplierID` = '4884' and `sales_documents`.`source` = 'eShop'</string>
+		<string>truncate users</string>
+		<string>TRUNCATE TABLE `sales_documents`</string>
+		<string>TRUNCATE TABLE `action_logs`;
+TRUNCATE TABLE `product_stocks`;
+TRUNCATE TABLE `products`;
+TRUNCATE TABLE `sales_documents`;
+TRUNCATE TABLE `suppliers`;
+TRUNCATE TABLE `users`</string>
+		<string>SELECT concat('TRUNCATE TABLE `', TABLE_NAME, '`;')
+FROM INFORMATION_SCHEMA.TABLES
+WHERE table_schema = 'osavmo' and TABLE_NAME &lt;&gt; 'migrations'</string>
+		<string>SELECT * FROM information_schema.tables where table_schema = 'osavmo' and TABLE_NAME &lt;&gt; 'migrations'</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop';
+/* Reset all data for testing*/
+delete from sales_documents;
+ALTER TABLE sales_documents AUTO_INCREMENT = 1;
+truncate table sales_documents;
+truncate table action_logs;
+SELECT * FROM information_schema.tables where table_schema = 'osavmo' and TABLE_NAME &lt;&gt; 'migrations';
+SELECT concat('TRUNCATE TABLE `', TABLE_NAME, '`;')
+FROM INFORMATION_SCHEMA.TABLES
+WHERE table_schema = 'osavmo' and TABLE_NAME &lt;&gt; 'migrations'</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop';
+/* Reset all data for testing*/
+delete from sales_documents;
+ALTER TABLE sales_documents AUTO_INCREMENT = 1;
+truncate table sales_documents;
+truncate table action_logs;
+SELECT * FROM information_schema.tables where table_schema = 'osavmo'</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop';
+/* Reset all data for testing*/
+delete from sales_documents;
+ALTER TABLE sales_documents AUTO_INCREMENT = 1;
+truncate table sales_documents;
+truncate table action_logs;
+SELECT * FROM information_schema.tables</string>
+		<string>SELECT table_name, table_type, engine FROM information_schema.tables</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop';
+/* Reset all data for testing*/
+delete from sales_documents;
+truncate table sales_documents;
+ALTER TABLE sales_documents AUTO_INCREMENT = 1;
+truncate table action_logs</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop';
+/* Reset all data for testing*/
+delete from sales_documents;
+ALTER TABLE sales_documents AUTO_INCREMENT = 1;
+truncate table sales_documents;
+truncate table action_logs</string>
+		<string>truncate table sales_documents</string>
+		<string>ALTER TABLE sales_documents AUTO_INCREMENT = 1</string>
+		<string>delete from sales_documents</string>
+		<string>delete * from sales_documents</string>
+		<string>select sd.`internalNotes`, sd.* from sales_documents sd where sd.source = 'eShop'</string>
+		<string>select sd.`notes`, sd.* from sales_documents sd where sd.source = 'eShop'</string>
+		<string>select sd.`deliveryDate`, sd.* from sales_documents sd where sd.source = 'eShop'</string>
+	</array>
+	<key>rdbms_type</key>
+	<string>mysql</string>
+	<key>rdbms_version</key>
+	<string>5.5.38</string>
+	<key>version</key>
+	<integer>1</integer>
+</dict>
+</plist>

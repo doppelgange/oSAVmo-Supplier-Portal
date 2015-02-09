@@ -9,9 +9,9 @@ class SuppliersController extends BaseController {
 
 	public function sync(){
 		if(SyncHelper::syncSuppliers()){
-			return Redirect::to('suppliers/index')->with('message', 'Sync to ERPLY Successfuly!');
+			return Redirect::to('suppliers/index')->with('message', 'Sync Successfuly!');
 		}else{
-			return Redirect::to('suppliers/index')->with('message', 'Cannot connect to ERPLY!');
+			return Redirect::to('suppliers/index')->with('message', 'Cannot connect to Server!');
 		}
 	}
 
@@ -26,7 +26,7 @@ class SuppliersController extends BaseController {
 		}
 
 		// return $reslut;
-		return Redirect::to('suppliers')->with('message', 'Sync to ERPLY Successfuly!');	
+		return Redirect::to('suppliers')->with('message', 'Amend Successfuly!');	
 	}
 
 

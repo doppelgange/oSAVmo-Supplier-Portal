@@ -305,6 +305,7 @@ class SyncHelper {
 					$salesDocument->clientCardNumber = $erplySalesDocument['clientCardNumber'];
 					$salesDocument->addressID = $erplySalesDocument['addressID'];
 					if(array_key_exists('address',$erplySalesDocument)){
+						$salesDocument->address = $erplySalesDocument['address'];
 					}
 					$salesDocument->clientPaysViaFactoring = $erplySalesDocument['clientPaysViaFactoring'];
 					if(array_key_exists('payerID',$erplySalesDocument)){
