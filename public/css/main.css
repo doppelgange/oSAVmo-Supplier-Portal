@@ -9,6 +9,7 @@ body {
 .action-button{
 	font-size:20px;
 }
+.action-button form{ display: inline;}
 
 .pagination{
 	margin-top: 0px;
@@ -41,3 +42,11 @@ body {
 .headline h2{margin: 0px;
 	vertical-align: middle;
 	line-height: 100px;padding: 5px;}
+
+/*Use for rewrite popover*/
+.popover{
+	max-width: 100%;
+}
+.popover-content{
+	white-space: pre-wrap;
+}

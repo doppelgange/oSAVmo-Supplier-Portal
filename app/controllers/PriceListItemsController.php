@@ -1,22 +1,38 @@
 <?php
 
-class $NAME$ extends \BaseController {
+class PriceListItemsController extends \BaseController {
 
 	protected $layout = "layouts.main";
 	/**
+	 * Syncing priceListItems from erply.
+	 * GET /priceListItems/sync
+	 *
+	 * @return Response
+	 */
+	public function sync()
+	{
+		if(SyncHelper::syncPriceListItems()){
+			return Redirect::to('priceListItems')->with('message', 'Sync Price List Successfuly!');
+		}else{
+			return Redirect::to('priceListItems')->with('message', 'Sync Error!');
+		}
+		
+	}
+	/**
 	 * Display a listing of the resource.
-	 * GET /$COLLECTION$
+	 * GET /pricelistitems
 	 *
 	 * @return Response
 	 */
 	public function index()
 	{
-		//
+		$priceListItems = PriceListItem::paginate(10);
+		$this->layout->content = View::make('priceListItems.index',array('priceListItems'=>$priceListItems)); 
 	}
 
 	/**
 	 * Show the form for creating a new resource.
-	 * GET /$COLLECTION$/create
+	 * GET /pricelistitems/create
 	 *
 	 * @return Response
 	 */
@@ -27,7 +43,7 @@ class $NAME$ extends \BaseController {
 
 	/**
 	 * Store a newly created resource in storage.
-	 * POST /$COLLECTION$
+	 * POST /pricelistitems
 	 *
 	 * @return Response
 	 */
@@ -38,7 +54,7 @@ class $NAME$ extends \BaseController {
 
 	/**
 	 * Display the specified resource.
-	 * GET /$COLLECTION$/{id}
+	 * GET /pricelistitems/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -50,7 +66,7 @@ class $NAME$ extends \BaseController {
 
 	/**
 	 * Show the form for editing the specified resource.
-	 * GET /$COLLECTION$/{id}/edit
+	 * GET /pricelistitems/{id}/edit
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -62,7 +78,7 @@ class $NAME$ extends \BaseController {
 
 	/**
 	 * Update the specified resource in storage.
-	 * PUT /$COLLECTION$/{id}
+	 * PUT /pricelistitems/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response
@@ -74,7 +90,7 @@ class $NAME$ extends \BaseController {
 
 	/**
 	 * Remove the specified resource from storage.
-	 * DELETE /$COLLECTION$/{id}
+	 * DELETE /pricelistitems/{id}
 	 *
 	 * @param  int  $id
 	 * @return Response

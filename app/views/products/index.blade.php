@@ -29,12 +29,14 @@
 	@foreach($products as $product)
 	    <tr>
 			<td> {{ $product -> productID }} </td>
-			<td> 
+			<td>
+				<a href="products/{{$product-> id}}/edit" target="_blank">  
 				<div><label>EA:</label>{{ $product -> name }} </div>
 				<div><label>CN:</label>{{ $product -> nameCN }} </div>
+				 </a>
 				<!-- <div><label>Code:</label> {{ $product -> code }} </div> -->
 			</td>
-			<td><a href="products/{{$product-> id}}/edit" target="_blank"> {{ $product -> ean }} </a></td>
+			<td>{{ $product -> ean }}</td>
 			<td> {{ $product -> categoryName }} </td>
 			<td> 
 				<span class="text-primary" data-toggle="tooltip" title="Price with VAT"> {{ $product -> priceWithVat }}</span>

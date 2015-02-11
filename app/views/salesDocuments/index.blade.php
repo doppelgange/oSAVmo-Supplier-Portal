@@ -26,7 +26,15 @@
 	</thead>
 	<tbody>
 	@foreach($salesDocuments as $salesDocument )
-	    <tr @if($salesDocument -> deliveryTypeName == '') class="danger" @endif>
+	    <tr 
+	    @if($salesDocument -> deliveryTypeName == '') class="danger" @endif  
+	    data-toggle="popover" title="Order {{ $salesDocument -> number }} Detail" data-content="@foreach(SalesDocumentItem::where('salesDocumentID','=',$salesDocument -> salesDocumentID)->get() as $salesDocumentItem )
+@if(Auth::user()->supplierID==0&&$salesDocumentItem->productID!=0||($salesDocumentItem->productID!=0&&$salesDocumentItem->product->supplierID == Auth::user()->supplierID))
+ - {{ $salesDocumentItem->itemName }} ({{$salesDocumentItem->product->nameCN}}) * {{ number_format($salesDocumentItem->amount)}} 
+@endif
+@endforeach
+">
+
 			<td> {{ $salesDocument -> id }} </td>
 			<td> {{ $salesDocument -> number }} ({{ $salesDocument -> invoiceState }})</td>
 			<td nowrap> {{ $salesDocument -> clientName }} 

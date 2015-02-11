@@ -47,6 +47,7 @@ class UsersController extends BaseController {
 	public function store()
 	{
 		$validator = Validator::make(Input::all(), User::$rules);
+		//dd($validator) ;
 	    if ($validator->passes()) {
 		    $user = new User;
 		    $user->firstname = Input::get('firstname');
@@ -55,9 +56,9 @@ class UsersController extends BaseController {
 		    $user->email = Input::get('email');
 		    $user->password = Hash::make(Input::get('password'));
 		    $user->save();
-		    return Redirect::to('users/login')->with('message', 'New user is created successfully!');
+		    return Redirect::to('users')->with('message', 'New user is created successfully!');
 		} else {
-		    return Redirect::to('users/new')->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
+		    return Redirect::to('users/create')->withInput()->with('message', 'The following errors occurred')->withErrors($validator)->withInput();
 		}
 	}
 
@@ -153,7 +154,10 @@ class UsersController extends BaseController {
 	 */
 	public function destroy($id)
 	{
-		//
+		$user = User::find($id);
+		$name=$user->lastname.' '.$user->firstname;
+		$user->delete();
+		return Redirect::to('users')->with('message', 'User:<strong>'.$name.'</strong> is update successfully!');
 	}
 
 

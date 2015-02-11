@@ -52,6 +52,11 @@ Route::group(array('before' => 'auth'), function()
 	//Log
 	Route::resource('actionLogs', 'ActionLogsController');
 
+	//Price List Item
+	Route::get('priceListItems/sync', 'PriceListItemsController@sync');
+	Route::resource('priceListItems', 'PriceListItemsController');
+
+
 	//Other related Routes
 	Route::filter('auth', function(){
 	    if (Auth::guest()) return Redirect::guest('/users/login');
@@ -65,6 +70,9 @@ Route::get('getProductStock', array(function(){return View::make('test/getProduc
 Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers');}));
 
 Route::get('getProducts', array( function(){return View::make('test/getProducts');}));
+Route::get('getPriceLists', array( function(){return View::make('test/getPriceLists');}));
+
+Route::get('getProductPictures', array( function(){return View::make('test/getProductPictures');}));
 
 Route::get('test', array(function(){return View::make('test/test');}));
 

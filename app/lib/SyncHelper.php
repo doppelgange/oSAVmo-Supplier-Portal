@@ -418,7 +418,84 @@ class SyncHelper {
 		return true;
 	}
 
-	
+	public static function syncPriceListItems($option = array()){
+		$api = new EAPI();
+		//Set parameter
+
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			
+			$result = json_decode(
+				$api->sendRequest(
+					"getPriceLists", 
+					array(
+						"pageNo"=>$pageNo,
+						"getPricesWithVAT"=> 1,
+						"pricelistID" => 8
+					)
+				), 
+				true
+			);
+			
+			$erplyPriceList = $result['records'][0];
+
+			//dd($result['records']);
+			$erplyPriceListItems = $result['records'][0]['pricelistRules'];
+
+			if(is_null($erplyPriceListItems)){
+				//Start: Add Log for sync error
+				ActionLog::Create(array(
+					'module' => 'PriceListItem',
+					'type' => 'Sync',
+					'notes' => 'Page has error, no record returned', 
+					'user' => 'System'
+				));
+				//End: Add Log for sync error
+				return false;
+			}else{
+				//Start: Add action log for sync success
+				ActionLog::Create(array(
+					'module' => 'PriceListItem',
+					'type' => 'Sync',
+					'notes' => 'Total '.count($erplyPriceListItems).' records', 
+					'user' => 'System'
+				));
+				//End:  Add action log for sync success
+
+				//Save priceListItem information
+				foreach ($erplyPriceListItems as $erplyPriceListItem) {
+					$priceListItem = PriceListItem::where('priceListID', '=', $erplyPriceList['pricelistID'])->
+						where('productID','=', $erplyPriceListItem['id'])
+						->first();
+					if (is_null($priceListItem)){
+						$priceListItem = new PriceListItem;
+						$priceListItem->pricelistID = $erplyPriceList['pricelistID'];
+						$priceListItem->productID = $erplyPriceListItem['id'];
+					}
+
+					if(array_key_exists('type',$erplyPriceListItem)){
+						$priceListItem->type= $erplyPriceListItem['type'];
+					}
+					if(array_key_exists('price',$erplyPriceListItem)){
+						$priceListItem->price= $erplyPriceListItem['price'];
+					}
+					if(array_key_exists('priceWithVat',$erplyPriceListItem)){
+						$priceListItem->priceWithVat= $erplyPriceListItem['priceWithVat'];
+					}
+					if(array_key_exists('ruleID',$erplyPriceListItem)){
+						$priceListItem->ruleID= $erplyPriceListItem['ruleID'];
+					}
+					if(array_key_exists('amount',$erplyPriceListItem)){
+						$priceListItem->amount= $erplyPriceListItem['amount'];
+					}
+					$priceListItem->save();
+					  
+				}
+					
+			}
+		}
+		return true;
+	}	
 
 
 

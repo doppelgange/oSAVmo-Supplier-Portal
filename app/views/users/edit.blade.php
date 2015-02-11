@@ -35,7 +35,7 @@
         {{ Form::text('email', $user->email, array('class'=>'form-control', 'placeholder'=>'Email Address')) }}
         </div>
     </div>
-    {{ Form::submit('Save', array('class'=>'btn btn-large btn-primary center-block'))}}
+    {{ Form::submit('Save Change', array('class'=>'btn btn-large btn-primary center-block'))}}
 {{ Form::close() }}
 
 {{ Form::open(array('url'=>'users/changePassword/'.$user->id, 'class'=>'form-new form-horizontal')) }}

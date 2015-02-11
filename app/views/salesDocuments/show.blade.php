@@ -108,9 +108,10 @@ No Order items
       <tr>
         <td> {{ $salesDocumentItem->line+1 }} </td>
         <!-- <td> {{ $salesDocumentItem->productID }} </td>-->
-        <td> {{ $salesDocumentItem->itemName }} <br/> 
-        @if($salesDocumentItem->productID!=0)
+        @if($salesDocumentItem->product!=null)
+        <td>
           <a href="../products/{{$salesDocumentItem->product->id}}" target="_blank"> 
+          {{ $salesDocumentItem->itemName }} <br/> 
           {{$salesDocumentItem->product->nameCN}}
           </a>
         </td>
@@ -121,9 +122,13 @@ No Order items
           {{ $salesDocumentItem->product->ean }} 
         </td>
         <td>
-          {{ $salesDocumentItem->product->supplier->fullName }} 
+          @if($salesDocumentItem->product->supplier!=null)
+          {{ $salesDocumentItem->product->supplier->fullName }}
+          @endif 
         </td>
         @else
+        <td>
+        {{ $salesDocumentItem->itemName }} <br/>
         </td>
         <td></td><td></td><td></td>
         @endif
