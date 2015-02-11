@@ -44,7 +44,22 @@
 			<key>connectionEncoding</key>
 			<string>utf8</string>
 			<key>contentFilter</key>
-			<dict/>
+			<dict>
+				<key>filterComparison</key>
+				<string>=</string>
+				<key>filterComparisonTag</key>
+				<integer>0</integer>
+				<key>filterField</key>
+				<string>productID</string>
+				<key>filterValue</key>
+				<string>2055</string>
+				<key>firstBetweenField</key>
+				<string></string>
+				<key>menuLabel</key>
+				<string>`productID` = '2055'</string>
+				<key>secondBetweenField</key>
+				<string></string>
+			</dict>
 			<key>contentPageNumber</key>
 			<integer>1</integer>
 			<key>contentSelection</key>
@@ -80,7 +95,12 @@ WHERE table_schema = 'osavmo' and table_name&lt;&gt;'migrations';
 
 SELECT CONCAT('truncate ', table_name,';')
 FROM information_schema.tables 
-WHERE table_schema = 'osavmo' and table_name&lt;&gt;'migrations';</string>
+WHERE table_schema = 'osavmo' and table_name&lt;&gt;'migrations';
+
+truncate price_list_items;
+
+
+select distinct `sales_documents`.* from `sales_documents` inner join `sales_document_items` on `sales_documents`.`salesDocumentID` = `sales_document_items`.`salesDocumentID` inner join `products` on `sales_document_items`.`productID` = `products`.`productID` where `sales_documents`.`source` ='eshop' order by `sales_documents`.`date` desc limit 20 offset 0</string>
 			<key>table</key>
 			<string>price_list_items</string>
 			<key>view</key>
@@ -97,6 +117,10 @@ WHERE table_schema = 'osavmo' and table_name&lt;&gt;'migrations';</string>
 	<array/>
 	<key>queryHistory</key>
 	<array>
+		<string>truncate price_list_items</string>
+		<string>SELECT CONCAT('truncate ', table_name,';')
+FROM information_schema.tables 
+WHERE table_schema = 'osavmo' and table_name&lt;&gt;'migrations'</string>
 		<string>truncate users;
 SELECT *
 FROM information_schema.tables 
@@ -178,8 +202,6 @@ ALTER TABLE sales_documents AUTO_INCREMENT = 1;
 truncate table sales_documents;
 truncate table action_logs</string>
 		<string>truncate table sales_documents</string>
-		<string>ALTER TABLE sales_documents AUTO_INCREMENT = 1</string>
-		<string>delete from sales_documents</string>
 	</array>
 	<key>rdbms_type</key>
 	<string>mysql</string>

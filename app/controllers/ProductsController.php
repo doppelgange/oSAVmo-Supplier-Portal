@@ -47,8 +47,12 @@ class ProductsController extends \BaseController {
 			$pagecount = Input::get("pagecount");
 		} ;
 
-		$supplierID = Auth::user()->supplierID;
-		$products = Product::where('supplierID','=',$supplierID)->where('active', '=','1')->paginate($pagecount);
+		if(Auth::user()->isSupplier){
+			$products = Product::where('supplierID','=',Auth::user()->supplierID)->where('active', '=','1')->paginate($pagecount);
+		}else{
+			$products=Product::all()->get();
+		}
+		
 		//return $products;
 		$this->layout->content = View::make('products.index',array('products'=>$products)); 
 	}

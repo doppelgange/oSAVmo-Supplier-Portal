@@ -33,6 +33,7 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
+		/**/
 		if(Auth::user()->isSupplier()){
 			$salesDocuments = DB::table('sales_documents')
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
@@ -40,23 +41,21 @@ class SalesDocumentsController extends \BaseController {
             ->select('sales_documents.*')
             ->where('products.supplierID', '=', Auth::user()->supplierID )
             ->where('sales_documents.source', '=','eShop')
-            ->orderBy('sales_documents.date', 'desc')
-            ->distinct()
-            ->paginate(10);
+            ->groupBy('sales_documents.salesDocumentID')
+            ->distinct()->paginate(10);
 		}else{
 			$salesDocuments = DB::table('sales_documents')
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
             ->select('sales_documents.*')
             ->where('sales_documents.source', '=','eShop')
-            ->orderBy('sales_documents.date', 'desc')
-            ->distinct()
-            ->paginate(10);
+            ->groupBy('sales_documents.salesDocumentID')
+            ->orderBy('sales_documents.date', 'desc')->paginate(10);
 		}
 		
-        //return $salesDocuments;
-        //$salesDocuments = SalesDocument::where('source', '=', 'eShop')->orderBy('date','desc')->paginate(10);
-		$this->layout->content = View::make('salesDocuments.index',array('salesDocuments'=>$salesDocuments)); 
+		$this->layout->content = View::make('salesDocuments.index',array(
+			'salesDocuments'=>$salesDocuments
+		)); 
 
 	}
 

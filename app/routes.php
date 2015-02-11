@@ -65,6 +65,7 @@ Route::group(array('before' => 'auth'), function()
 
 
 //Used for testing
+Route::get('getDeliveryTypes', array(function(){return View::make('test/getDeliveryTypes');}));
 Route::get('getSalesDocuments', array(function(){return View::make('test/getSalesDocuments');}));
 Route::get('getProductStock', array(function(){return View::make('test/getProductStock');}));
 Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers');}));

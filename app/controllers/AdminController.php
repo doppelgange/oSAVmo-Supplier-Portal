@@ -82,9 +82,18 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync stocks failed!';
 			}
 		}
+		//Sync PriceList Item
+		if(PriceListItem::all()->count()==0){
+			if(SyncHelper::syncPriceListItems()){
+				$message .='<br/>Sync Price List successfully!';
+			}else{
+				$message .='<br/>Sync Price List failed!';
+			}
+		}
+
 		//Sync Orders
 		if(SalesDocument::all()->count()==0){
-			if(SyncHelper::syncSalesDocuments(array('dateFrom'=>365))){
+			if(SyncHelper::syncSalesDocuments(array('dateFrom'=>30))){
 				$message .='<br/>Sync sales document successfully!';
 			}else{
 				$message .='<br/>Sync sales document failed!';

@@ -31,21 +31,38 @@
 			<td> {{ $product -> productID }} </td>
 			<td>
 				<a href="products/{{$product-> id}}/edit" target="_blank">  
-				<div><label>EA:</label>{{ $product -> name }} </div>
-				<div><label>CN:</label>{{ $product -> nameCN }} </div>
+				<div>{{ $product -> name }} </div>
+				<div>{{ $product -> nameCN }} </div>
 				 </a>
 				<!-- <div><label>Code:</label> {{ $product -> code }} </div> -->
 			</td>
 			<td>{{ $product -> ean }}</td>
 			<td> {{ $product -> categoryName }} </td>
 			<td> 
-				<span class="text-primary" data-toggle="tooltip" title="Price with VAT"> {{ $product -> priceWithVat }}</span>
-				<span class="text-muted"  data-toggle="tooltip" title="Price without VAT"> /  {{ $product -> price }} </span>
+				<!-- Use Price List first -->
+				<!--{{$priceListItem = $product->priceListItems()->where('priceListID','=','8')->first()}}-->
+				@if($priceListItem!= null)
+				
+					<span class="text-primary bg-success" data-toggle="tooltip" title="Price with VAT for eShop"> 
+						{{ $product->priceListItems()->first()->priceWithVat }}
+					</span>
+					<span class="text-muted bg-success"  data-toggle="tooltip" title="Price without VAT for eShop"> 
+						/  {{ number_format($product->priceListItems()->first()->price , 2, '.', '')}}
+					</span>
+				@else
+					<span class="text-primary" data-toggle="tooltip" title="Price with VAT"> 
+						{{ $product -> priceWithVat }}
+					</span>
+					<span class="text-muted"  data-toggle="tooltip" title="Price without VAT"> 
+						/  {{ $product -> price }}
+					</span>
+				@endif
+
 				<span class="text-muted"  data-toggle="tooltip" title="Cost">
 				@if($product -> cost!=0)
-				 / {{ $product -> cost }} 
+					 / {{ $product -> cost }} 
 				@else
-				/ Not set
+					/ N/A
 				@endif
 				</span>
 			</td>
