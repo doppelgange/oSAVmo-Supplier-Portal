@@ -57,6 +57,10 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('priceListItems', 'PriceListItemsController');
 
 
+	//Supporting Data - deliveryTypes
+	Route::get('deliveryTypes/sync', 'DeliveryTypesController@sync');
+	Route::resource('deliveryTypes', 'DeliveryTypesController');
+
 	//Other related Routes
 	Route::filter('auth', function(){
 	    if (Auth::guest()) return Redirect::guest('/users/login');

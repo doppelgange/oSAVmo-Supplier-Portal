@@ -12,8 +12,10 @@
       <td><label> number  </label></td>
       <td> 
         {{ $salesDocument -> number }} 
-        <a href="{{ $salesDocument -> invoiceLink }}" target="_blank"  data-toggle="tooltip" title="Invoice"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
-        <a href="{{ $salesDocument -> receiptLink }}" target="_blank" data-toggle="tooltip" title="Receipt"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+        @if(!Auth::user()->isSupplier())
+          <a href="{{ $salesDocument -> invoiceLink }}" target="_blank"  data-toggle="tooltip" title="Invoice"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+          <a href="{{ $salesDocument -> receiptLink }}" target="_blank" data-toggle="tooltip" title="Receipt"><span class="glyphicon glyphicon-file" aria-hidden="true"></span></a>
+        @endif
       </td>
       <td><label>Order Date  </label></td>
       <td> {{ $salesDocument -> date }} </td>
@@ -93,6 +95,7 @@ No Order items
       <th> code </th>
       <th> EAN </th>
       <th> Supplier </th>
+      <th style="width:100px;"> Status </th>
       <th> Amount </th>
       <th> Price </th>
       <th> Net Price </th>
@@ -132,6 +135,17 @@ No Order items
         </td>
         <td></td><td></td><td></td>
         @endif
+        <td class="
+        @if($salesDocumentItem->deliveryTypeID==0)
+        danger
+        elseif($salesDocumentItem->deliveryTypeID==1||$salesDocumentItem->deliveryTypeID==6)
+        success
+        elseif($salesDocumentItem->deliveryTypeID==2||$salesDocumentItem->deliveryTypeID==3||$salesDocumentItem->deliveryTypeID==4||$salesDocumentItem->deliveryTypeID==5)
+        warning
+        @endif
+        "> 
+        {{ $salesDocumentItem->deliveryType->deliveryTypeName or 'Not Delivered' }} 
+        </td>
         <td> {{ number_format($salesDocumentItem->amount)}} </td>
         <td class="text-right"> {{ $salesDocumentItem->price }} </td>
         <td class="text-right"> {{ $salesDocumentItem->finalNetPrice }} </td>
@@ -143,7 +157,7 @@ No Order items
   @endif
   @endforeach
       <tr class="">
-        <td colspan="9">  </td>
+        <td colspan="10">  </td>
         <td class="text-right"> <strong>{{ $salesDocument ->netTotal  }} </strong></td>
         <td class="text-right"><strong> {{ $salesDocument ->vatTotal }}</strong></td>
         <td class="text-right"><strong> {{ $salesDocument ->total }}  </strong></td>

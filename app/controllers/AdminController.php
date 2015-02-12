@@ -109,7 +109,7 @@ class AdminController extends \BaseController {
 		// Session::flash('message', $message); 
 		// Session::flash('alert-class', $alertClass); 
 		// $this->layout->content = View::make('admin.index'); 
-		return Redirect::to('admin')->with(array('message'=>$message,'alert-class'=> $alertClass));
+		return Redirect::to('admin')->with(array('message'=>$message,'alertClass'=> $alertClass));
 	}
 
 
@@ -119,7 +119,7 @@ class AdminController extends \BaseController {
 			}else{
 				$message ='<br/>Sync sales document failed!';
 			}
-		return Redirect::to('admin')->with(array('message'=>$message,'alert-class'=> $alertClass));
+		return Redirect::to('admin')->with(array('message'=>$message,'alertClass'=> $alertClass));
 	}
 
 

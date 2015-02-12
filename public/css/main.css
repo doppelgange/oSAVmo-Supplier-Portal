@@ -50,3 +50,8 @@ body {
 .popover-content{
 	white-space: pre-wrap;
 }
+
+
+/* Change the defulat margin*/
+.pager{margin:5px;}
+.navbar{margin-bottom: 5px;}

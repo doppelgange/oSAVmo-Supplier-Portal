@@ -36,7 +36,11 @@
 ">
 
 			<td> {{ $salesDocument -> id }} </td>
-			<td> {{ $salesDocument -> number }} ({{ $salesDocument -> invoiceState }})</td>
+			<td> 
+				<a href="salesDocuments/{{$salesDocument-> id}}/edit" target="_blank"> 
+				{{ $salesDocument -> number }} ({{ $salesDocument -> invoiceState }})
+				</a>
+			</td>
 			<td nowrap> {{ $salesDocument -> clientName }} 
 				<a href="mailto:{{ $salesDocument -> clientEmail }}" data-toggle="tooltip" title="{{ $salesDocument -> clientEmail }}">
 					<span class="glyphicon glyphicon-envelope" aria-hidden="true"></span>

@@ -58,12 +58,8 @@
     <div class="container">
     <!-- Message from session -->
         @if(Session::has('message'))
-        <div class="alert  fade in 
-          @if(Session::has('alert-class'))
-            {{Session::get('alert-class')}}
-          @else
-            alert-info
-          @endif
+        <div class="alert  fade in
+            {{Session::get('alertClass',function(){return 'alert-info';})}}
         " role="alert">
           {{ Session::get('message') }}
 

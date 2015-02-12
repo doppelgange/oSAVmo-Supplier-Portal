@@ -79,6 +79,7 @@ class SalesDocumentsController extends \BaseController {
 	public function store()
 	{
 		//
+		
 	}
 
 	/**
@@ -95,36 +96,10 @@ class SalesDocumentsController extends \BaseController {
 		$salesDocument = SalesDocument::find($id);
 		//return $salesDocument;
 
-		// get previous product id
-	    $previousItem = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*');
-        if(Auth::user()->isSupplier()){
-        	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
-        } 
-        $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '<', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'desc')->first();
-        $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id;
-
-	    // get next product id
-	    $nextItem = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*');
-        if(Auth::user()->isSupplier()){
-        	$nextItem=$nextItem->where('products.supplierID', '=', Auth::user()->supplierID);
-        } 
-        $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '>', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'asc')->first();
-        $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id;
-
 		$this->layout->content = View::make('salesDocuments.show',array(
 			'salesDocument'=>$salesDocument,
-			'next'=>$nextItemID,
-			'previous'=>$previousItemID
+			'next'=>$this->getNextItem($id),
+			'previous'=>$this->getPreviousItem($id),
 		)); 
 	}
 
@@ -137,7 +112,17 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$this->show($id);
+		//$this->show($id);
+		$salesDocument = SalesDocument::find($id);
+		$this->layout->content = View::make('salesDocuments.edit',array(
+			'salesDocument'=>$salesDocument,
+			'next'=>$this->getNextItem($id),
+			'deliveryTypes' => DeliveryType::getDeliveryTypeSelect(),
+			'previous'=>$this->getPreviousItem($id),
+		)); 
+
+		 
+
 	}
 
 	/**
@@ -149,7 +134,34 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		$deliveryTypeIDs = Input::get('deliveryTypeID');
+		$salesDocumentItemIDs = Input::get('salesDocumentItemID');
+		$message='';
+		$alertClass = 'alert-info';
+
+		$getDeliveryTypeSelect = DeliveryType::getDeliveryTypeSelect();
+		//Loop item to save
+		for($i=0;$i<count($deliveryTypeIDs);$i++){
+			$originalItem = SalesDocumentItem::find($salesDocumentItemIDs[$i]);
+			$originalID = $originalItem->deliveryTypeID;
+			$newID =$deliveryTypeIDs[$i];
+			if($originalID!=$newID){
+				//do update;
+				$originalItem->deliveryTypeID = $newID;
+				$originalItem->save();
+				//Set message
+				$message.=$originalItem->product->name."'s status is updated! from <strong>".$getDeliveryTypeSelect[$originalID]
+				."</strong> to <strong>".$getDeliveryTypeSelect[$newID]
+				."</strong><br/>";
+				//set message class
+				$alertClass = 'alert-success';
+			}
+			if($message == ''){$message = 'Nothing is updated.';}
+		}
+		//dd($quantities);
+		//dd($deliveryTypeIDs);
+		//dd($salesDocumentItemIDs);
+		return Redirect::to('salesDocuments/'.$id.'/edit')->with(array('message'=>$message,'alertClass'=>$alertClass));
 	}
 
 	/**
@@ -163,5 +175,40 @@ class SalesDocumentsController extends \BaseController {
 	{
 		//
 	}
+
+	public function getPreviousItem($id){
+		$salesDocument = SalesDocument::find($id);
+		// get previous product id
+	    $previousItem = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*');
+        if(Auth::user()->isSupplier()){
+        	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
+        } 
+        $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
+            ->where('sales_documents.date', '<', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'desc')->first();
+        $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id;
+        return $previousItemID;
+	}
+
+	public function getNextItem($id){
+		$salesDocument = SalesDocument::find($id);
+		// get next product id
+	    $nextItem = DB::table('sales_documents')
+            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
+            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
+            ->select('sales_documents.*');
+        if(Auth::user()->isSupplier()){
+        	$nextItem=$nextItem->where('products.supplierID', '=', Auth::user()->supplierID);
+        } 
+        $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
+            ->where('sales_documents.date', '>', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'asc')->first();
+        $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id;
+        return $nextItemID;
+	}
+
 
 }

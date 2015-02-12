@@ -6,4 +6,9 @@ class SalesDocument extends \Eloquent {
     {
         return $this->hasMany('SalesDocumentItem','salesDocumentID','salesDocumentID');
     }
+
+    public function products()
+    {
+        return $this->hasManyThrough('Product', 'SalesDocumentItem');
+    }
 }

@@ -1,1 +1,4 @@
 php artisan generate:resource price_list_item --fields="priceListID:integer, type:string, price:decimal(10,4), priceWithVat:decimal(10,2), productID:integer, ruleID:integer, amount:decimal(10,2)" 
+
+
+php artisan generate:resource delivery_type --fields="deliveryTypeID:integer, code:string, name:string, added:timestamp, lastModified:timestamp"

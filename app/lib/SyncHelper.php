@@ -497,6 +497,60 @@ class SyncHelper {
 		return true;
 	}	
 
+	public static function syncDeliveryTypes($option = array()){
+		$api = new EAPI();
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			$result = json_decode(
+				$api->sendRequest(
+					'getDeliveryTypes', 
+					array(
+						)
+					), 
+				true
+				);
+			$erplyDeliveryTypes = $result['records'];
+			if(is_null($erplyDeliveryTypes)){
+	   //Start: Add Log for sync error
+				ActionLog::Create(array(
+					'module' => 'DeliveryType',
+					'type' => 'Sync',
+					'notes' => 'Page has error, no record returned', 
+					'user' => 'System'
+					));
+	   //End: Add Log for sync error
+				return false;
+			}else{
+	   //Start: Add action log for sync success
+				ActionLog::Create(array(
+					'module' => 'DeliveryType',
+					'type' => 'Sync',
+					'notes' => 'Total '.count($erplyDeliveryTypes).' records', 
+					'user' => 'System'
+					));
+	   //End:  Add action log for sync success
+
+	   //Save DeliveryType information
+				foreach ($erplyDeliveryTypes as $erplyDeliveryType) {
+					$deliveryType = DeliveryType::where('deliveryTypeID', '=', $erplyDeliveryType['deliveryTypeID'])
+					->first();
+					if (is_null($deliveryType)){
+						$deliveryType = new DeliveryType;
+						$deliveryType->deliveryTypeID = $erplyDeliveryType['deliveryTypeID'];
+					}
+					$deliveryType->deliveryTypeID= $erplyDeliveryType['deliveryTypeID'];
+					$deliveryType->code= $erplyDeliveryType['code'];
+					$deliveryType->name= $erplyDeliveryType['name'];
+					$deliveryType->added= $erplyDeliveryType['added'];
+					$deliveryType->lastModified= $erplyDeliveryType['lastModified'];
+					$deliveryType->save();
+				}
+
+			}
+		}
+		return true;
+	}
+
 
 	
 

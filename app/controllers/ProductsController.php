@@ -47,10 +47,10 @@ class ProductsController extends \BaseController {
 			$pagecount = Input::get("pagecount");
 		} ;
 
-		if(Auth::user()->isSupplier){
+		if(Auth::user()->isSupplier()){
 			$products = Product::where('supplierID','=',Auth::user()->supplierID)->where('active', '=','1')->paginate($pagecount);
 		}else{
-			$products=Product::all()->get();
+			$products=Product::paginate($pagecount);
 		}
 		
 		//return $products;
