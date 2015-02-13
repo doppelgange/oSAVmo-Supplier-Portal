@@ -43,11 +43,15 @@ Route::group(array('before' => 'auth'), function()
 	Route::get('productStocks/sync', 'ProductStocksController@sync');
 	Route::resource('productStocks', 'ProductStocksController');
 
-	//SalsDocument
+	//SalesDocument
 	Route::get('salesDocuments/sync', 'SalesDocumentsController@sync');
 	Route::resource('salesDocuments', 'SalesDocumentsController');
 	//SalesDocumentItem
 	Route::resource('salesDocumentItems', 'SalesDocumentItemsController');
+
+	//Supplier SalesDocument
+	Route::get('salesDocuments/init', 'supplierSalesDocumentsController@init');
+	Route::resource('supplierSalesDocuments', 'supplierSalesDocumentsController');
 
 	//Log
 	Route::resource('actionLogs', 'ActionLogsController');
