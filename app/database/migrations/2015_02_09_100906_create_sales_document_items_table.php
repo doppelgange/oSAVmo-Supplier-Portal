@@ -22,7 +22,8 @@ class CreateSalesDocumentItemsTable extends Migration {
 			$table->string('itemName')->nullable();
 			$table->string('code')->nullable();
 			$table->integer('vatrateID')->nullable();
-			$table->decimal('amount', 10,2)->nullable();
+			$table->decimal('amount', 10,0)->nullable();
+			$table->decimal('fulfilledAmount', 10,0)->nullable();
 			$table->decimal('price', 10,2)->nullable();
 			$table->decimal('discount', 10,2)->nullable();
 			$table->decimal('finalNetPrice', 10,2)->nullable();
@@ -37,6 +38,8 @@ class CreateSalesDocumentItemsTable extends Migration {
 			$table->integer('containerID')->nullable();
 			$table->integer('containerAmount')->nullable();
 			$table->integer('originalPriceIsZero')->nullable();
+			$table->string('lastFulfilledBy')->nullable();
+			$table->timestamp('lastFulfilledDate')->nullable();
 			$table->timestamps();
 		});
 	}

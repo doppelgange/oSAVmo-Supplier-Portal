@@ -107,54 +107,48 @@ No Order items
   </thead>
   <tbody>
   @foreach($salesDocument->salesDocumentItems as $salesDocumentItem )
-  @if(Auth::user()->supplierID==0 ||($salesDocumentItem->productID!=0&&$salesDocumentItem->product->supplierID == Auth::user()->supplierID))
-      <tr>
-        <td> {{ $salesDocumentItem->line+1 }} </td>
-        <!-- <td> {{ $salesDocumentItem->productID }} </td>-->
-        @if($salesDocumentItem->product!=null)
-        <td>
-          <a href="../products/{{$salesDocumentItem->product->id}}" target="_blank"> 
-          {{ $salesDocumentItem->itemName }} <br/> 
-          {{$salesDocumentItem->product->nameCN}}
-          </a>
-        </td>
-        <td> 
-          {{ $salesDocumentItem->product->code }} 
-        </td>
-        <td>
-          {{ $salesDocumentItem->product->ean }} 
-        </td>
-        <td>
-          @if($salesDocumentItem->product->supplier!=null)
-          {{ $salesDocumentItem->product->supplier->fullName }}
-          @endif 
-        </td>
-        @else
-        <td>
-        {{ $salesDocumentItem->itemName }} <br/>
-        </td>
-        <td></td><td></td><td></td>
-        @endif
-        <td class="
-        @if($salesDocumentItem->deliveryTypeID==0)
-        danger
-        elseif($salesDocumentItem->deliveryTypeID==1||$salesDocumentItem->deliveryTypeID==6)
-        success
-        elseif($salesDocumentItem->deliveryTypeID==2||$salesDocumentItem->deliveryTypeID==3||$salesDocumentItem->deliveryTypeID==4||$salesDocumentItem->deliveryTypeID==5)
-        warning
-        @endif
-        "> 
-        {{ $salesDocumentItem->deliveryType->deliveryTypeName or 'Not Delivered' }} 
-        </td>
-        <td> {{ number_format($salesDocumentItem->amount)}} </td>
-        <td class="text-right"> {{ $salesDocumentItem->price }} </td>
-        <td class="text-right"> {{ $salesDocumentItem->finalNetPrice }} </td>
-        <td class="text-right"> {{ $salesDocumentItem->finalPriceWithVAT }} </td>
-        <td class="text-right"> {{ $salesDocumentItem->rowNetTotal }} </td>
-        <td class="text-right"> {{ $salesDocumentItem->rowVAT }} </td>
-        <td class="text-right"> {{ $salesDocumentItem->rowTotal }} </td>
-      </tr>
-  @endif
+    @if($salesDocumentItem->productID!=0)
+        <tr>
+          <td> {{ $salesDocumentItem->line+1 }} </td>
+          <!-- <td> {{ $salesDocumentItem->productID }} </td>-->
+          
+            <td>
+              <a href="../products/{{$salesDocumentItem->product->id}}" target="_blank"> 
+              {{ $salesDocumentItem->itemName }} <br/> 
+              {{$salesDocumentItem->product->nameCN}}
+              </a>
+            </td>
+            <td> 
+              {{ $salesDocumentItem->product->code }} 
+            </td>
+            <td>
+              {{ $salesDocumentItem->product->ean }} 
+            </td>
+            <td>
+              @if($salesDocumentItem->product->supplier!=null)
+              {{ $salesDocumentItem->product->supplier->fullName }}
+              @endif 
+            </td>
+            @if($salesDocumentItem->fufilledAmount==0)
+              <td class="danger" > Not Fulfill</td>
+            @elseif($salesDocumentItem->fufilledAmount < $salesDocumentItem->amount)
+              <td class=" warning"> Partial Fulfilled</td>
+            @else
+              <td class=" success"> Fully Fulfilled </td>
+            @endif
+          
+          <td> {{ number_format($salesDocumentItem->amount)}} </td>
+          <td class="text-right"> {{ $salesDocumentItem->price }} </td>
+          <td class="text-right"> {{ $salesDocumentItem->finalNetPrice }} </td>
+          <td class="text-right"> {{ $salesDocumentItem->finalPriceWithVAT }} </td>
+          <td class="text-right"> {{ $salesDocumentItem->rowNetTotal }} </td>
+          <td class="text-right"> {{ $salesDocumentItem->rowVAT }} </td>
+          <td class="text-right"> {{ $salesDocumentItem->rowTotal }} </td>
+        </tr>
+    @endif
+  <!-- If is not supplier show shipping charge -->
+    
+  <!-- Show Subtotal -->
   @endforeach
       <tr class="">
         <td colspan="10">  </td>

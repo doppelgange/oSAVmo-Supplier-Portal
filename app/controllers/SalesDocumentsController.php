@@ -39,6 +39,7 @@ class SalesDocumentsController extends \BaseController {
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
             ->select('sales_documents.*')
+            ->where('products.productID', '!=', 0 )
             ->where('products.supplierID', '=', Auth::user()->supplierID )
             ->where('sales_documents.source', '=','eShop')
             ->groupBy('sales_documents.salesDocumentID')
@@ -116,13 +117,10 @@ class SalesDocumentsController extends \BaseController {
 		$salesDocument = SalesDocument::find($id);
 		$this->layout->content = View::make('salesDocuments.edit',array(
 			'salesDocument'=>$salesDocument,
-			'next'=>$this->getNextItem($id),
+			'next'=>$this->getNextItem($id,'/edit'),
 			'deliveryTypes' => DeliveryType::getDeliveryTypeSelect(),
-			'previous'=>$this->getPreviousItem($id),
-		)); 
-
-		 
-
+			'previous'=>$this->getPreviousItem($id,'/edit'),
+		));  
 	}
 
 	/**
@@ -134,33 +132,60 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$deliveryTypeIDs = Input::get('deliveryTypeID');
-		$salesDocumentItemIDs = Input::get('salesDocumentItemID');
-		$message='';
+		$itemID = Input::get('itemID');
+		//dd($itemID);
+		$fulfillAmount = Input::get('fulfillAmount');
+		$salesDocumentID = Input::get('salesDocumentID');
+		$message="";
 		$alertClass = 'alert-info';
-
-		$getDeliveryTypeSelect = DeliveryType::getDeliveryTypeSelect();
-		//Loop item to save
-		for($i=0;$i<count($deliveryTypeIDs);$i++){
-			$originalItem = SalesDocumentItem::find($salesDocumentItemIDs[$i]);
-			$originalID = $originalItem->deliveryTypeID;
-			$newID =$deliveryTypeIDs[$i];
-			if($originalID!=$newID){
-				//do update;
-				$originalItem->deliveryTypeID = $newID;
-				$originalItem->save();
-				//Set message
-				$message.=$originalItem->product->name."'s status is updated! from <strong>".$getDeliveryTypeSelect[$originalID]
-				."</strong> to <strong>".$getDeliveryTypeSelect[$newID]
-				."</strong><br/>";
-				//set message class
-				$alertClass = 'alert-success';
+		//Check if only fulfill one item
+		if(is_int($itemID)){
+			//Fulfill one Item
+			$fulfilledItem = SalesDocumentItem::find($itemID);
+			$fulfilledItem->fulfilledAmount += $fulfillAmount;
+			$fulfilledItem->save();
+			$message.=$fulfillAmount." ".$fulfilledItem->product->name." has been fulfilled, total fulfilled amount is ".$fulfilledItem->fulfilledAmount.'. ';
+			$alertClass = 'alert-success';
+		
+			//change the supplier order status
+			if(Auth::user()->isSupplier()){
+				$supplierID = Auth::user()->supplierID;
+				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->whereHas('products', function($q){
+					$q->where('supplierID', '=', $supplierID);
+				})->get();
+			}else{
+				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
 			}
-			if($message == ''){$message = 'Nothing is updated.';}
+			
+			$isAllFulfilled = true;
+			foreach ($supplierSalesDocumentItems as $salesDocumentItem) {
+				if($salesDocumentItem->fulfillAmount<$salesDocumentItem->amount){
+					$isAllFulfilled = false;
+				}
+			}
+			if($isAllFulfilled){$message.=' All the items of this order are fulfilled!';};
+		}elseif($itemID='*'){
+			//Fulfill selected item
+			if(Auth::user()->isSupplier()){
+				$supplierID = Auth::user()->supplierID;
+				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->whereHas('products', function($q){
+					$q->where('supplierID', '=', $supplierID);
+				})->get();
+			}else{
+				//dd($id);
+				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
+			}
+			//dd(SalesDocumentItem::where('salesDocumentID','=',$id));
+			foreach($supplierSalesDocumentItems as $salesDocumentItem) {
+				//dd($salesDocumentItem);
+				$salesDocumentItem->fulfilledAmount = $salesDocumentItem->amount;
+				$salesDocumentItem->save();
+			}
+			$message.=' All the items of this order are fulfilled!';
 		}
-		//dd($quantities);
-		//dd($deliveryTypeIDs);
-		//dd($salesDocumentItemIDs);
+		
+		
+	
 		return Redirect::to('salesDocuments/'.$id.'/edit')->with(array('message'=>$message,'alertClass'=>$alertClass));
 	}
 
@@ -176,7 +201,7 @@ class SalesDocumentsController extends \BaseController {
 		//
 	}
 
-	public function getPreviousItem($id){
+	public function getPreviousItem($id,$modeString=''){
 		$salesDocument = SalesDocument::find($id);
 		// get previous product id
 	    $previousItem = DB::table('sales_documents')
@@ -189,11 +214,11 @@ class SalesDocumentsController extends \BaseController {
         $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
             ->where('sales_documents.date', '<', $salesDocument->date)
             ->orderBy('sales_documents.date', 'desc')->first();
-        $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id;
+        $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id.$modeString;
         return $previousItemID;
 	}
 
-	public function getNextItem($id){
+	public function getNextItem($id,$modeString=''){
 		$salesDocument = SalesDocument::find($id);
 		// get next product id
 	    $nextItem = DB::table('sales_documents')
@@ -206,7 +231,7 @@ class SalesDocumentsController extends \BaseController {
         $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
             ->where('sales_documents.date', '>', $salesDocument->date)
             ->orderBy('sales_documents.date', 'asc')->first();
-        $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id;
+        $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id.$modeString;
         return $nextItemID;
 	}
 
