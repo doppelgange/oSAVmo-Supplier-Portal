@@ -29,6 +29,7 @@ return array(
     'ClassPreloader\\Parser\\DirVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/DirVisitor.php',
     'ClassPreloader\\Parser\\FileVisitor' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/FileVisitor.php',
     'ClassPreloader\\Parser\\NodeTraverser' => $vendorDir . '/classpreloader/classpreloader/src/ClassPreloader/Parser/NodeTraverser.php',
+    'CreateSupplierSalesDocumentsTable'=>$baseDir . '/app/database/migrations/2015_02_13_155048_create_supplier_sales_documents_table.php',
     'CreateDeliveryTypesTable' => $baseDir . '/app/database/migrations/2015_02_12_093705_create_delivery_types_table.php',
     'CreatePriceListItemsTable' => $baseDir . '/app/database/migrations/2015_02_11_130323_create_price_list_items_table.php',
     'CreateActionLogsTable' => $baseDir . '/app/database/migrations/2015_02_05_125807_create_action_logs_table.php',

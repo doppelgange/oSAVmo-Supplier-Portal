@@ -33,31 +33,12 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		/**/
-		if(Auth::user()->isSupplier()){
-			$salesDocuments = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*')
-            ->where('products.productID', '!=', 0 )
-            ->where('products.supplierID', '=', Auth::user()->supplierID )
-            ->where('sales_documents.source', '=','eShop')
-            ->groupBy('sales_documents.salesDocumentID')
-            ->distinct()->paginate(10);
-		}else{
-			$salesDocuments = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*')
-            ->where('sales_documents.source', '=','eShop')
-            ->groupBy('sales_documents.salesDocumentID')
-            ->orderBy('sales_documents.date', 'desc')->paginate(10);
-		}
-		
+
+		$salesDocuments = SalesDocument::where('sales_documents.source', '=','eShop')
+		->orderBy('sales_documents.date', 'desc')->paginate(10);
 		$this->layout->content = View::make('salesDocuments.index',array(
 			'salesDocuments'=>$salesDocuments
-		)); 
-
+		));
 	}
 
 	/**
@@ -114,7 +95,8 @@ class SalesDocumentsController extends \BaseController {
 	public function edit($id)
 	{
 		//$this->show($id);
-		$salesDocument = SalesDocument::find($id);
+		$salesDocumentID = SalesDocument::find($id)->salesDocumentID;
+		$salesDocument = SalesDocument::where('salesDocumentID','=',$salesDocumentID)->first();
 		$this->layout->content = View::make('salesDocuments.edit',array(
 			'salesDocument'=>$salesDocument,
 			'next'=>$this->getNextItem($id,'/edit'),
@@ -132,61 +114,7 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		$itemID = Input::get('itemID');
-		//dd($itemID);
-		$fulfillAmount = Input::get('fulfillAmount');
-		$salesDocumentID = Input::get('salesDocumentID');
-		$message="";
-		$alertClass = 'alert-info';
-		//Check if only fulfill one item
-		if(is_int($itemID)){
-			//Fulfill one Item
-			$fulfilledItem = SalesDocumentItem::find($itemID);
-			$fulfilledItem->fulfilledAmount += $fulfillAmount;
-			$fulfilledItem->save();
-			$message.=$fulfillAmount." ".$fulfilledItem->product->name." has been fulfilled, total fulfilled amount is ".$fulfilledItem->fulfilledAmount.'. ';
-			$alertClass = 'alert-success';
-		
-			//change the supplier order status
-			if(Auth::user()->isSupplier()){
-				$supplierID = Auth::user()->supplierID;
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->whereHas('products', function($q){
-					$q->where('supplierID', '=', $supplierID);
-				})->get();
-			}else{
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
-			}
-			
-			$isAllFulfilled = true;
-			foreach ($supplierSalesDocumentItems as $salesDocumentItem) {
-				if($salesDocumentItem->fulfillAmount<$salesDocumentItem->amount){
-					$isAllFulfilled = false;
-				}
-			}
-			if($isAllFulfilled){$message.=' All the items of this order are fulfilled!';};
-		}elseif($itemID='*'){
-			//Fulfill selected item
-			if(Auth::user()->isSupplier()){
-				$supplierID = Auth::user()->supplierID;
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->whereHas('products', function($q){
-					$q->where('supplierID', '=', $supplierID);
-				})->get();
-			}else{
-				//dd($id);
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
-			}
-			//dd(SalesDocumentItem::where('salesDocumentID','=',$id));
-			foreach($supplierSalesDocumentItems as $salesDocumentItem) {
-				//dd($salesDocumentItem);
-				$salesDocumentItem->fulfilledAmount = $salesDocumentItem->amount;
-				$salesDocumentItem->save();
-			}
-			$message.=' All the items of this order are fulfilled!';
-		}
-		
-		
-	
-		return Redirect::to('salesDocuments/'.$id.'/edit')->with(array('message'=>$message,'alertClass'=>$alertClass));
+		//
 	}
 
 	/**

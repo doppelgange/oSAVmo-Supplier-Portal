@@ -10,4 +10,5 @@ class SalesDocumentItem extends \Eloquent {
     {
         return $this->belongsTo('Product','productID','productID');
     }
+
 }

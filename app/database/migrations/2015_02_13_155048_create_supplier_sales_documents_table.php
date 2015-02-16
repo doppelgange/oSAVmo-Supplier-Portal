@@ -17,6 +17,7 @@ class CreateSupplierSalesDocumentsTable extends Migration {
 			$table->increments('id');
 			$table->integer('supplierID');
 			$table->integer('salesDocumentID');
+			$table->unique(array('supplierID','salesDocumentID'));
 			$table->string('status');
 			$table->decimal('amount', 10,0)->nullable();
 			$table->decimal('netTotal', 10,2)->nullable();

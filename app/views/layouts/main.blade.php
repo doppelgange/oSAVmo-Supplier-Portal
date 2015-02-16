@@ -19,7 +19,8 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">   
             <li>{{ HTML::link('products', 'Products') }}</li>
-            <li>{{ HTML::link('salesDocuments', 'Order') }}</li>
+            <li>{{ HTML::link('supplierSalesDocuments', 'Supplier Order') }}</li>
+            <li>{{ HTML::link('salesDocuments', 'Order(Admin)') }}</li>
             <li>{{ HTML::link('users', 'Users') }}</li>
             @if(Auth::check())
             <li>{{ HTML::link('users/'.Auth::user()->id, 'Hello! '.Auth::user()->lastname.' ('.(Auth::user()->supplierID==0?'All Suppliers':Auth::user()->supplier->fullName).')')}}</li>
@@ -42,7 +43,8 @@
                 <li>{{ HTML::link('products/sync', 'Sync Products for current supplier') }}</li>
                 <li>{{ HTML::link('products/sync/all', 'Sync Products') }}</li>
                 <li>{{ HTML::link('productStocks/sync', 'Sync Product Stocks') }}</li>
-                <li>{{ HTML::link('salesDocuments/sync', 'Sync Orders') }}</li>
+                <li>{{ HTML::link('salesDocuments/sync', 'Sync Orders of last week') }}</li>
+                <li>{{ HTML::link('supplierSalesDocuments/sync', 'Sync Supplier Orders') }}</li>
                 <li class="divider"></li>
                 <li>{{ HTML::link('salesDocumentItems', 'Order Item')}}</li>
                 <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
@@ -55,19 +57,26 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-    <div class="container">
-    <!-- Message from session -->
-        @if(Session::has('message'))
-        <div class="alert  fade in
-            {{Session::get('alertClass',function(){return 'alert-info';})}}
-        " role="alert">
-          {{ Session::get('message') }}
 
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        @endif
+
+
+    <div class="container">
+      @if(isset($headline))
+        <h1>{{$headline or ''}} <small>{{$subtext or ''}} </small></h1>
+      @endif
+
+    <!-- Message from session -->
+    @if(Session::has('message'))
+    <div class="alert  fade in
+        {{Session::get('alertClass',function(){return 'alert-info';})}}
+    " role="alert">
+      {{ Session::get('message') }}
+
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    @endif
 
 
 

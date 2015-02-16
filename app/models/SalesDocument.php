@@ -11,4 +11,24 @@ class SalesDocument extends \Eloquent {
     {
         return $this->hasManyThrough('Product', 'SalesDocumentItem');
     }
+
+    public function supplierSalesDocuments(){
+    	return $this->hasMany('SupplierSalesDocument','salesDocumentID','salesDocumentID');
+    }
+    //get current user's sales document item
+    public function supplierSalesDocumentItems(){ 
+        $items = $this->salesDocumentItems;
+        $items = $items->filter(function($item){
+            $supplierID = Auth::user()->supplierID;
+            if(!is_null($item->product)){
+                if($item->product->supplierID==$supplierID||$supplierID==0){
+                    return $item;
+                }
+            }
+        });
+        return $items;
+    }
+
+
+
 }

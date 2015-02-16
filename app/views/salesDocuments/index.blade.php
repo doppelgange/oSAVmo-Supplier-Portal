@@ -26,9 +26,8 @@
 	</thead>
 	<tbody>
 	@foreach($salesDocuments as $salesDocument )
-	    <tr 
-	    @if($salesDocument -> deliveryTypeName == '') class="danger" @endif  
-	    data-toggle="popover" title="Order {{ $salesDocument -> number }} Detail" data-content="@foreach(SalesDocumentItem::where('salesDocumentID','=',$salesDocument -> salesDocumentID)->get() as $salesDocumentItem )
+	    <tr data-toggle="popover" title="Order {{ $salesDocument -> number }} Detail" 
+	    data-content="@foreach(SalesDocumentItem::where('salesDocumentID','=',$salesDocument -> salesDocumentID)->get() as $salesDocumentItem )
 @if(Auth::user()->supplierID==0&&$salesDocumentItem->productID!=0||($salesDocumentItem->productID!=0&&$salesDocumentItem->product->supplierID == Auth::user()->supplierID))
  - {{ $salesDocumentItem->itemName }} ({{$salesDocumentItem->product->nameCN}}) * {{ number_format($salesDocumentItem->amount)}} 
 @endif
@@ -69,7 +68,9 @@
 				<span class="text-warning" data-toggle="tooltip" title="Total Cost">{{ $salesDocument -> cost }}</span>
 			</div>
 			</td>
-			<td> {{ $salesDocument -> deliveryTypeName }} </td>
+			<td>
+			 {{ $salesDocument -> deliveryTypeName }}
+			</td>
 			<td> {{ $salesDocument -> address }} </td>
 			<td> {{ $salesDocument -> internalNotes }} </td>
 			<td> {{ $salesDocument -> date }} </td>

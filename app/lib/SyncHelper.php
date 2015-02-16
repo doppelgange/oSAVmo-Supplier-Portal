@@ -371,12 +371,11 @@ class SyncHelper {
 					$salesDocument->invoiceLink = $erplySalesDocument['invoiceLink'];
 					$salesDocument->receiptLink = $erplySalesDocument['receiptLink'];
 					$salesDocument->save();
+
 					//sync SalesDocumentItem
 					if(array_key_exists('rows',$erplySalesDocument)){
 						$item=$erplySalesDocument['rows'];
 						$salesDocumentID = $salesDocument->salesDocumentID;
-						//$salesDocumentItems = SalesDocumentItem::where('salesDocumentID', '=',$salesDocumentID )->get();
-						//return var_dump($salesDocumentItems);
 
 
 						for($line=0;$line<count($item);$line++){
@@ -409,10 +408,28 @@ class SyncHelper {
 							$salesDocumentItem->containerAmount= $item[$line]['containerAmount'];
 							$salesDocumentItem->originalPriceIsZero= $item[$line]['originalPriceIsZero'];
 							$salesDocumentItem->save();
+
 						}
 					}    
 				}
-					
+
+				//Sync supplier sales document table
+				$result = DB::statement('INSERT INTO supplier_sales_documents (supplierID, salesDocumentID, amount, netTotal, vatTotal,total,lastModified,lastModifierUsername,created_at,updated_at) select prod.supplierID, doc.salesDocumentID, @amount := sum(item.amount), @rowNetTotal := sum(item.rowNetTotal), @rowVat := sum(item.rowVat), @rowTotal := sum(item.rowTotal),NOW(),"System",NOW(),NOW() from sales_documents doc, sales_document_items item, products prod where doc.salesDocumentID = item.salesDocumentID and item.productID = prod.productID group by doc.salesDocumentID,prod.supplierID on duplicate key update amount = @amount, netTotal = @rowNetTotal, vatTotal = @rowVat,total = @rowTotal,lastModified = NOW(),lastModifierUsername = "System",updated_at = NOW();');	
+		
+				//Start: Add action log for sync
+				if($result){
+					$notes = 'Sync SupplierSalesDocument successfully';
+				}else{
+					$notes = 'Sync SupplierSalesDocument failed';
+				};
+				ActionLog::Create(array(
+					'module' => 'SupplierSalesDocument',
+					'type' => 'Sync',
+					'notes' => $notes, 
+					'user' => 'System'
+				));
+				//End: Add action log for sync
+
 			}
 		}
 		return true;
