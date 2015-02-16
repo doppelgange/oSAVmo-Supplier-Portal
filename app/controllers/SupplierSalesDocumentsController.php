@@ -2,7 +2,7 @@
 
 class SupplierSalesDocumentsController extends \BaseController {
 
-	protected $layout = "layouts.main";
+	protected $layout = "layouts.main"; 
 	/**
 	 * Init the data from sales document.
 	 * GET /suppliersalesdocuments
