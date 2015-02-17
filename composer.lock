@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dcb1c7c8dbe2166f65957263f79e0f64",
+    "hash": "0f85fb16b52f2236f5bbf87e924690ab",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -264,6 +264,59 @@
             "time": "2014-08-17 21:15:53"
         },
         {
+            "name": "indatus/dispatcher",
+            "version": "1.4.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Indatus/dispatcher.git",
+                "reference": "9862c8111fb29007ddec14f330f8a73a1d32f025"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Indatus/dispatcher/zipball/9862c8111fb29007ddec14f330f8a73a1d32f025",
+                "reference": "9862c8111fb29007ddec14f330f8a73a1d32f025",
+                "shasum": ""
+            },
+            "require": {
+                "mtdowling/cron-expression": "~1.0.3",
+                "php": ">=5.3.2",
+                "wp-cli/php-cli-tools": "v0.9.4-patch46"
+            },
+            "require-dev": {
+                "mockery/mockery": "~0.9",
+                "orchestra/testbench": "~2.1.1",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "tests/TestCase.php"
+                ],
+                "psr-0": {
+                    "Indatus\\Dispatcher\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ben Kuhl",
+                    "email": "bkuhl@indatus.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Schedule your artisan commands within your application",
+            "keywords": [
+                "artisan",
+                "dispatcher",
+                "laravel",
+                "schedule"
+            ],
+            "time": "2014-11-20 17:02:25"
+        },
+        {
             "name": "ircmaxell/password-compat",
             "version": "v1.0.4",
             "source": {
@@ -355,16 +408,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v4.2.16",
+            "version": "v4.2.17",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "31fe6a5747bbe3c2df21dc4cc8f291e75ab6144f"
+                "reference": "3359de6d6cd322e8a1b251c2f8d9dd42a3e4e232"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/31fe6a5747bbe3c2df21dc4cc8f291e75ab6144f",
-                "reference": "31fe6a5747bbe3c2df21dc4cc8f291e75ab6144f",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/3359de6d6cd322e8a1b251c2f8d9dd42a3e4e232",
+                "reference": "3359de6d6cd322e8a1b251c2f8d9dd42a3e4e232",
                 "shasum": ""
             },
             "require": {
@@ -375,7 +428,7 @@
                 "jeremeamia/superclosure": "~1.0.1",
                 "monolog/monolog": "~1.6",
                 "nesbot/carbon": "~1.0",
-                "patchwork/utf8": "1.1.*",
+                "patchwork/utf8": "~1.1",
                 "php": ">=5.4.0",
                 "phpseclib/phpseclib": "0.3.*",
                 "predis/predis": "0.8.*",
@@ -466,7 +519,7 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2014-12-22 20:56:10"
+            "time": "2015-02-11 20:37:15"
         },
         {
             "name": "monolog/monolog",
@@ -541,17 +594,61 @@
             "time": "2014-12-29 21:29:35"
         },
         {
-            "name": "nesbot/carbon",
-            "version": "1.13.0",
+            "name": "mtdowling/cron-expression",
+            "version": "v1.0.4",
             "source": {
                 "type": "git",
-                "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "5cb6e71055f7b0b57956b73d324cc4de31278f42"
+                "url": "https://github.com/mtdowling/cron-expression.git",
+                "reference": "fd92e883195e5dfa77720b1868cf084b08be4412"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/5cb6e71055f7b0b57956b73d324cc4de31278f42",
-                "reference": "5cb6e71055f7b0b57956b73d324cc4de31278f42",
+                "url": "https://api.github.com/repos/mtdowling/cron-expression/zipball/fd92e883195e5dfa77720b1868cf084b08be4412",
+                "reference": "fd92e883195e5dfa77720b1868cf084b08be4412",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.2"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Cron": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Dowling",
+                    "email": "mtdowling@gmail.com",
+                    "homepage": "https://github.com/mtdowling"
+                }
+            ],
+            "description": "CRON for PHP: Calculate the next or previous run date and determine if a CRON expression is due",
+            "keywords": [
+                "cron",
+                "schedule"
+            ],
+            "time": "2015-01-11 23:07:46"
+        },
+        {
+            "name": "nesbot/carbon",
+            "version": "1.14.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/briannesbitt/Carbon.git",
+                "reference": "bb87460c995d97fe55b39e65f6ffb7f64b0a941e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/bb87460c995d97fe55b39e65f6ffb7f64b0a941e",
+                "reference": "bb87460c995d97fe55b39e65f6ffb7f64b0a941e",
                 "shasum": ""
             },
             "require": {
@@ -584,7 +681,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2014-09-26 02:52:02"
+            "time": "2015-02-06 05:07:29"
         },
         {
             "name": "nikic/php-parser",
@@ -633,16 +730,16 @@
         },
         {
             "name": "patchwork/utf8",
-            "version": "v1.1.28",
+            "version": "v1.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tchwork/utf8.git",
-                "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982"
+                "reference": "01f0ed1628db7794e2d4e336f55a09daef4248a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tchwork/utf8/zipball/ffa082111aa3cb23cf2479a17e6785ace91da982",
-                "reference": "ffa082111aa3cb23cf2479a17e6785ace91da982",
+                "url": "https://api.github.com/repos/tchwork/utf8/zipball/01f0ed1628db7794e2d4e336f55a09daef4248a5",
+                "reference": "01f0ed1628db7794e2d4e336f55a09daef4248a5",
                 "shasum": ""
             },
             "require": {
@@ -652,9 +749,15 @@
             "suggest": {
                 "ext-iconv": "Use iconv for best performance",
                 "ext-intl": "Use Intl for best performance",
-                "ext-mbstring": "Use Mbstring for best performance"
+                "ext-mbstring": "Use Mbstring for best performance",
+                "ext-wfio": "Use WFIO for UTF-8 filesystem access on Windows"
             },
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2-dev"
+                }
+            },
             "autoload": {
                 "psr-0": {
                     "Patchwork": "class/",
@@ -680,30 +783,30 @@
                 "utf-8",
                 "utf8"
             ],
-            "time": "2015-01-12 08:05:15"
+            "time": "2015-01-29 08:36:50"
         },
         {
             "name": "phpseclib/phpseclib",
-            "version": "0.3.9",
+            "version": "0.3.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1"
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
-                "reference": "c6e88ca6e81bc5a2d7161658e16a95b7ef8d6ad1",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
+                "reference": "d15bba1edcc7c89e09cc74c5d961317a8b947bf4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.0.0"
             },
             "require-dev": {
-                "phing/phing": "2.7.*",
-                "phpunit/phpunit": "4.0.*",
-                "sami/sami": "1.*",
-                "squizlabs/php_codesniffer": "1.*"
+                "phing/phing": "~2.7",
+                "phpunit/phpunit": "~4.0",
+                "sami/sami": "~2.0",
+                "squizlabs/php_codesniffer": "~1.5"
             },
             "suggest": {
                 "ext-gmp": "Install the GMP (GNU Multiple Precision) extension in order to speed up arbitrary precision integer arithmetic operations.",
@@ -778,7 +881,7 @@
                 "x.509",
                 "x509"
             ],
-            "time": "2014-11-10 03:08:59"
+            "time": "2015-01-28 21:50:33"
         },
         {
             "name": "predis/predis",
@@ -1754,6 +1857,51 @@
             "description": "Symfony Translation Component",
             "homepage": "http://symfony.com",
             "time": "2015-01-03 15:23:51"
+        },
+        {
+            "name": "wp-cli/php-cli-tools",
+            "version": "v0.9.4-patch46",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/wp-cli/php-cli-tools.git",
+                "reference": "02d5ed4cdbab911df91bf06062c8b2705fb0919a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/wp-cli/php-cli-tools/zipball/02d5ed4cdbab911df91bf06062c8b2705fb0919a",
+                "reference": "02d5ed4cdbab911df91bf06062c8b2705fb0919a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">= 5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "cli": "lib/"
+                },
+                "files": [
+                    "lib/cli/cli.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "James Logsdon",
+                    "email": "jlogsdon@php.net",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Console utilities for PHP",
+            "homepage": "http://github.com/jlogsdon/php-cli-tools",
+            "keywords": [
+                "cli",
+                "console"
+            ],
+            "time": "2014-02-01 23:11:00"
         }
     ],
     "packages-dev": [
@@ -1763,12 +1911,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/fzaninotto/Faker.git",
-                "reference": "81e4eccea302300ac0c69c7ed04c94e29f580633"
+                "reference": "80c1424e6522a3303d320b611647fa6fbc29a8e4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/81e4eccea302300ac0c69c7ed04c94e29f580633",
-                "reference": "81e4eccea302300ac0c69c7ed04c94e29f580633",
+                "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/80c1424e6522a3303d320b611647fa6fbc29a8e4",
+                "reference": "80c1424e6522a3303d320b611647fa6fbc29a8e4",
                 "shasum": ""
             },
             "require": {
@@ -1807,7 +1955,7 @@
                 "faker",
                 "fixtures"
             ],
-            "time": "2015-01-27 08:16:46"
+            "time": "2015-02-12 21:08:01"
         },
         {
             "name": "way/generators",
@@ -1861,6 +2009,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
+        "indatus/dispatcher": 20,
         "fzaninotto/faker": 20
     },
     "prefer-stable": false,
