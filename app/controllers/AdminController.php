@@ -67,7 +67,7 @@ class AdminController extends \BaseController {
 
 		//Sync Products
 		if(Product::all()->count() ==0 ){
-			if(SyncHelper::syncProducts(false,null)){
+			if(SyncHelper::syncProducts()){
 				$message .='<br/>Sync products successfully!';
 			}else{
 				$message .='<br/>Sync products failed!';

@@ -55,27 +55,37 @@ class SyncHelper {
 		}
 	}
 
-	public static function syncProducts($needFilter,$supplierID){
+
+	/**
+	 * Sync the products.
+	 * GET
+	 * Option:
+	 * supplierID: filter by given supplier if set
+	 *
+	 * @return true / false
+	 */
+	public static function syncProducts($option = array()){
 		$api = new EAPI();
 
-		$supplierIDstr= ''; 
+		//Set filter by supplier
+		$erplyOptions['supplierID'] = array_key_exists('supplierID',$option) ? $option['supplierID'] : null;
+		//Set filter by date
+		$erplyOptions['recordsOnPage'] = 1000;
+		//Set sync day default sync 7 days before
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
 
-		if($needFilter&&$supplierID!=null){
-			$supplierIDstr = '"supplierID"=>'.$supplierID;
-		}
+
+
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			//Set Page Number
+			$erplyOptions['pageNo']=$pageNo;
+
 			$result = json_decode(
 				$api->sendRequest(
 					"getProducts", 
-					array(
-					    //"getStockInfo"=>1,
-						"recordsOnPage" =>1000,
-						//"active"=>1,
-						$supplierIDstr,
-						"pageNo"=>$pageNo
-					)
+					$erplyOptions
 				), 
 				true
 			);

@@ -16,17 +16,9 @@ class ProductsController extends \BaseController {
 	 *
 	 * @return Response
 	 */
-	public function sync($s)
+	public function sync()
 	{
-		//return $s;
-		$supplierID = Auth::user()->supplierID;
-		$needFilter= true;
-		if($s=='all'){
-			$needFilter=false;
-			$supplierID = null;
-		}
-		//return SyncHelper::syncProducts(null,null);
-		if(SyncHelper::syncProducts($needFilter,$supplierID)){
+		if(SyncHelper::syncProducts(array('supplierID'=>Auth::user()->supplierID))){
 			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
 			return Redirect::to('products')->with('message', 'Cannot connect to ERPLY!');
