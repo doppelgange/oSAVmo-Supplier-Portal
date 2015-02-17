@@ -50,9 +50,9 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('salesDocumentItems', 'SalesDocumentItemsController');
 
 	//Supplier SalesDocument
-	Route::get('supplierSalesDocuments/{id}/fulfill', 'supplierSalesDocumentsController@fulfill');
-	Route::get('supplierSalesDocuments/sync', 'supplierSalesDocumentsController@sync');
-	Route::resource('supplierSalesDocuments', 'supplierSalesDocumentsController');
+	Route::get('supplierSalesDocuments/{id}/fulfill', 'SupplierSalesDocumentsController@fulfill');
+	Route::get('supplierSalesDocuments/sync', 'SupplierSalesDocumentsController@sync');
+	Route::resource('supplierSalesDocuments', 'SupplierSalesDocumentsController');
 
 	//Log
 	Route::resource('actionLogs', 'ActionLogsController');
