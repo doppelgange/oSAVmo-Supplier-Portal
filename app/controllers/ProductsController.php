@@ -145,9 +145,9 @@ class ProductsController extends \BaseController {
 	public function previousProduct($id){
 		if(Auth::user()->isSupplier()){
 			$previous = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('id', '<', $id)->first()->id;
+			->where('id', '<', $id)->max('id');
 		}else{
-			$previous = Product::where('id', '<', $id)->max('id');
+			$previous = Product::where('id', '<', $id)->min('id');
 		}
 		return $previous;
 	}
@@ -155,7 +155,7 @@ class ProductsController extends \BaseController {
 	public function nextProduct($id){
 		if(Auth::user()->isSupplier()){
 			$next = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('id', '>', $id)->first()->id;
+			->where('id', '>', $id)->max('id');
 		}else{
 			$next = Product::where('id', '>', $id)->min('id');
 		}
