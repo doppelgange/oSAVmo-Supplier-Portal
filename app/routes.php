@@ -85,6 +85,8 @@ Route::get('getPriceLists', array( function(){return View::make('test/getPriceLi
 Route::get('getProductPictures', array( function(){return View::make('test/getProductPictures');}));
 
 Route::get('test', array(function(){return View::make('test/test');}));
+Route::get('savePriceList', array(function(){return View::make('test/savePriceList');}));
+
 
 
 // Display all SQL executed in Eloquent

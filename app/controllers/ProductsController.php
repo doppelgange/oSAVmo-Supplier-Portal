@@ -18,7 +18,10 @@ class ProductsController extends \BaseController {
 	 */
 	public function sync()
 	{
-		if(SyncHelper::syncProducts(array('supplierID'=>Auth::user()->supplierID))){
+		$option['supplierID'] = Input::get('days');
+		$option['supplierID'] = Input::get('supplierID');
+
+		if(SyncHelper::syncProducts($option)){
 			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
 			return Redirect::to('products')->with('message', 'Cannot connect to ERPLY!');
@@ -82,17 +85,11 @@ class ProductsController extends \BaseController {
 	{
 		$product = Product::find($id);
 		// get previous product id
-	    $previous = Product::where('id', '<', $product->id)->max('id');
-
-	    // get next product id
-	    $next = Product::where('id', '>', $product->id)->min('id');
-		// return array($product,$product->productStocks,DB::getQueryLog());
-		//$product->productStocks;
-		//return array($product->productStocks->$amountInStock);
+	    
 		$this->layout->content = View::make('products.show',array(
 			'product'=>$product,
-			'next'=>$next,
-			'previous'=>$previous
+			'next'=>$this->previousProduct($id),
+			'previous'=>$this->nextProduct($id)
 		)); 
 	}
 
@@ -105,7 +102,14 @@ class ProductsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		$this->show($id);
+		$product = Product::find($id);
+		// get previous product id
+	    
+		$this->layout->content = View::make('products.edit',array(
+			'product'=>$product,
+			'next'=>$this->previousProduct($id),
+			'previous'=>$this->nextProduct($id)
+		));
 	}
 
 	/**
@@ -130,6 +134,26 @@ class ProductsController extends \BaseController {
 	public function destroy($id)
 	{
 		//
+	}
+
+	public function previousProduct($id){
+		if(Auth::user()->isSupplier()){
+			$previous = Product::where('supplierID','=',Auth::user()->supplierID)
+			->where('id', '<', $id)->first()->id;
+		}else{
+			$previous = Product::where('id', '<', $id)->max('id');
+		}
+		return $previous;
+	}
+
+	public function nextProduct($id){
+		if(Auth::user()->isSupplier()){
+			$next = Product::where('supplierID','=',Auth::user()->supplierID)
+			->where('id', '>', $id)->first()->id;
+		}else{
+			$next = Product::where('id', '>', $id)->min('id');
+		}
+		return $next;
 	}
 
 }

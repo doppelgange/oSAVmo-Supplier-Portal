@@ -17,7 +17,7 @@ class SalesDocumentsController extends \BaseController {
 	{
 		//return SyncHelper::syncSalesDocuments();
 		/**/
-		if(SyncHelper::syncSalesDocuments()){
+		if(SyncHelper::syncSalesDocuments(array('days'=>1))){
 			return Redirect::to('salesDocuments')->with('message', 'Sync to ERPLY Successfuly!');
 		}else{
 			return Redirect::to('salesDocuments')->with('message', 'Cannot connect to ERPLY!');

@@ -7,6 +7,8 @@ $suppliers = json_decode(
 		array(
 		    "getStockInfo"=>0,
 			"recordsOnPage" => 1,
+			//"changedSince"=> null
+			"supplierID" => null
 			//"pageNo"=>$page,
 			//"active"=>1,
 			//"supplierID"=>7242

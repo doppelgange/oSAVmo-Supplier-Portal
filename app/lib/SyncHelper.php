@@ -68,7 +68,12 @@ class SyncHelper {
 		$api = new EAPI();
 
 		//Set filter by supplier
-		$erplyOptions['supplierID'] = array_key_exists('supplierID',$option) ? $option['supplierID'] : null;
+		if(array_key_exists('supplierID',$option)){
+			if($option['supplierID']!=0&&is_numeric ($option['supplierID']))
+			$erplyOptions['supplierID'] = $option['supplierID'];
+		}
+		 
+		
 		//Set filter by date
 		$erplyOptions['recordsOnPage'] = 1000;
 		//Set sync day default sync 7 days before
@@ -228,25 +233,29 @@ class SyncHelper {
 
 	public static function syncSalesDocuments($option = array()){
 		$api = new EAPI();
+
+
+		//Set filter by supplier
+		$erplyOptions['dateFrom'] =  array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
+
+		$erplyOptions['recordsOnPage'] =100;
+		$erplyOptions['getRowsForAllInvoices'] =1;
+		$erplyOptions['getReturnedPayments'] =1;
+		$erplyOptions['getCOGS'] =1;
+		$erplyOptions['getAddedTimestamp'] =1;
+
 		//Set parameter
-		$dateFrom = array_key_exists('dateFrom',$option)? $option['dateFrom']:10;
+		$dateFrom = array_key_exists('days',$option)? $option['days']:10;
 
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
-			
+			$erplyOptions['pageNo']=$pageNo;
+
 			$result = json_decode(
 				$api->sendRequest(
 					"getSalesDocuments", 
-					array(
-						"recordsOnPage" =>100,
-					    "getRowsForAllInvoices" => 1,
-					    "getAddedTimestamp" => 1,
-					    "getReturnedPayments" =>1,
-					    "getCOGS" => 1,
-						"pageNo"=>$pageNo,
-						"dateFrom" => Date('Y-m-d', strtotime("-".$dateFrom." days"))
-					)
+					$erplyOptions
 				), 
 				true
 			);
