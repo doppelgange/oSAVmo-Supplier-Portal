@@ -12,7 +12,7 @@ class ActionLogsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$actionLogs = ActionLog::paginate(10);
+		$actionLogs = ActionLog::orderBy('updated_at','DESC')->paginate(10);
 		$this->layout->content = View::make('actionLogs.index',array('actionLogs'=>$actionLogs)); 
 	}
 

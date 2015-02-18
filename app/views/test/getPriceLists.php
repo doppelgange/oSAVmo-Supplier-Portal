@@ -2,14 +2,11 @@
 session_start();
 
 $api = new EAPI();
-$pageNo = 1;
 
-$dateFrom = 100;
 $salesDocuments = json_decode(
 	$api->sendRequest(
 		"getPriceLists", 
 		array(
-			"pageNo"=>$pageNo,
 			"getPricesWithVAT"=> 1,
 			"pricelistID" => 8
 			//"changedSince" => Date('Y-m-d', strtotime("-".$dateFrom." days"))

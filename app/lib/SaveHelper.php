@@ -1,43 +1,41 @@
 <?php
 class SaveHelper {
-	public static function saveSalesDocumentItem($option=array()){
+	public static function savePriceList($option=array()){
 		$api = new EAPI();
+		$erplyOption = array(
+			"pricelistID"=> 8,
+			"type1" => "PRODUCT",
+			"id1" => $option['id'],
+			"price1" => $option['priceWithVat']/1.15,
+			"attributeName1" =>"lastModifyBy",
+			"attributeValue1" => Auth::user()->name(),
+			"attributeName1" =>"updateChannel",
+			"attributeValue1" => "Supplier Portal API"
+		);
 		$result = json_decode(
 			$api->sendRequest(
-				"getSuppliers", 
-				array(
-				    "recordsOnPage" =>100,
-				    "responseMode" => "detail",
-				    //"displayedInWebshop" => 1,
-				    //"productID" => 2306	
-				)
+				"savePriceList", 
+				$erplyOption
 			), 
 			true
 		);
-		$erplySuppliers = $result['records'];
-		if(is_null($erplySuppliers)){
+
+		$priceListItem = PriceListItem::where('productID','=',$option['id'])->first();
+		$priceListItem->price = $option['priceWithVat']/1.15;
+		$priceListItem->priceWithVat = $option['priceWithVat'];
+		$priceListItem->save();
+
+		//SyncHelper::syncPriceListItems();
 			//Start: Add action log for sync error
 			ActionLog::Create(array(
-				'module' => 'Supplier',
-				'type' => 'Sync',
-				'notes' => 'Sync error, no record returned', 
-				'user' => 'System'
+				'module' => 'priceList',
+				'type' => 'Update',
+				'from' => $option['from'],
+				'to' => $option['priceWithVat'],
+				'notes' => $option['id'], 
+				'user' => Auth::user()->name()
 			));
 			//End: Add action log for sync error
-			return false;
-		}else{
-
-				//Start: Add action log
-				ActionLog::Create(array(
-					'module' => 'Supplier',
-					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records', 
-					'user' => 'System'
-				));
-				//End: Add action log
-			}
-			return true;	
-		}
 	}
 
 

@@ -121,7 +121,13 @@ class ProductsController extends \BaseController {
 	 */
 	public function update($id)
 	{
-		//
+		SaveHelper::savePriceList(array(
+			'id' => Product::find($id)->productID,
+			'from' => Input::get('originalPriceWithVat'),
+			'priceWithVat' => Input::get('priceWithVat'),
+		));
+
+		return Redirect::to('products/'.$id.'/edit');
 	}
 
 	/**
