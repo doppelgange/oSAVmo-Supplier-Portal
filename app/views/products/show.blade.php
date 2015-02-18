@@ -19,32 +19,32 @@
 			<td>{{ $product -> nameCN }} </td>
 		</tr>
 		<tr>
-			<td><label> supplierID </label></td>
-			<td> {{ $product -> supplierID }} </td> 
+			<!-- <td><label> supplierID </label></td>
+			<td> {{ $product -> supplierID }} </td>  -->
 			<td><label> supplierName </label></td>
 			<td> {{ $product -> supplierName }} </td>
 		</tr>
 		<tr>
-			<td><label> groupID </label></td>
-			<td> {{ $product -> groupID }} </td>
+			<!-- <td><label> groupID </label></td>
+			<td> {{ $product -> groupID }} </td> -->
 			<td><label> Group </label></td>
 			<td> {{ $product -> groupName }} </td>
 		</tr>
 		<tr>
-			<td><label> categoryID </label></td>
-			<td> {{ $product -> categoryID }} </td>
+			<!-- <td><label> categoryID </label></td>
+			<td> {{ $product -> categoryID }} </td> -->
 			<td><label> Category</label></td>
 			<td> {{ $product -> categoryName }} </td>
 		</tr>
 		<tr>
-			<td><label> seriesID </label></td>
-			<td> {{ $product -> seriesID }} </td>
+			<!-- <td><label> seriesID </label></td>
+			<td> {{ $product -> seriesID }} </td> -->
 			<td><label> seriesName </label></td>
 			<td> {{ $product -> seriesName }} </td>
 		</tr>
 		<tr>
-			<td><label> unitID </label></td>
-			<td> {{ $product -> unitID }} </td>
+			<!-- <td><label> unitID </label></td>
+			<td> {{ $product -> unitID }} </td> -->
 			<td><label> Unit </label></td>
 			<td> {{ $product -> unitID }} </td>
 		</tr>
