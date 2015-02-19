@@ -1549,12 +1549,12 @@
         "source": {
             "type": "git",
             "url": "https://github.com/fzaninotto/Faker.git",
-            "reference": "80c1424e6522a3303d320b611647fa6fbc29a8e4"
+            "reference": "74f58bbda974d0820183d228f120c2f3258bf7f6"
         },
         "dist": {
             "type": "zip",
-            "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/80c1424e6522a3303d320b611647fa6fbc29a8e4",
-            "reference": "80c1424e6522a3303d320b611647fa6fbc29a8e4",
+            "url": "https://api.github.com/repos/fzaninotto/Faker/zipball/74f58bbda974d0820183d228f120c2f3258bf7f6",
+            "reference": "74f58bbda974d0820183d228f120c2f3258bf7f6",
             "shasum": ""
         },
         "require": {
@@ -1567,7 +1567,7 @@
         "suggest": {
             "ext-intl": "*"
         },
-        "time": "2015-02-12 21:08:01",
+        "time": "2015-02-19 08:29:00",
         "type": "library",
         "extra": {
             "branch-alias": {
@@ -3053,6 +3053,41 @@
             "phpunit",
             "testing",
             "xunit"
+        ]
+    },
+    {
+        "name": "rocket-code/shopify",
+        "version": "1.0.6",
+        "version_normalized": "1.0.6.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/joshrps/laravel-shopify-API-wrapper.git",
+            "reference": "0253894a9c44fbb45213fde706910c98928a3e3a"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/joshrps/laravel-shopify-API-wrapper/zipball/0253894a9c44fbb45213fde706910c98928a3e3a",
+            "reference": "0253894a9c44fbb45213fde706910c98928a3e3a",
+            "shasum": ""
+        },
+        "require": {
+            "illuminate/support": ">=4.0",
+            "php": ">=5.4.0"
+        },
+        "time": "2015-02-10 22:50:52",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "RocketCode\\Shopify": "src/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "authors": [
+            {
+                "name": "Rocket Code",
+                "email": "josh@rocketcode.io"
+            }
         ]
     }
 ]
