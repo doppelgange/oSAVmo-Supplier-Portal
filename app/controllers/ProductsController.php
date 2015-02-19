@@ -49,7 +49,7 @@ class ProductsController extends \BaseController {
 		}
 		
 		//return $products;
-		$this->layout->content = View::make('products.index',array('products'=>$products)); 
+		$this->layout->content = View::make('products.inventoryAdjustment',array('products'=>$products)); 
 	}
 
 	/**
@@ -142,6 +142,38 @@ class ProductsController extends \BaseController {
 		//
 	}
 
+	/**
+	 * Change inventory.
+	 * change inventory /products
+	 *
+	 * @return Response
+	 */
+
+	public function inventoryAdjustment(){
+
+		$option['item']=array();
+		for($i=0;$i<count(Input::get('toAmount'));$i++){
+			//Check whether there is change
+			$deltaAmount = Input::get('toAmount')[$i] - Input::get('fromAmount')[$i];
+			//If changed, add into list for update.
+			if($deltaAmount!=0){
+				array_push($option['item'],array(
+					'productID' =>Input::get('productID')[$i],
+					'fromAmount' =>Input::get('fromAmount')[$i],
+					'toAmount' =>Input::get('toAmount')[$i],
+					'deltaAmount' =>$deltaAmount
+				));
+			}
+		}
+
+		$option['userName'] = Auth::user()->name();
+
+		$feedback=SaveHelper::inventoryAdjustment($option);
+		return Redirect::to('products')->with('message',$feedback['message'] );
+
+	}
+
+
 	public function previousProduct($id){
 		if(Auth::user()->isSupplier()){
 			$previous = Product::where('supplierID','=',Auth::user()->supplierID)
@@ -161,5 +193,6 @@ class ProductsController extends \BaseController {
 		}
 		return $next;
 	}
+
 
 }

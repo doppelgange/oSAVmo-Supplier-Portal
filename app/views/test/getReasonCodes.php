@@ -5,19 +5,13 @@ session_start();
 
 $api = new EAPI();
 
-
-//Save Stocktaking
 $result = json_decode(
 	$api->sendRequest(
-		"getEmployees", 
+		"getReasonCodes", 
 		array(
-			//'creatorID'	=>2608,
-			// 'reasonID'=>5,
-			// 'warehouseID'=>1,
-			// 'comments' => 'This is a test by bob using API',	
+			// 'stocktakingID'=>3,
 			// 'productID1'=> 1676,
-			// 'amount1' => 111
-			//'confirmed'=>1
+			// 'countPcs1' => 111
 		)
 	), 
 	true

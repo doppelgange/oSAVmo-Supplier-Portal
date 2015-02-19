@@ -17,11 +17,11 @@ class CreateProductStocksTable extends Migration {
 			$table->increments('id');
 			$table->integer('productID');
 			$table->integer('warehouseID');
-			$table->float('amountInStock')->nullable();
-			$table->float('amountReserved')->nullable();
-			$table->float('suggestedPurchasePrice')->nullable();
-			$table->float('averagePurchasePrice')->nullable();
-			$table->float('averageCost')->nullable();
+			$table->decimal('amountInStock',10,0)->nullable();
+			$table->decimal('amountReserved',10,0)->nullable();
+			$table->decimal('suggestedPurchasePrice',10,2)->nullable();
+			$table->decimal('averagePurchasePrice',10,2)->nullable();
+			$table->decimal('averageCost',10,2)->nullable();
 			$table->timestamp('firstPurchaseDate')->nullable();
 			$table->timestamp('lastPurchaseDate')->nullable();
 			$table->timestamp('lastSoldDate');

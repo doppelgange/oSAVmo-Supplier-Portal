@@ -166,20 +166,26 @@ class SyncHelper {
 	}
 
 	//Now only warehouse 1 is sync
-	public static function syncProductStocks(){
+	public static function syncProductStocks($option = array()){
 		$api = new EAPI();
+
+		//Set parameter
+		$erplyOptions = array(
+		    "warehouseID"=>1,
+			"getAmountReserved" => 1,
+			"getSuggestedPurchasePrice" => 1,
+			"getAveragePrices" => 1,
+			"getFirstPurchaseDate" => 1,
+			"getLastPurchaseDate" => 1,
+			"getLastSoldDate" => 1
+		);
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
+
+
 		$result = json_decode(
 			$api->sendRequest(
 				"getProductStock", 
-				array(
-				    "warehouseID"=>1,
-					"getAmountReserved" => 1,
-					"getSuggestedPurchasePrice" => 1,
-					"getAveragePrices" => 1,
-					"getFirstPurchaseDate" => 1,
-					"getLastPurchaseDate" => 1,
-					"getLastSoldDate" => 1
-				)
+				$erplyOptions
 			), 
 			true
 		);

@@ -12,9 +12,9 @@ class ProductStocksController extends \BaseController {
 	public function sync()
 	{
 		if(SyncHelper::syncProductStocks()){
-			return Redirect::to('productStocks')->with('message', 'Sync to ERPLY Successfuly!');
+			return Redirect::to('products')->with('message', 'Sync Successfuly!');
 		}else{
-			return Redirect::to('productStocks')->with('message', 'Cannot connect to ERPLY!');
+			return Redirect::to('products')->with('message', 'Cannot Sync');
 		}
 	}
 
@@ -31,8 +31,13 @@ class ProductStocksController extends \BaseController {
 		//only return the active items' stock
 		$productStocks = ProductStock::whereHas('product', function($q)
 		{
-			$supplierID = Auth::user()->supplierID;
-		    $q->where('active', '=', '1')->where('supplierID','=',$supplierID);
+			if(Auth::user()->isSupplier()){
+				$supplierID = Auth::user()->supplierID;
+		    	$q->where('active', '=', '1')->where('supplierID','=',$supplierID);
+			}else{
+				$q->where('active', '=', '1');
+			}
+			
 
 		})->paginate(10);
 

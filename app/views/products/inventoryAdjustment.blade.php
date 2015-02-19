@@ -2,13 +2,14 @@
 	<div>There is no record for products, you can sync to get the latest data! </div>
 @else
 
-{{ Form::open(array('url'=>'products/batchAmend')) }}
 <div>
 	Total {{$products->getTotal()}} records are found. 
 	{{$products->count()}} records in this page.
 
 </div>
 {{$products->links()}}
+
+{{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'put')) }}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -22,7 +23,7 @@
 			<th> In stock</th>
 			<th> Lay-by</th>
 			<th> erply Last Modified </th>
-			<th style="width: 60px;"> Action</th>
+			<th class="col-md-1"> Action</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -74,9 +75,12 @@
 	    	@else 
 			<td> Yes </td>
 	    	@endif
-			<td class="text-right"> 
+			<td class="text-right col-md-1"> 
 				@if(is_null($product -> productStocks()-> first())==false)
-					{{ number_format($product -> productStocks()-> first()->amountInStock,0, '', ',') }}
+					{{Form::number('toAmount[]',$product -> productStocks()-> first()->amountInStock,
+					array('class'=>'form-control focus-select-all','step'=>'1','tabindex'=>1))}}
+					{{Form::hidden('fromAmount[]',$product -> productStocks()-> first()->amountInStock)}}
+					{{Form::hidden('productID[]',$product ->productID)}}
 				@endif
 			</td>
 			<td class="text-right"> 
@@ -98,9 +102,9 @@
 	</tbody>
 </table>
 {{$products->links()}}
-<!--
-{{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
--->
+
+{{ Form::submit('Submit', array('class'=>'btn btn-large btn-primary center-block'))}}
+
 
 {{ Form::close() }}
  @endif

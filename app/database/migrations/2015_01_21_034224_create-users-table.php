@@ -17,7 +17,7 @@ class CreateUsersTable extends Migration {
 			$table->increments('id');
 		    $table->string('firstname', 100);
 		    $table->string('lastname', 100);
-		    $table->string('supplierID', 10);
+		    $table->integer('supplierID');
 		    $table->string('status', 10)->nullable();
 		    $table->string('email', 100)->unique();
 		    $table->string('password', 64);

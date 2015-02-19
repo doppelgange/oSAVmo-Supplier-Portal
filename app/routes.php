@@ -36,6 +36,8 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('suppliers','SuppliersController');
 
 	//Products related Routes
+	
+	Route::put('products/inventoryAdjustment', 'ProductsController@inventoryAdjustment');
 	Route::get('products/sync', 'ProductsController@sync');
 	Route::resource('products','ProductsController');
 
@@ -74,19 +76,18 @@ Route::group(array('before' => 'auth'), function()
 
 
 //Used for testing
-Route::get('getDeliveryTypes', array(function(){return View::make('test/getDeliveryTypes');}));
-Route::get('getSalesDocuments', array(function(){return View::make('test/getSalesDocuments');}));
-Route::get('getProductStock', array(function(){return View::make('test/getProductStock');}));
-Route::get('getSuppliers', array(function(){return View::make('test/getSuppliers');}));
-
+Route::get('getInventoryWriteOffs', array(function(){return View::make('test/getInventoryWriteOffs');}));
+Route::get('getReasonCodes', array(function(){return View::make('test/getReasonCodes');}));
+Route::get('saveInventoryWriteOff', array(function(){return View::make('test/saveInventoryWriteOff');}));
+Route::get('saveInventoryRegistration', array(function(){return View::make('test/saveInventoryRegistration');}));
+Route::get('getInventoryRegistrations', array( function(){return View::make('test/getInventoryRegistrations');}));
+Route::get('getProductStock', array( function(){return View::make('test/getProductStock');}));
 Route::get('getProducts', array( function(){return View::make('test/getProducts');}));
-Route::get('getPriceLists', array( function(){return View::make('test/getPriceLists');}));
 
-Route::get('getProductPictures', array( function(){return View::make('test/getProductPictures');}));
-
+// Route::get('getProductPictures', array( function(){return View::make('test/getProductPictures');}));
 Route::get('test', array(function(){return View::make('test/test');}));
-Route::get('savePriceList', array(function(){return View::make('test/savePriceList');}));
 
+// Route::get('savePriceList', array(function(){return View::make('test/savePriceList');}));
 
 
 // Display all SQL executed in Eloquent

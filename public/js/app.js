@@ -59,7 +59,10 @@ $(function () {
     $(this).parents('form').submit();
   });
 
-
+//on focus select all text
+  $('.focus-select-all').on('focus',function(){
+    $(this).select();
+  })
 
 
 })

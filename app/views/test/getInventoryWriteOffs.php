@@ -9,10 +9,10 @@ $api = new EAPI();
 //Save Stocktaking
 $result = json_decode(
 	$api->sendRequest(
-		"getEmployees", 
+		"getInventoryWriteOffs", 
 		array(
-			//'creatorID'	=>2608,
-			// 'reasonID'=>5,
+			//'creatorID'	=>1,
+			// 'reasonID'=>1,
 			// 'warehouseID'=>1,
 			// 'comments' => 'This is a test by bob using API',	
 			// 'productID1'=> 1676,
