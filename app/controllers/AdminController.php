@@ -21,6 +21,8 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync suppliers failed!';
 			}
 		}
+		//Set defulat vlaue for supplier
+		//$affectedRows = Supplier::where('supplierID', 'in', '')->update(array('status' => 2));
 
 		if(User::all()->count() ==0 ){
 			//Create User
@@ -63,7 +65,6 @@ class AdminController extends \BaseController {
 			$message .= "User Name:".$user['lastname']." is created for you: <label>Email: </label>".$user['email']."<br/>";
 			}
 		}
-
 
 		//Sync Products
 		if(Product::all()->count() ==0 ){

@@ -9,6 +9,7 @@ return array(
     'ActionLog' => $baseDir . '/app/models/ActionLog.php',
     'ActionLogsController' => $baseDir . '/app/controllers/ActionLogsController.php',
     'ActionLogsTableSeeder' => $baseDir . '/app/database/seeds/ActionLogsTableSeeder.php',
+    'AddShopifyFiledsToProducts' => $baseDir . '/app/database/migrations/2015_02_20_102316_add_shopify_fileds_to_products.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',

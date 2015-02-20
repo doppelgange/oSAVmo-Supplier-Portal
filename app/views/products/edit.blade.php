@@ -39,11 +39,12 @@
 			</td>
 			<td><label> Online Price(VAT), Price</label></td>
 			<td>
-			@if($product->priceListItems!= null) 
+			@if(count($product->priceListItems)!= 0) 
 				{{Form::hidden('originalPriceWithVat',$product->priceListItems->first()->priceWithVat)}}
 				{{ Form::number('priceWithVat',$product->priceListItems->first()->priceWithVat,array('class' => 'form-control','step'=>'0.01','data-original' =>$product->priceListItems->first()->priceWithVat))}}
-
-
+			@else
+				{{Form::hidden('originalPriceWithVat',$product->priceWithVat)}}
+				{{ Form::number('priceWithVat',$product->priceWithVat,array('class' => 'form-control','step'=>'0.01','data-original' =>$product->priceWithVat))}}
 			@endif
 			</td>
 			<td><label> Cost</label></td>

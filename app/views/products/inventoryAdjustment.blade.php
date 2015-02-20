@@ -81,6 +81,11 @@
 					array('class'=>'form-control focus-select-all','step'=>'1','tabindex'=>1))}}
 					{{Form::hidden('fromAmount[]',$product -> productStocks()-> first()->amountInStock)}}
 					{{Form::hidden('productID[]',$product ->productID)}}
+				@else
+					{{Form::number('toAmount[]',0,
+					array('class'=>'form-control focus-select-all','step'=>'1','tabindex'=>1))}}
+					{{Form::hidden('fromAmount[]',0)}}
+					{{Form::hidden('productID[]',$product ->productID)}}
 				@endif
 			</td>
 			<td class="text-right"> 

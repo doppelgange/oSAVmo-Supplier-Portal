@@ -15,9 +15,9 @@ try
 {
 
     $call = $sh->call([
-    	'URL' => 'products.json', 
+    	'URL' => '/admin/products/1165665156/images.json', 
     	'METHOD' => 'GET', 
-    	'DATA' => ['limit' => 50, 'published_status' => 'any']
+    	'DATA' => ['limit' => 5, 'published_status' => 'any']
     ]);
 }
 catch (Exception $e)
