@@ -7,7 +7,7 @@ $api = new EAPI();
 
 $result = json_decode(
 	$api->sendRequest(
-		"getReasonCodes", 
+		"getEmployees", 
 		array(
 			// 'stocktakingID'=>3,
 			// 'productID1'=> 1676,

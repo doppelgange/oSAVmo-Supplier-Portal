@@ -51,7 +51,7 @@ class SaveHelper {
 		$api = new EAPI();
 		//Set parameter for erply
 
-		$erplyOption['creatorID'] = 2608;
+		$erplyOption['creatorID'] = 601;
 		$erplyOption['reasonID'] = 5;
 		$erplyOption['warehouseID'] = 1;
 		$option['userName'] = array_key_exists('userName', $option)? $option['userName'] : 'Unknown User';
