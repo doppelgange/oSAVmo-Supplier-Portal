@@ -8,6 +8,8 @@
     # Handle Front Controller...
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-f
+
+    RewriteRule AAA http://www.google.com
     RewriteRule ^(.*)$ /index.php/$1 [L]
 
 </IfModule>
