@@ -40,7 +40,8 @@ class HourlySyncFromErply extends ScheduledCommand {
 	 */
 	public function schedule(Schedulable $scheduler)
 	{
-		return $scheduler;
+		//return $scheduler;
+		return $scheduler->hourly()->minutes([3,4,5,6,7,8,9]);
 	}
 
 	/**
@@ -50,16 +51,18 @@ class HourlySyncFromErply extends ScheduledCommand {
 	 */
 	public function fire()
 	{
-		SyncHelper::syncSuppliers();
-		$this->info('syncSuppliers');
-		SyncHelper::syncProducts(array('days'=>'all'));
-		$this->info('syncProducts -- all');
-		SyncHelper::syncProductStocks();
-		$this->info('syncProductStocks');
-		SyncHelper::syncSalesDocuments(array('days'=>1));
-		$this->info('syncSalesDocuments');
-		SyncHelper::syncPriceListItems();
-		$this->info('syncPriceListItems');
+		// SyncHelper::syncSuppliers();
+		// $this->info('syncSuppliers');
+		// SyncHelper::syncProducts(array('days'=>'all'));
+		// $this->info('syncProducts -- all');
+		// SyncHelper::syncProductStocks();
+		// $this->info('syncProductStocks');
+		// SyncHelper::syncSalesDocuments(array('days'=>1));
+		// $this->info('syncSalesDocuments');
+		// SyncHelper::syncPriceListItems();
+		// $this->info('syncPriceListItems');
+		SyncHelper::syncDeliveryTypes();
+		$this->info('syncDeliveryTypes');
 	}
 
 	/**
