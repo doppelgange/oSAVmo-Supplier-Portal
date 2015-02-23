@@ -131,6 +131,20 @@ class SyncHelper {
 					$product->name = $erplyProduct['name'];
 					$product->code = $erplyProduct['code'];
 					$product->ean = $erplyProduct['code2'];
+					if (array_key_exists('attributes', $erplyProduct)) {
+						$shopifyinfo = $erplyProduct['attributes'];
+						foreach ($shopifyinfo as $key => $value) {
+							if($value['attributeName'] == 'shopifyId'){
+								$product->shopifyID = $value['attributeValue'];
+							}
+							elseif($value['attributeName'] == 'shopifyCollectId'){
+								$product->shopifyCollectID = $value['attributeValue'];
+							}
+							elseif($value['attributeName'] == 'shopifyVariationId'){
+								$product->shopifyVariantID = $value['attributeValue'];
+							}
+						}						
+					}
 					$product->nameCN = $erplyProduct['code3'];
 					$product->supplierID = $erplyProduct['supplierID'];
 					$product->supplierName = $erplyProduct['supplierName'];
@@ -159,7 +173,36 @@ class SyncHelper {
 				    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
 				    $product->save();
 				}
-					
+
+				// Get tags from shopify
+				$sh = App::make('ShopifyAPI', [
+    					'API_KEY' => 'bd360cdb9b0b38fcd59cefde4f1c5e6a', 
+    					'API_SECRET' => '55ee2fef63d2eeb0836df90058812532', 
+    					'SHOP_DOMAIN' => 'bobs-test.myshopify.com', 
+    					'ACCESS_TOKEN' => '3ad5cde60a869cfd4ab5a034949b84f7'
+				]);
+
+				$args['URL'] = 'products/count.json';
+    				$args['METHOD'] = 'GET';
+    				$args['DATA'] = array();
+    				$count = $sh->call($args);
+    				$count = $count -> count;
+				$page = ceil($count / 250);
+
+				for ($i=1;$i<=$page;$i++ ){
+					$args['URL'] = 'products.json';
+    					$args['METHOD'] = 'GET';
+    					$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
+    					$call = $sh->call($args);
+    					$products = $call -> products;
+    					foreach($products as $key => $value){
+    						$shopifyid = $value -> id;
+    						$tags = $value -> tags;
+    						$product = Product::where('shopifyID', '=', $shopifyid)->first();
+    						$product->tags= $tags;
+    						$product->save();
+    					}
+				}					
 			}
 		}
 		return true;
