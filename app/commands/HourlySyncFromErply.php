@@ -41,7 +41,7 @@ class HourlySyncFromErply extends ScheduledCommand {
 	public function schedule(Schedulable $scheduler)
 	{
 		//return $scheduler;
-		return $scheduler->hourly()->minutes([3,4,5,6,7,8,9]);
+		return $scheduler;
 	}
 
 	/**
