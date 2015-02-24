@@ -41,7 +41,11 @@ class HourlySyncFromErply extends ScheduledCommand {
 	public function schedule(Schedulable $scheduler)
 	{
 		//return $scheduler;
-		return $scheduler->everyMinutes(5);
+		return [
+			$scheduler->hours([0,1,2,3,4,5,6,7,24])->everyMinutes(120),
+			App::make(get_class($scheduler))->hours([8,9,10,11,12,13,14,15,16,17,18])->everyMinutes(5),
+			App::make(get_class($scheduler))->hours([20,21,22,23])->everyMinutes(30)
+		];
 	}
 
 	/**
