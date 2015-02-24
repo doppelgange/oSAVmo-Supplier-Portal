@@ -77,7 +77,7 @@ class SyncHelper {
 		//Set filter by date
 		$erplyOptions['recordsOnPage'] = 1000;
 		//Set sync day default sync 7 days before
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
 		//
 		ActionLog::Create(array(
 					'module' => 'Testing',
