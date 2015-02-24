@@ -88,6 +88,11 @@ class SaveHelper {
 			for($i=0;$i<count($option['item']);$i++){
 				$productStock = ProductStock::where('warehouseID','=',Property::env('ErplyWarehouseID'))
 				->where('productID','=',$option['item'][$i]['productID'])->first();
+				if(is_null($productStock)){
+					$productStock = new ProductStock;
+					$productStock->productID = $erplyProductStock['productID'];
+					$productStock->warehouseID = 1;
+				}
 				$productStock->amountInStock = $option['item'][$i]['toAmount'];
 				$productStock->save();
 			}

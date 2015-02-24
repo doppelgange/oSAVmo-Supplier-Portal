@@ -44,7 +44,7 @@ class ProductsController extends \BaseController {
 
 		if(Auth::user()->isSupplier()){
 			$products = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('active', '=','1')
+			->where('active', '=','1')->orderBy('name','asc')
 			->paginate($pagecount);
 		}else{
 			$products=Product::orderBy('erplyLastModified','DESC')
@@ -110,8 +110,8 @@ class ProductsController extends \BaseController {
 	    
 		$this->layout->content = View::make('products.edit',array(
 			'product'=>$product,
-			'next'=>$this->previousProduct($id),
-			'previous'=>$this->nextProduct($id)
+			'previous'=>$this->previous($id,'/edit'),
+			'next'=>$this->next($id,'/edit')
 		));
 	}
 
@@ -177,24 +177,30 @@ class ProductsController extends \BaseController {
 	}
 
 
-	public function previousProduct($id){
+	public function previous($id,$modeString=''){
+		$current = Product::find($id);
 		if(Auth::user()->isSupplier()){
-			$previous = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('id', '<', $id)->max('id');
-		}else{
-			$previous = Product::where('id', '<', $id)->min('id');
+			$previous = Product::where('supplierID','=',Auth::user()->supplierID);
 		}
-		return $previous;
+		//dd($current->name);
+		$previous=$previous->where('active', '=','1')
+			->where('name', '>', $current->name)
+			->orderBy('name','asc')->first();
+		$previousID= is_null($previous)? '#':URL::to('products').'/'.$previous->id.$modeString;
+		return $previousID;
 	}
 
-	public function nextProduct($id){
+	public function next($id,$modeString=''){
+		$current = Product::find($id);
 		if(Auth::user()->isSupplier()){
-			$next = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('id', '>', $id)->max('id');
-		}else{
-			$next = Product::where('id', '>', $id)->min('id');
+			$next = Product::where('supplierID','=',Auth::user()->supplierID);
 		}
-		return $next;
+		//dd($current->name);
+		$next=$next->where('active', '=','1')
+			->where('name', '<', $current->name)
+			->orderBy('name','desc')->first();
+		$nextID= is_null($next)? '#':URL::to('products').'/'.$next->id.$modeString;
+		return $nextID;
 	}
 
 

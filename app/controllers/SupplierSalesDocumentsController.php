@@ -245,6 +245,7 @@ class SupplierSalesDocumentsController extends \BaseController {
             ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
             ->join('products', 'sales_document_items.productID', '=', 'products.productID')
             ->select('sales_documents.*');
+            
         if(Auth::user()->isSupplier()){
         	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
         } 
