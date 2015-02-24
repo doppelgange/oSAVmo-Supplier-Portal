@@ -77,10 +77,7 @@ class SyncHelper {
 		//Set filter by date
 		$erplyOptions['recordsOnPage'] = 1000;
 		//Set sync day default sync 7 days before
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
-
-
-
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
@@ -116,7 +113,9 @@ class SyncHelper {
 				ActionLog::Create(array(
 					'module' => 'Product',
 					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records on page '.$pageNo.' , Data is from '.Date('Y-m-d', strtotime("-10 days")).' , to '.Date('Y-m-d'), 
+					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '
+						.$result['status']['recordsInResponse'].' records on page '.$pageNo
+						.$erplyOptions['changedSince'], 
 					'user' => 'System'
 				));
 				//End:  Add action log for sync success
@@ -219,7 +218,7 @@ class SyncHelper {
 			"getLastPurchaseDate" => 1,
 			"getLastSoldDate" => 1
 		);
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
 
 
 		$result = json_decode(
