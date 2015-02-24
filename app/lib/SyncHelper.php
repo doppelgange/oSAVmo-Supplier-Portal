@@ -273,6 +273,41 @@ class SyncHelper {
 				$productStock->lastSoldDate = date('Y-m-d H:i:s',strtotime($erplyProductStock['lastSoldDate'])) ;
 			    $productStock->save();
 			}
+			// get stock from shopify
+			$sh = new SAPI();
+
+			$args['URL'] = 'products/count.json';
+    			$args['METHOD'] = 'GET';
+    			$args['DATA'] = array();
+    			$count = $sh->call($args);
+			$count = $count -> count;
+			$page = ceil($count / 250);
+
+			for ($i=1;$i<=$page;$i++ ){
+				$args['URL'] = 'products.json';
+    				$args['METHOD'] = 'GET';
+    				$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
+    				$call = $sh->call($args);
+    				$products = $call -> products;
+    				foreach($products as $key => $value){
+	    				$shopifyid = $value -> id;
+	    				$variants = $value -> variants;
+	    				// $numVariants = count($variants);
+	    				foreach ($variants as $key => $value) {
+	    					$shopifyVariantID = $value -> id;
+	    					$shopifyStock = $value -> inventory_quantity;
+	    					$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
+	    					if(isset($product)){
+    							$productID = $product -> productID;
+    							$productStocks = Productstock::where('productID', '=', $productID)->first();
+    							if(isset($productStocks)){
+    								$productStocks -> shopifyAmountInStock = $shopifyStock; 
+    								$productStocks->save();
+    							}					
+    						}
+	    				}
+    				}					
+    			}
 			return true;	
 		}
 	}

@@ -9,6 +9,7 @@ return array(
     'ActionLog' => $baseDir . '/app/models/ActionLog.php',
     'ActionLogsController' => $baseDir . '/app/controllers/ActionLogsController.php',
     'ActionLogsTableSeeder' => $baseDir . '/app/database/seeds/ActionLogsTableSeeder.php',
+    'AddColumsToProductsStockTable' => $baseDir . '/app/database/migrations/2015_02_24_232613_add_colums_to_products_stock_table.php',
     'AddProductsColumns' => $baseDir . '/app/database/migrations/2015_02_23_204944_add_products_columns.php',
     'AddShopifyFiledsToProducts' => $baseDir . '/app/database/migrations/2015_02_20_102316_add_shopify_fileds_to_products.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
