@@ -1,5 +1,3 @@
-
-
 truncate properties;
 INSERT INTO `properties` (`name`, `key`, `value`, `remarks`)
 VALUES

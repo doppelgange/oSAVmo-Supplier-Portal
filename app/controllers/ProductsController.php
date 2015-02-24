@@ -18,7 +18,7 @@ class ProductsController extends \BaseController {
 	 */
 	public function sync()
 	{
-		$option['supplierID'] = Input::get('days');
+		$option['days'] = Input::get('days');
 		$option['supplierID'] = Input::get('supplierID');
 
 		if(SyncHelper::syncProducts($option)){

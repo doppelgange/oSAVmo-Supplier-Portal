@@ -94,7 +94,7 @@ class AdminController extends \BaseController {
 
 		//Sync Orders
 		if(SalesDocument::all()->count()==0){
-			if(SyncHelper::syncSalesDocuments(array('dateFrom'=>30))){
+			if(SyncHelper::syncSalesDocuments(array('dateFrom'=>10))){
 				$message .='<br/>Sync sales document successfully!';
 			}else{
 				$message .='<br/>Sync sales document failed!';
