@@ -172,37 +172,36 @@ class SyncHelper {
 					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
 				    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
 				    $product->save();
-				}
-
-				// Get tags from shopify
-				$sh = new SAPI();
-
-				$args['URL'] = 'products/count.json';
-    				$args['METHOD'] = 'GET';
-    				$args['DATA'] = array();
-    				$count = $sh->call($args);
-    				$count = $count -> count;
-				$page = ceil($count / 250);
-
-				for ($i=1;$i<=$page;$i++ ){
-					$args['URL'] = 'products.json';
-    					$args['METHOD'] = 'GET';
-    					$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
-    					$call = $sh->call($args);
-    					$products = $call -> products;
-    					foreach($products as $key => $value){
-    						$shopifyid = $value -> id;
-    						$tags = $value -> tags;
-    						$product = Product::where('shopifyID', '=', $shopifyid)->first();
-    						if(isset($product)){
-    							$product->tags= $tags;
-    							$product->save();
-    						}
-    						
-    					}
-				}					
+				}		
 			}
 		}
+		// Get tags from shopify
+		$sh = new SAPI();
+
+		$args['URL'] = 'products/count.json';
+    		$args['METHOD'] = 'GET';
+    		$args['DATA'] = array();
+    		$count = $sh->call($args);
+    		$count = $count -> count;
+		$page = ceil($count / 250);
+
+		for ($i=1;$i<=$page;$i++ ){
+			$args['URL'] = 'products.json';
+    			$args['METHOD'] = 'GET';
+    			$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
+    			$call = $sh->call($args);
+    			$products = $call -> products;
+    			foreach($products as $key => $value){
+    				$shopifyid = $value -> id;
+    				$tags = $value -> tags;
+    				$product = Product::where('shopifyID', '=', $shopifyid)->first();
+    				if(isset($product)){
+    					$product->tags= $tags;
+    					$product->save();
+    				}
+    						
+    			}
+		}			
 		return true;
 	}
 
