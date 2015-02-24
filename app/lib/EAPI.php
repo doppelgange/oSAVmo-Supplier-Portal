@@ -1,5 +1,4 @@
 <?php
-
 class EAPI {
 
     //Testing Env
@@ -8,18 +7,25 @@ class EAPI {
     // public $username="doppelganger";
     // public $password="3792565Jj";
     // public $url="https://400206.erply.com/api/";
-    
-    
-    //Product Env
-    public $clientCode="284954";
-    public $username="bsun";
-    public $password="3792565Jj";
-    public $url="https://284954.erply.com/api/";
-    
 
+    //Product Env
+    public $clientCode;
+    public $username;
+    public $password;
+    public $url;
+    public $property;
+
+    public function __construct(){
+        $this->clientCode = Property::env('EnvErplyClientCode');
+        $this->username = Property::env('EnvErplyUsername');
+        $this->password = Property::env('EnvErplyPassword');
+        $this->url = Property::env('EnvErplyUrl');
+    }
 
     // Sends POST request to API
     public function sendRequest($request, $parameters = array()){
+
+        
 
         // Check if all nessecary parameters are set up
         if(!$this->url OR !$this->clientCode OR !$this->username OR !$this->password)

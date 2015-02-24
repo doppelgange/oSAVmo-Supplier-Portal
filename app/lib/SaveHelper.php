@@ -3,7 +3,7 @@ class SaveHelper {
 	public static function savePriceList($option=array()){
 		$api = new EAPI();
 		$erplyOption = array(
-			"pricelistID"=> 8,
+			"pricelistID"=> Property::env('ErplyPricelistID'),
 			"type1" => "PRODUCT",
 			"id1" => $option['id'],
 			"price1" => $option['priceWithVat']/1.15,
@@ -51,9 +51,9 @@ class SaveHelper {
 		$api = new EAPI();
 		//Set parameter for erply
 
-		$erplyOption['creatorID'] = 601;
-		$erplyOption['reasonID'] = 5;
-		$erplyOption['warehouseID'] = 1;
+		$erplyOption['creatorID'] = Property::env('ErplyCreatorID');
+		$erplyOption['reasonID'] = Property::env('ErplyReasonID');
+		$erplyOption['warehouseID'] = Property::env('ErplyWarehouseID');
 		$option['userName'] = array_key_exists('userName', $option)? $option['userName'] : 'Unknown User';
 		$erplyOption['comments'] = 'Updated by Supplier Portal, User is '.$option['userName'].'at'.date("Y-m-d h:i:s");
 		for($i = 0;$i<count($option['item']);$i++){
@@ -86,7 +86,7 @@ class SaveHelper {
 		if($result['status']['responseStatus']=='ok'){
 			//Update DB
 			for($i=0;$i<count($option['item']);$i++){
-				$productStock = ProductStock::where('warehouseID','=',1)
+				$productStock = ProductStock::where('warehouseID','=',Property::env('ErplyWarehouseID'))
 				->where('productID','=',$option['item'][$i]['productID'])->first();
 				$productStock->amountInStock = $option['item'][$i]['toAmount'];
 				$productStock->save();

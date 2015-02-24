@@ -175,12 +175,7 @@ class SyncHelper {
 				}
 
 				// Get tags from shopify
-				$sh = App::make('ShopifyAPI', [
-    					'API_KEY' => 'bd360cdb9b0b38fcd59cefde4f1c5e6a', 
-    					'API_SECRET' => '55ee2fef63d2eeb0836df90058812532', 
-    					'SHOP_DOMAIN' => 'bobs-test.myshopify.com', 
-    					'ACCESS_TOKEN' => '3ad5cde60a869cfd4ab5a034949b84f7'
-				]);
+				$sh = new SAPI();
 
 				$args['URL'] = 'products/count.json';
     				$args['METHOD'] = 'GET';
@@ -199,8 +194,11 @@ class SyncHelper {
     						$shopifyid = $value -> id;
     						$tags = $value -> tags;
     						$product = Product::where('shopifyID', '=', $shopifyid)->first();
-    						$product->tags= $tags;
-    						$product->save();
+    						if(isset($product)){
+    							$product->tags= $tags;
+    							$product->save();
+    						}
+    						
     					}
 				}					
 			}

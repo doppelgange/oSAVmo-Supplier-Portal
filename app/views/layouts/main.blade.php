@@ -36,6 +36,7 @@
                 <li>{{ HTML::link('priceListItems/sync', 'Sync Price List') }}</li>
                 <li class="divider"></li>
                 <li>{{ HTML::link('admin', 'Admin Page') }}</li>
+                <li>{{ HTML::link('properties', 'Property Setting') }}</li>
                 <li>{{ HTML::link('actionLogs', 'Action Logs') }}</li>
                 <li class="divider"></li>
                 <li>{{ HTML::link('admin/init', 'Initiate System') }}</li>

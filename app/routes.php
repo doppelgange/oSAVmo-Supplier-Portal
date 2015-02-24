@@ -63,6 +63,8 @@ Route::group(array('before' => 'auth'), function()
 	Route::get('priceListItems/sync', 'PriceListItemsController@sync');
 	Route::resource('priceListItems', 'PriceListItemsController');
 
+	//Admin properties
+	Route::resource('properties', 'PropertiesController');
 
 	//Supporting Data - deliveryTypes
 	Route::get('deliveryTypes/sync', 'DeliveryTypesController@sync');

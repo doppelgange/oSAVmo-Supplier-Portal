@@ -16,7 +16,7 @@ body {
 	margin-bottom: 0px;
 }
 .table{
-	margin-bottom: 5px;
+	margin: 5px 0;
 }
 
 .table > thead > tr > th {

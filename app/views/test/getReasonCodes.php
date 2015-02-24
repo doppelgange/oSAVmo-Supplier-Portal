@@ -5,6 +5,7 @@ session_start();
 
 $api = new EAPI();
 
+//dd($api);
 $result = json_decode(
 	$api->sendRequest(
 		"getEmployees", 
@@ -16,7 +17,6 @@ $result = json_decode(
 	), 
 	true
 );
-
 
 // $result = $result['records'][0];
 print "<pre>";

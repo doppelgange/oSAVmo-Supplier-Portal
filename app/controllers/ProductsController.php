@@ -43,9 +43,12 @@ class ProductsController extends \BaseController {
 		} ;
 
 		if(Auth::user()->isSupplier()){
-			$products = Product::where('supplierID','=',Auth::user()->supplierID)->where('active', '=','1')->paginate($pagecount);
+			$products = Product::where('supplierID','=',Auth::user()->supplierID)
+			->where('active', '=','1')
+			->paginate($pagecount);
 		}else{
-			$products=Product::paginate($pagecount);
+			$products=Product::orderBy('erplyLastModified','DESC')
+			->paginate($pagecount);
 		}
 		
 		//return $products;
