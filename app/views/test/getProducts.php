@@ -19,7 +19,7 @@ $erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-"
 // 			//"active"=>1,
 // 			//"supplierID"=>7242
 // 		)
-
+dd($property);
 $result = json_decode(
 	$api->sendRequest(
 		"getProducts", 
@@ -33,5 +33,6 @@ print "<pre>";
 print_r($result);
 print "</pre>";
 
+		
 
 ?>

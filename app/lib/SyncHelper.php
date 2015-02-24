@@ -1,4 +1,22 @@
 <?php
+function syncChangeFromParser($option){
+		$data = $option['data'];
+		$returnDate;
+		if(array_key_exists('days',$data)){
+			//If sync from last time
+			if($data['days']=='lastAutoSync'){
+				if(Property::qget('AutoSyncTimesLog',$option['module'])==null){
+					$returnDate = Property::qget('AutoSyncTimesLog',$option['module'])->value;
+				}
+			}else{
+				$returnDate = strtotime("-".$data['days']." days");
+			}
+		}
+		if($returnDate==null){
+			$returnDate = strtotime("-7 days");
+		}
+		return $returnDate;
+	}
 class SyncHelper {
 	public static function syncSuppliers(){
 		$api = new EAPI();
@@ -77,7 +95,10 @@ class SyncHelper {
 		//Set filter by date
 		$erplyOptions['recordsOnPage'] = 1000;
 		//Set sync day default sync 7 days before
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'Product'));
+		dd($erplyOptions['changedSince'].Date('Y-m-d h:i:s',$erplyOptions['changedSince']));
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','Product',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
@@ -115,7 +136,7 @@ class SyncHelper {
 					'type' => 'Sync',
 					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '
 						.$result['status']['recordsInResponse'].' records on page '.$pageNo
-						.$erplyOptions['changedSince'], 
+						.Date('y-m-d h:i:s',$erplyOptions['changedSince']), 
 					'user' => 'System'
 				));
 				//End:  Add action log for sync success
@@ -221,6 +242,8 @@ class SyncHelper {
 		);
 		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
 
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','ProductStock',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
 
 		$result = json_decode(
 			$api->sendRequest(
@@ -249,7 +272,9 @@ class SyncHelper {
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
-				'notes' => 'Total'.$result['status']['recordsTotal'].'Records, sync '.$result['status']['recordsInResponse'].' records', 
+				'notes' => 'Total'.$result['status']['recordsTotal']
+					.'Records, sync '.$result['status']['recordsInResponse'].' records,since '
+					.Date('y-m-d h:i:s',$erplyOptions['changedSince']), 
 				'user' => 'System'
 			));
 			//End: Add action log
@@ -309,6 +334,7 @@ class SyncHelper {
     			}
 			return true;	
 		}
+
 	}
 
 
@@ -317,7 +343,7 @@ class SyncHelper {
 
 
 		//Set filter by supplier
-		$erplyOptions['dateFrom'] =  array_key_exists('days',$option) ? Date('Y-m-d', strtotime("-".$option['days']." days"))  : Date('Y-m-d', strtotime("-7 days"));
+		$erplyOptions['changedSince'] =  array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
 
 		$erplyOptions['recordsOnPage'] =100;
 		$erplyOptions['getRowsForAllInvoices'] =1;
@@ -326,8 +352,8 @@ class SyncHelper {
 		$erplyOptions['getAddedTimestamp'] =1;
 		$erplyOptions['type']='INVWAYBILL';
 
-		//Set parameter
-		//$dateFrom = array_key_exists('days',$option)? $option['days']:10;
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','SalesDocument',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
 
 
 		$totalPage = 1; // Set default only one page
@@ -537,7 +563,20 @@ class SyncHelper {
 
 	public static function syncPriceListItems($option = array()){
 		$api = new EAPI();
+
 		//Set parameter
+		$erplyOptions['getPricesWithVAT'] =1;
+		$erplyOptions['pricelistID'] =Property::env('ErplyPricelistID');
+		$erplyOptions['getReturnedPayments'] =0;
+		$erplyOptions['getCOGS'] =1;
+		$erplyOptions['getAddedTimestamp'] =1;
+		$erplyOptions['type']='INVWAYBILL';
+
+		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
+
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','PriceListItem',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
+
 
 		$totalPage = 1; // Set default only one page
 		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
