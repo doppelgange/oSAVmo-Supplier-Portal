@@ -1,3 +1,6 @@
-*/1 * * * * /Applications/MAMP/bin/php/php5.6.2/bin/php /Users/sunnyyang/Documents/CodePlayground/osavmo-console/artisan scheduled:run >/Users/sunnyyang/Documents/CodePlayground/osavmo-console/cron.log 2>&1 &
+*/1 * * * * php /Users/sunnyyang/Documents/CodePlayground/osavmo-console/artisan scheduled:run >/Users/sunnyyang/Documents/CodePlayground/osavmo-console/cron.log 2>&1 &
 
 */1 * * * * open http://localhost/deliveryTypes/sync >/Users/sunnyyang/Documents/CodePlayground/osavmo-console/cron.log 2>&1 &
+
+
+* * * * * php /usr/osavmo/console/artisan scheduled:run 1>> /usr/osavmo/console/cron.log 2>&1
