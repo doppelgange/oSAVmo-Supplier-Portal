@@ -15,7 +15,9 @@ $salesDocuments = json_decode(
 		    "getReturnedPayments" =>1,
 		    "getCOGS" => 1,
 			"pageNo"=>$pageNo,
-			"dateFrom" => Date('Y-m-d', strtotime("-".$dateFrom." days"))
+			// "dateFrom" => Date('Y-m-d', strtotime("-".$dateFrom." days")),
+			"number" =>102026,
+			"type"=>"INVWAYBILL"
 		)
 	), 
 	true

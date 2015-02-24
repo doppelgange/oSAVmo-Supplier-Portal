@@ -85,6 +85,8 @@ Route::get('saveInventoryRegistration', array(function(){return View::make('test
 Route::get('getInventoryRegistrations', array( function(){return View::make('test/getInventoryRegistrations');}));
 Route::get('getProductStock', array( function(){return View::make('test/getProductStock');}));
 Route::get('getProducts', array( function(){return View::make('test/getProducts');}));
+Route::get('getSalesDocuments', array( function(){return View::make('test/getSalesDocuments');}));
+
 
 // Route::get('getProductPictures', array( function(){return View::make('test/getProductPictures');}));
 Route::get('test', array(function(){return View::make('test/test');}));
