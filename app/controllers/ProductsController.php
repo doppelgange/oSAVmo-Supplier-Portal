@@ -18,8 +18,13 @@ class ProductsController extends \BaseController {
 	 */
 	public function sync()
 	{
+		//Default get the options from URL
 		$option['days'] = Input::get('days');
 		$option['supplierID'] = Input::get('supplierID');
+		//If user is supplier set the supplier ID
+		if(Auth::user()->isSupplier()){
+			$option['supplierID'] = Auth::user()->supplierID;
+		}
 
 		if(SyncHelper::syncProducts($option)){
 			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
