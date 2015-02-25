@@ -28,10 +28,10 @@
             <li>{{ HTML::link('users/login', 'Login') }}</li> 
             @endif
             @if(Auth::check()&&!Auth::user()->isSupplier())
-            <li>{{ HTML::link('admin', 'Admin Page') }}</li>
+            <li>{{ HTML::link('admin', 'Admin') }}</li>
             <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
-            <li>{{ HTML::link('properties', 'Property Setting') }}</li>
-            <li>{{ HTML::link('actionLogs', 'Action Logs') }}</li>
+            <li>{{ HTML::link('properties', 'Property') }}</li>
+            <li>{{ HTML::link('actionLogs', 'Logs') }}</li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">

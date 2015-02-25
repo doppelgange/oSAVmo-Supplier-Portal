@@ -57,7 +57,7 @@ class SyncHelper {
 					.$result['status']['recordsInResponse'].' records on page '.$pageNo
 					.', from '
 					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
-					.$result['status']['generationTime'].'seconds. ';
+					.number_format($result['status']['generationTime'], 2, '.', '').' seconds. ';
 
 				foreach ($erplySuppliers as $erplySupplier) {
 					$supplier = Supplier::where('supplierID', '=', $erplySupplier['supplierID'])->first();
@@ -142,7 +142,7 @@ class SyncHelper {
 					.$result['status']['recordsInResponse'].' records on page '.$pageNo
 					.', from '
 					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
-					.$result['status']['generationTime'].'seconds. ';
+					.number_format($result['status']['generationTime'], 2, '.', '').' seconds. ';
 				foreach ($erplyProducts as $erplyProduct) {
 					$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
 					if (is_null($product)){
@@ -274,7 +274,7 @@ class SyncHelper {
 					.' records, sync '.$result['status']['recordsInResponse']
 					.' records, from '
 					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
-					.$result['status']['generationTime'].'seconds. ';
+					.number_format($result['status']['generationTime'], 2, '.', '').' seconds. ';
 			foreach ($erplyProductStocks as $erplyProductStock) {
 				$productStock = ProductStock::where('productID', '=', (int)$erplyProductStock['productID'])->first();
 				if (is_null($productStock)){
@@ -537,7 +537,7 @@ class SyncHelper {
 			$notes = 'Total '.$totalItemSync.'records sync (erply:'.$totalItemReturn
 					.'), from '
 					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply Use '
-					.$result['status']['generationTime'].'seconds. ';
+					.number_format($result['status']['generationTime'], 2, '.', '').' seconds. ';
 
 			//Sync supplier sales document table
 			$result = DB::statement('INSERT INTO supplier_sales_documents (supplierID, salesDocumentID, amount, netTotal, vatTotal,total,lastModified,lastModifierUsername,created_at,updated_at) select prod.supplierID, doc.salesDocumentID, @amount := sum(item.amount), @rowNetTotal := sum(item.rowNetTotal), @rowVat := sum(item.rowVat), @rowTotal := sum(item.rowTotal),NOW(),"System",doc.date,NOW() from sales_documents doc, sales_document_items item, products prod where doc.salesDocumentID = item.salesDocumentID and item.productID = prod.productID group by doc.salesDocumentID,prod.supplierID on duplicate key update amount = @amount, netTotal = @rowNetTotal, vatTotal = @rowVat,total = @rowTotal,lastModified = NOW(),lastModifierUsername = "System",updated_at = NOW();');	
@@ -597,7 +597,7 @@ class SyncHelper {
 				$erplyPriceListItems = $result['records'][0]['pricelistRules'];
 
 				$notes = 'Total '.count($erplyPriceListItems).' records sync. Erply use '
-					.$result['status']['generationTime'].'seconds';
+					.number_format($result['status']['generationTime'], 2, '.', '').'seconds';
 				//Save priceListItem information
 				foreach ($erplyPriceListItems as $erplyPriceListItem) {
 					$priceListItem = PriceListItem::where('priceListID', '=', $erplyPriceList['pricelistID'])->
