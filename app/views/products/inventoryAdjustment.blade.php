@@ -31,7 +31,7 @@
 	    <tr>
 			<td> {{ $product -> productID }} </td>
 			<td>
-				<a href="/products/{{$product-> id}}/edit" target="_blank">  
+				<a href="products/{{$product-> id}}/edit" target="_blank">  
 				<div>{{ $product -> name }} </div>
 				<div>{{ $product -> nameCN }} </div>
 				 </a>

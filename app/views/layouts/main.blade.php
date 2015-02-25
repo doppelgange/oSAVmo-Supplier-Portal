@@ -20,36 +20,35 @@
           <ul class="nav navbar-nav">   
             <li>{{ HTML::link('products', 'Products') }}</li>
             <li>{{ HTML::link('supplierSalesDocuments', 'Supplier Order') }}</li>
-            <li>{{ HTML::link('salesDocuments', 'Order(Admin)') }}</li>
             <li>{{ HTML::link('users', 'Users') }}</li>
             @if(Auth::check())
-            <li>{{ HTML::link('users/'.Auth::user()->id, 'Hello! '.Auth::user()->lastname.' ('.(Auth::user()->supplierID==0?'All Suppliers':Auth::user()->supplier->fullName).')')}}</li>
+            <li>{{ HTML::link('users/'.Auth::user()->id, Auth::user()->lastname.' ('.(Auth::user()->supplierID==0?'All Suppliers':Auth::user()->supplier->fullName).')')}}</li>
             <li>{{ HTML::link('users/logout', 'Logout') }}</li>
             @else
             <li>{{ HTML::link('users/login', 'Login') }}</li> 
             @endif
             @if(Auth::check()&&!Auth::user()->isSupplier())
+            <li>{{ HTML::link('admin', 'Admin Page') }}</li>
+            <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
+            <li>{{ HTML::link('properties', 'Property Setting') }}</li>
+            <li>{{ HTML::link('actionLogs', 'Action Logs') }}</li>
             <li class="dropdown">
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
-                <li>{{ HTML::link('priceListItems', 'Price List') }}</li>
-                <li>{{ HTML::link('priceListItems/sync', 'Sync Price List') }}</li>
                 <li class="divider"></li>
-                <li>{{ HTML::link('admin', 'Admin Page') }}</li>
-                <li>{{ HTML::link('properties', 'Property Setting') }}</li>
-                <li>{{ HTML::link('actionLogs', 'Action Logs') }}</li>
+                <li>{{ HTML::link('priceListItems', 'Price') }}</li>
+                <li>{{ HTML::link('salesDocuments', 'Order(Admin)') }}</li>
+                <li>{{ HTML::link('salesDocumentItems', 'Order Item')}}</li>
+                <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
                 <li class="divider"></li>
                 <li>{{ HTML::link('admin/init', 'Initiate System') }}</li>
+                <li>{{ HTML::link('priceListItems/sync', 'Sync Price List') }}</li>
                 <li>{{ HTML::link('suppliers/sync', 'Sync Suppliers') }}</li>
-                <li>{{ HTML::link('products/sync', 'Sync Products for current supplier') }}</li>
-                <li>{{ HTML::link('products/sync/all', 'Sync Products') }}</li>
+                <li>{{ HTML::link('products/sync', 'Sync Products') }}</li>
                 <li>{{ HTML::link('productStocks/sync', 'Sync Product Stocks') }}</li>
                 <li>{{ HTML::link('salesDocuments/sync', 'Sync Orders of last week') }}</li>
                 <li>{{ HTML::link('supplierSalesDocuments/sync', 'Sync Supplier Orders') }}</li>
-                <li class="divider"></li>
-                <li>{{ HTML::link('salesDocumentItems', 'Order Item')}}</li>
-                <li>{{ HTML::link('productStocks', 'Stocks') }}</li>
-                <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
+                
               </ul>
             </li>
             @endif()
