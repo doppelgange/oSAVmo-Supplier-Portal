@@ -55,14 +55,14 @@ class HourlySyncFromErply extends ScheduledCommand {
 	 */
 	public function fire()
 	{
-		// SyncHelper::syncProducts(array('days'=>'1'));
-		// $this->info('Sync Products for 1 day successfuly');
-		SyncHelper::syncProductStocks(array('days'=>'1'));
-		$this->info('syncProductStocks for 1 day successfuly');
-		SyncHelper::syncSalesDocuments(array('days'=>1));
-		$this->info('syncSalesDocuments for 1 day successfuly');
-		SyncHelper::syncPriceListItems();
-		$this->info('syncPriceListItems for 1 day');
+		SyncHelper::syncProducts(array('days'=>'auto'));
+		$this->info('Sync Products successfuly');
+		SyncHelper::syncProductStocks(array('days'=>'auto'));
+		$this->info('syncProductStocks successfuly');
+		SyncHelper::syncSalesDocuments(array('days'=>'auto'));
+		$this->info('syncSalesDocuments successfuly');
+		SyncHelper::syncPriceListItems(array('days'=>'auto'));
+		$this->info('syncPriceListItems successfuly');
 		// SyncHelper::syncDeliveryTypes();
 	}
 

@@ -1,22 +1,24 @@
 <?php
+//used to 
 function syncChangeFromParser($option){
-		$data = $option['data'];
-		$returnDate;
-		if(array_key_exists('days',$data)){
-			//If sync from last time
-			if($data['days']=='lastAutoSync'){
-				if(Property::qget('AutoSyncTimesLog',$option['module'])==null){
-					$returnDate = Property::qget('AutoSyncTimesLog',$option['module'])->value;
-				}
-			}else{
-				$returnDate = strtotime("-".$data['days']." days");
+	$data = $option['data'];
+	if(array_key_exists('days',$data)){
+		//If sync from last time
+		if($data['days']=='auto'){
+			if(Property::qget('AutoSyncTimesLog',$option['module'])!=null){
+				$returnDate = Property::qget('AutoSyncTimesLog',$option['module'])->value;
 			}
+		}else{
+			$returnDate = strtotime("-".$data['days']." days");
 		}
-		if($returnDate==null){
-			$returnDate = strtotime("-7 days");
-		}
-		return $returnDate;
 	}
+	if(isset($returnDate)==false){
+		$returnDate = strtotime("-7 days");
+	}
+	return $returnDate;
+}
+
+
 class SyncHelper {
 	public static function syncSuppliers(){
 		$api = new EAPI();
@@ -49,7 +51,9 @@ class SyncHelper {
 				ActionLog::Create(array(
 					'module' => 'Supplier',
 					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '.$result['status']['recordsInResponse'].' records', 
+					'notes' => 'Total '.$result['status']['recordsTotal']
+						.' records, sync '.$result['status']['recordsInResponse']
+						.' records', 
 					'user' => 'System'
 				));
 				//End: Add action log
@@ -96,7 +100,7 @@ class SyncHelper {
 		$erplyOptions['recordsOnPage'] = 1000;
 		//Set sync day default sync 7 days before
 		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'Product'));
-		dd($erplyOptions['changedSince'].Date('Y-m-d h:i:s',$erplyOptions['changedSince']));
+
 		//Update the last auto sync time log to current time
 		Property::qsave('AutoSyncTimesLog','Product',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
 
@@ -134,9 +138,11 @@ class SyncHelper {
 				ActionLog::Create(array(
 					'module' => 'Product',
 					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal'].' records, sync '
+					'notes' => 'Total '.$result['status']['recordsTotal']
+						.' records, sync '
 						.$result['status']['recordsInResponse'].' records on page '.$pageNo
-						.Date('y-m-d h:i:s',$erplyOptions['changedSince']), 
+						.', from '
+						.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
 					'user' => 'System'
 				));
 				//End:  Add action log for sync success
@@ -239,7 +245,7 @@ class SyncHelper {
 			"getLastPurchaseDate" => 1,
 			"getLastSoldDate" => 1
 		);
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'ProductStock'));
 
 		//Update the last auto sync time log to current time
 		Property::qsave('AutoSyncTimesLog','ProductStock',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
@@ -271,9 +277,10 @@ class SyncHelper {
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
-				'notes' => 'Total'.$result['status']['recordsTotal']
-					.'Records, sync '.$result['status']['recordsInResponse'].' records,since '
-					.Date('y-m-d h:i:s',$erplyOptions['changedSince']), 
+				'notes' => 'Total '.$result['status']['recordsTotal']
+					.' records, sync '.$result['status']['recordsInResponse']
+					.' records, from '
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
 				'user' => 'System'
 			));
 			//End: Add action log
@@ -342,7 +349,7 @@ class SyncHelper {
 
 
 		//Set filter by supplier
-		$erplyOptions['changedSince'] =  array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'SalesDocument'));
 
 		$erplyOptions['recordsOnPage'] =100;
 		$erplyOptions['getRowsForAllInvoices'] =1;
@@ -532,30 +539,34 @@ class SyncHelper {
 		}
 
 		//Start: Add action log for sync success
-		ActionLog::Create(array(
-			'module' => 'SalesDocument',
-			'type' => 'Sync',
-			'notes' => 'Total '.$totalItemSync.'Items synced (erply:'.$totalItemReturn.'), from '.$erplyOptions['dateFrom'], 
-			'user' => 'System'
-		));
-		//End:  Add action log for sync success
-		
-		//Sync supplier sales document table
-		$result = DB::statement('INSERT INTO supplier_sales_documents (supplierID, salesDocumentID, amount, netTotal, vatTotal,total,lastModified,lastModifierUsername,created_at,updated_at) select prod.supplierID, doc.salesDocumentID, @amount := sum(item.amount), @rowNetTotal := sum(item.rowNetTotal), @rowVat := sum(item.rowVat), @rowTotal := sum(item.rowTotal),NOW(),"System",doc.date,NOW() from sales_documents doc, sales_document_items item, products prod where doc.salesDocumentID = item.salesDocumentID and item.productID = prod.productID group by doc.salesDocumentID,prod.supplierID on duplicate key update amount = @amount, netTotal = @rowNetTotal, vatTotal = @rowVat,total = @rowTotal,lastModified = NOW(),lastModifierUsername = "System",updated_at = NOW();');	
+		if($totalItemSync>0){
+			ActionLog::Create(array(
+				'module' => 'SalesDocument',
+				'type' => 'Sync',
+				'notes' => 'Total '.$totalItemSync.'records sync (erply:'.$totalItemReturn
+					.'), from '
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
+				'user' => 'System'
+			));
+			//End:  Add action log for sync success
 
-		//Start: Add action log for sync
-		if($result){
-			$notes = 'Sync SupplierSalesDocument successfully';
-		}else{
-			$notes = 'Sync SupplierSalesDocument failed';
-		};
-		ActionLog::Create(array(
-			'module' => 'SupplierSalesDocument',
-			'type' => 'Sync',
-			'notes' => $notes, 
-			'user' => 'System'
-		));
-		//End: Add action log for sync
+			//Sync supplier sales document table
+			$result = DB::statement('INSERT INTO supplier_sales_documents (supplierID, salesDocumentID, amount, netTotal, vatTotal,total,lastModified,lastModifierUsername,created_at,updated_at) select prod.supplierID, doc.salesDocumentID, @amount := sum(item.amount), @rowNetTotal := sum(item.rowNetTotal), @rowVat := sum(item.rowVat), @rowTotal := sum(item.rowTotal),NOW(),"System",doc.date,NOW() from sales_documents doc, sales_document_items item, products prod where doc.salesDocumentID = item.salesDocumentID and item.productID = prod.productID group by doc.salesDocumentID,prod.supplierID on duplicate key update amount = @amount, netTotal = @rowNetTotal, vatTotal = @rowVat,total = @rowTotal,lastModified = NOW(),lastModifierUsername = "System",updated_at = NOW();');	
+
+			//Start: Add action log for sync
+			if($result){
+				$notes = 'Sync SupplierSalesDocument successfully';
+			}else{
+				$notes = 'Sync SupplierSalesDocument failed';
+			};
+			ActionLog::Create(array(
+				'module' => 'SupplierSalesDocument',
+				'type' => 'Sync',
+				'notes' => $notes, 
+				'user' => 'System'
+			));
+			//End: Add action log for sync	
+		}
 
 		return true;
 	}
@@ -571,7 +582,7 @@ class SyncHelper {
 		$erplyOptions['getAddedTimestamp'] =1;
 		$erplyOptions['type']='INVWAYBILL';
 
-		$erplyOptions['changedSince'] = array_key_exists('days',$option) ? strtotime("-".$option['days']." days") : strtotime("-7 days");
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'PriceListItem'));
 
 		//Update the last auto sync time log to current time
 		Property::qsave('AutoSyncTimesLog','PriceListItem',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
@@ -583,40 +594,20 @@ class SyncHelper {
 			$result = json_decode(
 				$api->sendRequest(
 					"getPriceLists", 
-					array(
-						"pageNo"=>$pageNo,
-						"getPricesWithVAT"=> 1,
-						"pricelistID" => 8
-					)
+					$erplyOptions
 				), 
 				true
 			);
-			
-			$erplyPriceList = $result['records'][0];
 
-			//dd($result['records']);
-			$erplyPriceListItems = $result['records'][0]['pricelistRules'];
-
-			if(is_null($erplyPriceListItems)){
-				//Start: Add Log for sync error
-				ActionLog::Create(array(
-					'module' => 'PriceListItem',
-					'type' => 'Sync',
-					'notes' => 'Page has error, no record returned', 
-					'user' => 'System'
-				));
-				//End: Add Log for sync error
-				return false;
+			if($result['status']['responseStatus']!='ok'){
+				$notes = 'Page has error, no record returned';
+			}elseif($result['status']['recordsInResponse']==0){
+				$notes = $result['status'];
 			}else{
-				//Start: Add action log for sync success
-				ActionLog::Create(array(
-					'module' => 'PriceListItem',
-					'type' => 'Sync',
-					'notes' => 'Total '.count($erplyPriceListItems).' records', 
-					'user' => 'System'
-				));
-				//End:  Add action log for sync success
-
+				dd($result);
+				$erplyPriceList = $result['records'][0];
+				$erplyPriceListItems = $result['records'][0]['pricelistRules'];
+				$notes = $result['status'].'Total '.count($erplyPriceListItems).' records sync.';
 				//Save priceListItem information
 				foreach ($erplyPriceListItems as $erplyPriceListItem) {
 					$priceListItem = PriceListItem::where('priceListID', '=', $erplyPriceList['pricelistID'])->
@@ -648,6 +639,15 @@ class SyncHelper {
 				}
 					
 			}
+
+			//Start: Add action log for sync success
+			ActionLog::Create(array(
+				'module' => 'PriceListItem',
+				'type' => 'Sync',
+				'notes' =>$notes , 
+				'user' => 'System'
+			));
+			//End:  Add action log for sync success
 		}
 		return true;
 	}	

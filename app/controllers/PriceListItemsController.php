@@ -11,7 +11,8 @@ class PriceListItemsController extends \BaseController {
 	 */
 	public function sync()
 	{
-		if(SyncHelper::syncPriceListItems()){
+		$option['days'] = Input::get('days');
+		if(SyncHelper::syncPriceListItems($option)){
 			return Redirect::to('priceListItems')->with('message', 'Sync Price List Successfuly!');
 		}else{
 			return Redirect::to('priceListItems')->with('message', 'Sync Error!');
