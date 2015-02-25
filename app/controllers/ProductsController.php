@@ -185,12 +185,12 @@ class ProductsController extends \BaseController {
 		if(Auth::user()->isSupplier()){
 			$previous = Product::where('supplierID','=',Auth::user()->supplierID)
 			->where('active', '=','1')
-			->where('name', '>', $current->name)
-			->orderBy('name','asc')->first();
+			->where('name', '<', $current->name)
+			->orderBy('name','desc')->first();
 		}else{
 			$previous = Product::where('active', '=','1')
-			->where('name', '>', $current->name)
-			->orderBy('name','asc')->first();
+			->where('name', '<', $current->name)
+			->orderBy('name','desc')->first();
 		}
 		$previousID= is_null($previous)? '#':URL::to('products').'/'.$previous->id.$modeString;
 		return $previousID;
@@ -201,12 +201,12 @@ class ProductsController extends \BaseController {
 		if(Auth::user()->isSupplier()){
 			$next = Product::where('supplierID','=',Auth::user()->supplierID)
 			->where('active', '=','1')
-			->where('name', '<', $current->name)
-			->orderBy('name','desc')->first();
+			->where('name', '>', $current->name)
+			->orderBy('name','asc')->first();
 		}else{
 			$next = Product::where('active', '=','1')
-			->where('name', '<', $current->name)
-			->orderBy('name','desc')->first();
+			->where('name', '>', $current->name)
+			->orderBy('name','asc')->first();
 		}
 		$nextID= is_null($next)? '#':URL::to('products').'/'.$next->id.$modeString;
 		return $nextID;

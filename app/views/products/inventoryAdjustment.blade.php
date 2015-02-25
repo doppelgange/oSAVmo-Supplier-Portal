@@ -7,6 +7,9 @@
 	{{$products->count()}} records in this page.
 
 </div>
+
+
+
 {{$products->links()}}
 
 {{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'put')) }}

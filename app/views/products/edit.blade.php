@@ -106,8 +106,8 @@
 
 <nav>
   <ul class="pager">
-    <li><a href="{{ URL::to( 'products/' . $previous ) }}" class="">Previous</a></li>
-    <li><a href="{{ URL::to( 'products/' . $next ) }}">Next</a></li>
+    <li><a href="{{ URL::to($previous)}}" class=""> Previous</a></li>
+    <li><a href="{{ URL::to($next)}}"> Next</a></li>
   </ul>
 </nav>
 
