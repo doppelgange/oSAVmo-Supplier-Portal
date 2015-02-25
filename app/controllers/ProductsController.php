@@ -52,7 +52,7 @@ class ProductsController extends \BaseController {
 			->where('active', '=','1')->orderBy('name','asc')
 			->paginate($pagecount);
 		}else{
-			$products=Product::orderBy('erplyLastModified','DESC')
+			$products=Product::where('active', '=','1')->orderBy('name','asc')
 			->paginate($pagecount);
 		}
 		
@@ -95,9 +95,7 @@ class ProductsController extends \BaseController {
 		// get previous product id
 	    
 		$this->layout->content = View::make('products.show',array(
-			'product'=>$product,
-			'next'=>$this->previousProduct($id),
-			'previous'=>$this->nextProduct($id)
+			'product'=>$product
 		)); 
 	}
 

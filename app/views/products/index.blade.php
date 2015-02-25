@@ -28,7 +28,7 @@
 	<tbody>
 	@foreach($products as $product)
 	    <tr>
-			<td> {{ $product -> productID }} </td>
+			<td> {{ $product -> id }}<!--{{ $product -> productID }}--> </td>
 			<td>
 				<a href="products/{{$product-> id}}/edit" target="_blank">  
 				<div>{{ $product -> name }} </div>

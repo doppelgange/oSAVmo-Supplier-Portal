@@ -1,9 +1,3 @@
-<nav>
-  <ul class="pager">
-    <li><a href="{{ URL::to( 'products/' . $previous ) }}" class="">Previous</a></li>
-    <li><a href="{{ URL::to( 'products/' . $next ) }}">Next</a></li>
-  </ul>
-</nav>
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<tbody>
 		<tr>
@@ -95,14 +89,4 @@
 		
 	</tbody>
 </table>
-
-
-
-
-<nav>
-  <ul class="pager">
-    <li><a href="{{ URL::to( 'products/' . $previous ) }}" class="">Previous</a></li>
-    <li><a href="{{ URL::to( 'products/' . $next ) }}">Next</a></li>
-  </ul>
-</nav>
 
