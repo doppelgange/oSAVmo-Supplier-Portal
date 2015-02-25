@@ -191,6 +191,10 @@ class SyncHelper {
 					$product->grossWeight = $erplyProduct['grossWeight'];
 					$product->volume = $erplyProduct['volume'];
 					$product->longdesc = $erplyProduct['longdesc'];
+					if (array_key_exists('images', $erplyProduct)) {
+						$product->imageLink = $erplyProduct['images'][0]['smallURL'];						
+					}
+					$product->type = $erplyProduct['type'];
 					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
 				    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
 				    $product->save();
@@ -208,7 +212,6 @@ class SyncHelper {
 		}
 		// Get tags from shopify
 		$sh = new SAPI();
-
 		$args['URL'] = 'products/count.json';
     		$args['METHOD'] = 'GET';
     		$args['DATA'] = array();
@@ -229,10 +232,27 @@ class SyncHelper {
     				if(isset($product)){
     					$product->tags= $tags;
     					$product->save();
-    				}
-    						
+    				}    						
     			}
-		}			
+		}
+		$product = Product::where('imageLink', '!=', 'NULL')->get();
+		$records =  Product::where('imageLink', '!=', 'NULL')->count();		
+		$imageNum = 0;
+		foreach ($product as $key => $value) {
+			$url =  $value -> imageLink;
+			$productID = $value -> productID;
+		   	$img_name= $productID.".jpg";
+		   	$destinationPath = public_path().'/images/200x200/'.$img_name;	   			
+       			if(file_put_contents($destinationPath, file_get_contents($url))){
+       				$imageNum++;
+			}
+		}
+		ActionLog::Create(array(
+			'module' => 'ImageDownload',
+			'type' => 'Sync',
+			'notes' => 'There are '.$records.' records,'.$imageNum. " images have been download",
+			'user' => 'System'
+		));
 		return true;
 	}
 
@@ -326,12 +346,10 @@ class SyncHelper {
 								$productStocks->save();
 							}					
 						}
-    				}
+    					}
 				}					
-    		}
-
-
-    		//Start: Add action log
+    			}
+    			//Start: Add action log
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
@@ -695,10 +713,6 @@ class SyncHelper {
 		}
 		return true;
 	}
-
-
-	
-
 }
 
 ?>

@@ -10,6 +10,8 @@ return array(
     'ActionLogsController' => $baseDir . '/app/controllers/ActionLogsController.php',
     'ActionLogsTableSeeder' => $baseDir . '/app/database/seeds/ActionLogsTableSeeder.php',
     'AddColumsToProductsStockTable' => $baseDir . '/app/database/migrations/2015_02_24_232613_add_colums_to_products_stock_table.php',
+    'AddProductImagelink' => $baseDir . '/app/database/migrations/2015_02_25_211318_add_product_imagelink.php',
+    'AddProductType' => $baseDir . '/app/database/migrations/2015_02_25_212852_add_product_type.php',
     'AddProductsColumns' => $baseDir . '/app/database/migrations/2015_02_23_204944_add_products_columns.php',
     'AddShopifyFiledsToProducts' => $baseDir . '/app/database/migrations/2015_02_20_102316_add_shopify_fileds_to_products.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
