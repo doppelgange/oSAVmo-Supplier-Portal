@@ -9,9 +9,9 @@ class SuppliersController extends BaseController {
 
 	public function sync(){
 		if(SyncHelper::syncSuppliers()){
-			return Redirect::to('suppliers/index')->with('message', 'Sync Successfuly!');
+			return Redirect::to('suppliers')->with('message', 'Sync supplier successfuly!');
 		}else{
-			return Redirect::to('suppliers/index')->with('message', 'Cannot connect to Server!');
+			return Redirect::to('suppliers')->with('message', 'Fail to sync supplier!');
 		}
 	}
 

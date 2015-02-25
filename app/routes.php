@@ -32,6 +32,7 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('users', 'UsersController');
 
 	//Supplier related Routes
+	Route::get('suppliers/sync', 'SuppliersController@sync');
 	Route::post('/suppliers/batch-amend', 'SuppliersController@batchAmend');
 	Route::resource('suppliers','SuppliersController');
 

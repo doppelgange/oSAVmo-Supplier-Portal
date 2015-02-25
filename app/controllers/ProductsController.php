@@ -27,9 +27,9 @@ class ProductsController extends \BaseController {
 		}
 
 		if(SyncHelper::syncProducts($option)){
-			return Redirect::to('products')->with('message', 'Sync to ERPLY Successfuly!');
+			return Redirect::to('products')->with('message', 'Sync products successfuly!');
 		}else{
-			return Redirect::to('products')->with('message', 'Cannot connect to ERPLY!');
+			return Redirect::to('products')->with('message', 'Fail to sync products!');
 		}
 	}
 

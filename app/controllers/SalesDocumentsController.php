@@ -19,9 +19,9 @@ class SalesDocumentsController extends \BaseController {
 		/**/
 		$option['days'] = Input::get('days');
 		if(SyncHelper::syncSalesDocuments($option)){
-			return Redirect::to('salesDocuments')->with('message', 'Sync to ERPLY Successfuly!');
+			return Redirect::to('salesDocuments')->with('message', 'Sync orders successfuly!');
 		}else{
-			return Redirect::to('salesDocuments')->with('message', 'Cannot connect to ERPLY!');
+			return Redirect::to('salesDocuments')->with('message', 'Fail to sync orders!');
 		}
 		
 	}

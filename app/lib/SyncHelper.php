@@ -1,6 +1,7 @@
 <?php
 //used to 
-function syncChangeFromParser($option){
+function syncChangeFromParser($option=array()){
+
 	$data = $option['data'];
 	if(array_key_exists('days',$data)){
 		//If sync from last time
@@ -8,7 +9,7 @@ function syncChangeFromParser($option){
 			if(Property::qget('AutoSyncTimesLog',$option['module'])!=null){
 				$returnDate = Property::qget('AutoSyncTimesLog',$option['module'])->value;
 			}
-		}else{
+		}elseif(is_numeric($data['days'])){
 			$returnDate = strtotime("-".$data['days']." days");
 		}
 	}
@@ -20,60 +21,69 @@ function syncChangeFromParser($option){
 
 
 class SyncHelper {
-	public static function syncSuppliers(){
+	public static function syncSuppliers($option=array()){
 		$api = new EAPI();
-		$result = json_decode(
-			$api->sendRequest(
-				"getSuppliers", 
-				array(
-				    "recordsOnPage" =>100,
-				    "responseMode" => "detail",
-				    //"displayedInWebshop" => 1,
-				    //"productID" => 2306	
-				)
-			), 
-			true
-		);
-		$erplySuppliers = $result['records'];
-		if(is_null($erplySuppliers)){
-			//Start: Add action log for sync error
-			ActionLog::Create(array(
-				'module' => 'Supplier',
-				'type' => 'Sync',
-				'notes' => 'Sync error, no record returned', 
-				'user' => 'System'
-			));
-			//End: Add action log for sync error
-			return false;
-		}else{
+		//Set sync day default sync 7 days before
+		$erplyOptions['recordsOnPage'] = 100;
+		$erplyOptions['responseMode'] = 'detail';
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'Supplier'));
 
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','Supplier',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
+
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			//Set Page Number
+			$erplyOptions['pageNo']=$pageNo;
+			$result = json_decode(
+				$api->sendRequest(
+					"getSuppliers", 
+					$erplyOptions
+				), 
+				true
+			);
+			$erplySuppliers = $result['records'];
+			if($result['status']['recordsTotal']!=null){
+				$totalPage = ceil($result['status']['recordsTotal']/100);
+			}
+
+			if($result['status']['responseStatus']!='ok'){
+				$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
+			}elseif($result['status']['recordsInResponse']==0){
+				return true;
+			}else{
+				$notes = 'Total '.$result['status']['recordsTotal']
+					.' records, sync '
+					.$result['status']['recordsInResponse'].' records on page '.$pageNo
+					.', from '
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
+					.$result['status']['generationTime'].'seconds. ';
+
+				foreach ($erplySuppliers as $erplySupplier) {
+					$supplier = Supplier::where('supplierID', '=', $erplySupplier['supplierID'])->first();
+					if (is_null($supplier)){
+						$supplier = new Supplier;
+						$supplier->supplierID = $erplySupplier['supplierID'];
+					}
+					$supplier->erplyID = $erplySupplier['id'];
+				    $supplier->supplierType = $erplySupplier['supplierType'];
+				    $supplier->fullName = $erplySupplier['fullName'];
+				    $supplier->companyName = $erplySupplier['companyName'];
+				    $supplier->groupID = $erplySupplier['groupID'];
+				    $supplier->erplyAdded = date('y-m-d h:i:s',$erplySupplier['added']) ;
+				    $supplier->erplyLastModified = date('y-m-d h:i:s',$erplySupplier['lastModified']); 
+				    $supplier->save();
+				}
 				//Start: Add action log
 				ActionLog::Create(array(
 					'module' => 'Supplier',
 					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal']
-						.' records, sync '.$result['status']['recordsInResponse']
-						.' records', 
+					'notes' => $notes, 
 					'user' => 'System'
 				));
 				//End: Add action log
-
-			foreach ($erplySuppliers as $erplySupplier) {
-				$supplier = Supplier::where('supplierID', '=', $erplySupplier['supplierID'])->first();
-				if (is_null($supplier)){
-					$supplier = new Supplier;
-					$supplier->supplierID = $erplySupplier['supplierID'];
-				}
-				$supplier->erplyID = $erplySupplier['id'];
-			    $supplier->supplierType = $erplySupplier['supplierType'];
-			    $supplier->fullName = $erplySupplier['fullName'];
-			    $supplier->companyName = $erplySupplier['companyName'];
-			    $supplier->groupID = $erplySupplier['groupID'];
-			    $supplier->erplyAdded = date('y-m-d h:i:s',$erplySupplier['added']) ;
-			    $supplier->erplyLastModified = date('y-m-d h:i:s',$erplySupplier['lastModified']); 
-			    $supplier->save();
+				return true;	
 			}
-			return true;	
 		}
 	}
 
@@ -116,37 +126,23 @@ class SyncHelper {
 				), 
 				true
 			);
-
 			$erplyProducts = $result['records'];
 			//Get the total records
 			if($result['status']['recordsTotal']!=null){
 				$totalPage = ceil($result['status']['recordsTotal']/1000);
 			}
 			//return $totalPage;
-			if(is_null($erplyProducts)){
-				//Start: Add Log for sync error
-				ActionLog::Create(array(
-					'module' => 'Product',
-					'type' => 'Sync',
-					'notes' => 'Page '.$pageNo.' has error, no record returned', 
-					'user' => 'System'
-				));
-				//End: Add Log for sync error
-				return false;
+			if($result['status']['responseStatus']!='ok'){
+				$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
+			}elseif($result['status']['recordsInResponse']==0){
+				return true;
 			}else{
-				//Start: Add action log for sync success
-				ActionLog::Create(array(
-					'module' => 'Product',
-					'type' => 'Sync',
-					'notes' => 'Total '.$result['status']['recordsTotal']
-						.' records, sync '
-						.$result['status']['recordsInResponse'].' records on page '.$pageNo
-						.', from '
-						.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
-					'user' => 'System'
-				));
-				//End:  Add action log for sync success
-
+				$notes = 'Total '.$result['status']['recordsTotal']
+					.' records, sync '
+					.$result['status']['recordsInResponse'].' records on page '.$pageNo
+					.', from '
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
+					.$result['status']['generationTime'].'seconds. ';
 				foreach ($erplyProducts as $erplyProduct) {
 					$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();
 					if (is_null($product)){
@@ -200,6 +196,15 @@ class SyncHelper {
 				    $product->save();
 				}		
 			}
+
+			//Start: Add action log for sync success
+			ActionLog::Create(array(
+				'module' => 'Product',
+				'type' => 'Sync',
+				'notes' => $notes, 
+				'user' => 'System'
+			));
+			//End:  Add action log for sync success
 		}
 		// Get tags from shopify
 		$sh = new SAPI();
@@ -260,31 +265,16 @@ class SyncHelper {
 
 		$erplyProductStocks = $result['records'];
 		//return $totalPage;
-		if(is_null($erplyProductStocks)){
-			//Start: Add action log for sync error
-			ActionLog::Create(array(
-				'module' => 'ProductStock',
-				'type' => 'Sync',
-				'notes' => 'Sync error, no record returned', 
-				'user' => 'System'
-			));
-			//End: Add action log for sync error
-
-			return false;
+		if($result['status']['responseStatus']!='ok'){
+			$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
+		}elseif($result['status']['recordsInResponse']==0){
+			return true;
 		}else{
-
-			//Start: Add action log
-			ActionLog::Create(array(
-				'module' => 'ProductStock',
-				'type' => 'Sync',
-				'notes' => 'Total '.$result['status']['recordsTotal']
+			$notes = 'Total '.$result['status']['recordsTotal']
 					.' records, sync '.$result['status']['recordsInResponse']
 					.' records, from '
-					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
-				'user' => 'System'
-			));
-			//End: Add action log
-
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply use '
+					.$result['status']['generationTime'].'seconds. ';
 			foreach ($erplyProductStocks as $erplyProductStock) {
 				$productStock = ProductStock::where('productID', '=', (int)$erplyProductStock['productID'])->first();
 				if (is_null($productStock)){
@@ -303,6 +293,7 @@ class SyncHelper {
 				$productStock->lastSoldDate = date('Y-m-d H:i:s',strtotime($erplyProductStock['lastSoldDate'])) ;
 			    $productStock->save();
 			}
+
 			// get stock from shopify
 			$sh = new SAPI();
 
@@ -310,34 +301,44 @@ class SyncHelper {
     			$args['METHOD'] = 'GET';
     			$args['DATA'] = array();
     			$count = $sh->call($args);
-			$count = $count -> count;
+			$count = $count->count;
 			$page = ceil($count / 250);
 
 			for ($i=1;$i<=$page;$i++ ){
 				$args['URL'] = 'products.json';
-    				$args['METHOD'] = 'GET';
-    				$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
-    				$call = $sh->call($args);
-    				$products = $call -> products;
-    				foreach($products as $key => $value){
-	    				$shopifyid = $value -> id;
-	    				$variants = $value -> variants;
-	    				// $numVariants = count($variants);
-	    				foreach ($variants as $key => $value) {
-	    					$shopifyVariantID = $value -> id;
-	    					$shopifyStock = $value -> inventory_quantity;
-	    					$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
-	    					if(isset($product)){
-    							$productID = $product -> productID;
-    							$productStocks = Productstock::where('productID', '=', $productID)->first();
-    							if(isset($productStocks)){
-    								$productStocks -> shopifyAmountInStock = $shopifyStock; 
-    								$productStocks->save();
-    							}					
-    						}
-	    				}
-    				}					
-    			}
+				$args['METHOD'] = 'GET';
+				$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
+				$call = $sh->call($args);
+				$products = $call -> products;
+				foreach($products as $key => $value){
+    				$shopifyid = $value -> id;
+    				$variants = $value -> variants;
+    				// $numVariants = count($variants);
+    				foreach ($variants as $key => $value) {
+    					$shopifyVariantID = $value -> id;
+    					$shopifyStock = $value -> inventory_quantity;
+    					$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
+    					if(isset($product)){
+							$productID = $product -> productID;
+							$productStocks = Productstock::where('productID', '=', $productID)->first();
+							if(isset($productStocks)){
+								$productStocks -> shopifyAmountInStock = $shopifyStock; 
+								$productStocks->save();
+							}					
+						}
+    				}
+				}					
+    		}
+
+
+    		//Start: Add action log
+			ActionLog::Create(array(
+				'module' => 'ProductStock',
+				'type' => 'Sync',
+				'notes' => $notes, 
+				'user' => 'System'
+			));
+			//End: Add action log
 			return true;	
 		}
 
@@ -375,25 +376,18 @@ class SyncHelper {
 				), 
 				true
 			);
-			/*
-			$result = json_decode(file_get_contents("SalesDocuments.json"),true);
-			*/
+
 			$erplySalesDocuments = $result['records'];
 			//Get the total records
 			if($result['status']['recordsTotal']!=null){
 				$totalPage = ceil($result['status']['recordsTotal']/100);
 			}
 
-			if(is_null($erplySalesDocuments)){
-				//Start: Add Log for sync error
-				ActionLog::Create(array(
-					'module' => 'SalesDocument',
-					'type' => 'Sync',
-					'notes' => 'Sync sales documents error.', 
-					'user' => 'System'
-				));
-				//End: Add Log for sync error
-				return false;
+			//check status to updates
+			if($result['status']['responseStatus']!='ok'){
+				$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
+			}elseif($result['status']['recordsInResponse']==0){
+				return true;
 			}else{
 				//Save salesDocument information
 				foreach ($erplySalesDocuments as $erplySalesDocument) {
@@ -538,26 +532,21 @@ class SyncHelper {
 			}
 		}
 
-		//Start: Add action log for sync success
+		
 		if($totalItemSync>0){
-			ActionLog::Create(array(
-				'module' => 'SalesDocument',
-				'type' => 'Sync',
-				'notes' => 'Total '.$totalItemSync.'records sync (erply:'.$totalItemReturn
+			$notes = 'Total '.$totalItemSync.'records sync (erply:'.$totalItemReturn
 					.'), from '
-					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']), 
-				'user' => 'System'
-			));
-			//End:  Add action log for sync success
+					.Date('Y-m-d h:i:s',$erplyOptions['changedSince']).' Erply Use '
+					.$result['status']['generationTime'].'seconds. ';
 
 			//Sync supplier sales document table
 			$result = DB::statement('INSERT INTO supplier_sales_documents (supplierID, salesDocumentID, amount, netTotal, vatTotal,total,lastModified,lastModifierUsername,created_at,updated_at) select prod.supplierID, doc.salesDocumentID, @amount := sum(item.amount), @rowNetTotal := sum(item.rowNetTotal), @rowVat := sum(item.rowVat), @rowTotal := sum(item.rowTotal),NOW(),"System",doc.date,NOW() from sales_documents doc, sales_document_items item, products prod where doc.salesDocumentID = item.salesDocumentID and item.productID = prod.productID group by doc.salesDocumentID,prod.supplierID on duplicate key update amount = @amount, netTotal = @rowNetTotal, vatTotal = @rowVat,total = @rowTotal,lastModified = NOW(),lastModifierUsername = "System",updated_at = NOW();');	
 
 			//Start: Add action log for sync
 			if($result){
-				$notes = 'Sync SupplierSalesDocument successfully';
+				$notes .= 'Sync SupplierSalesDocument successfully';
 			}else{
-				$notes = 'Sync SupplierSalesDocument failed';
+				$notes .= 'Sync SupplierSalesDocument failed';
 			};
 			ActionLog::Create(array(
 				'module' => 'SupplierSalesDocument',
@@ -600,14 +589,15 @@ class SyncHelper {
 			);
 
 			if($result['status']['responseStatus']!='ok'){
-				$notes = 'Page has error, no record returned';
+				$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
 			}elseif($result['status']['recordsInResponse']==0){
-				$notes = $result['status'];
+				return true;
 			}else{
-				dd($result);
 				$erplyPriceList = $result['records'][0];
 				$erplyPriceListItems = $result['records'][0]['pricelistRules'];
-				$notes = $result['status'].'Total '.count($erplyPriceListItems).' records sync.';
+
+				$notes = 'Total '.count($erplyPriceListItems).' records sync. Erply use '
+					.$result['status']['generationTime'].'seconds';
 				//Save priceListItem information
 				foreach ($erplyPriceListItems as $erplyPriceListItem) {
 					$priceListItem = PriceListItem::where('priceListID', '=', $erplyPriceList['pricelistID'])->
