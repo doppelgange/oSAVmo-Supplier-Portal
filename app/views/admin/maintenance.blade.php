@@ -59,7 +59,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
-<div class="main" style="background-image: url('img/maintainance-bg.jpg')">
+<div class="main" style="background-image: url('images/common/maintainance-bg.jpg')">
 
 <!--    Change the image source '/images/default.jpg' with your favourite image.     -->
     

@@ -30,7 +30,7 @@ body {
 	width: 300px;
 	height: 100px;
 	margin: auto;
-	background-image: url(../img/logo.png);
+	background-image: url(../images/common/logo.png);
 	background-size: 300px auto;
 	background-position: 0 0;
 }

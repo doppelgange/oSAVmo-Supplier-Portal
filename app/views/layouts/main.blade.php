@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>oSAVmo - Management your online store</title>
-    <link rel="shortcut icon" href='{{{ asset('img/favicon.png') }}}' sizes="16x16">
+    <link rel="shortcut icon" href='{{{ asset('images/common/favicon.png') }}}' sizes="16x16">
     {{ HTML::style('css/bootstrap.css') }}
     {{ HTML::style('css/main.css')}}
     {{ HTML::script('js/jquery-2.1.3.js') }}
