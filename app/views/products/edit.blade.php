@@ -64,6 +64,10 @@
 			<td><label> Desc </label></td>
 			<td colspan="5"> {{ $product -> longdesc }} </td>
 		</tr>
+		<tr>
+			<td><label> Tags </label></td>
+			<td colspan="5"> {{ $product -> tags }} </td>
+		</tr>
 		@if(is_null($product -> productStocks()-> first()))
 		<tr>
 			<td colspan="6"> No Stock information for this item </td>
