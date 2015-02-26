@@ -11,7 +11,9 @@ class ProductStocksController extends \BaseController {
 	 */
 	public function sync()
 	{
-		if(SyncHelper::syncProductStocks()){
+		//Default get the options from URL
+		$option['days'] = Input::get('days');
+		if(SyncHelper::syncProductStocks($option)){
 			return Redirect::to('products')->with('message', 'Sync Successfuly!');
 		}else{
 			return Redirect::to('products')->with('message', 'Cannot Sync');

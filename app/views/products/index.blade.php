@@ -2,6 +2,8 @@
 	<div>There is no record for products, you can sync to get the latest data! </div>
 @else
 
+
+
 {{ Form::open(array('url'=>'products/batchAmend')) }}
 <div>
 	Total {{$products->getTotal()}} records are found. 

@@ -16,8 +16,7 @@ class UsersController extends BaseController {
 	public function index()
 	{
 		if(Auth::user()->isSupplier()){
-			$users = User::where('active','=','1')
-			->where('supplierID','=',Auth::user()->supplierID)->get();
+			$users = User::where('supplierID','=',Auth::user()->supplierID)->get();
 			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
 		}else{
 			$users = User::all();

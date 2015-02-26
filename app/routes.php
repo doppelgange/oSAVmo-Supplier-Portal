@@ -37,7 +37,6 @@ Route::group(array('before' => 'auth'), function()
 	Route::resource('suppliers','SuppliersController');
 
 	//Products related Routes
-	
 	Route::put('products/inventoryAdjustment', 'ProductsController@inventoryAdjustment');
 	Route::get('products/sync', 'ProductsController@sync');
 	Route::resource('products','ProductsController');

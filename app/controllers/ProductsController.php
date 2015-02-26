@@ -41,23 +41,34 @@ class ProductsController extends \BaseController {
 	 */
 	public function index()
 	{
-		// Not ready, allow change paging
-		$pagecount = 10;
-		if(is_numeric(Input::get("pagecount"))){
-			$pagecount = Input::get("pagecount");
-		} ;
+		//Check search criteria
 
+		$q=Input::get('q')==null? '':Input::get('q');
+		$pagecount = is_numeric(Input::get("pagecount"))? Input::get("pagecount"):10;
+
+		//Init query
+		$products =Product::where('active', '=','1');
+		//Filter by supplier
 		if(Auth::user()->isSupplier()){
-			$products = Product::where('supplierID','=',Auth::user()->supplierID)
-			->where('active', '=','1')->orderBy('name','asc')
-			->paginate($pagecount);
-		}else{
-			$products=Product::where('active', '=','1')->orderBy('name','asc')
-			->paginate($pagecount);
+			$products = $products->where('supplierID','=',Auth::user()->supplierID);
 		}
+		//Filter by query
+		if($q!=''){
+			$products = $products->where('name', 'like','%'.$q.'%')
+				->orWhere('nameCN', 'like','%'.$q.'%')
+				->orWhere('ean', 'like','%'.$q.'%')
+				->orWhere('code', 'like','%'.$q.'%');
+		}
+		//Paginate
+		$products = $products->orderBy('name','asc')
+			->paginate($pagecount);
 		
-		//return $products;
-		$this->layout->content = View::make('products.inventoryAdjustment',array('products'=>$products)); 
+		//Create view
+		$this->layout->content = View::make('products.inventoryAdjustment',
+			array(
+				'products'=>$products,
+				'q'=>$q)
+		); 
 	}
 
 	/**
@@ -157,6 +168,7 @@ class ProductsController extends \BaseController {
 
 	public function inventoryAdjustment(){
 
+
 		$option['item']=array();
 		for($i=0;$i<count(Input::get('toAmount'));$i++){
 			//Check whether there is change
@@ -178,7 +190,6 @@ class ProductsController extends \BaseController {
 		return Redirect::to('products')->with('message',$feedback['message'] );
 
 	}
-
 
 	public function previous($id,$modeString=''){
 		$current = Product::find($id);

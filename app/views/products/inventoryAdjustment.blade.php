@@ -1,18 +1,19 @@
+{{ Form::open(array('url'=>'products','method' => 'get','class'=>'form-inline')) }}
+	{{ Form::label('name', 'Name/EAN/Code')}}
+	{{Form::text('q',$q,array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+{{ Form::close() }}
 @if (count($products) === 0)
 	<div>There is no record for products, you can sync to get the latest data! </div>
 @else
-
 <div>
 	Total {{$products->getTotal()}} records are found. 
 	{{$products->count()}} records in this page.
 
 </div>
+{{$products->appends(Request::input())->links()}}
 
-
-
-{{$products->links()}}
-
-{{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'put')) }}
+{{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'get')) }}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -35,13 +36,13 @@
 			<td> {{ $product -> id }}<!--{{ $product -> productID }}--></td>
 			<td>
 				<a href="products/{{$product-> id}}/edit" target="_blank">  
-				<div>{{ $product -> name }} </div>
-				<div>{{ $product -> nameCN }} </div>
+				<div>{{ $product -> name}} </div>
+				<div>{{ $product -> nameCN}} </div>
 				 </a>
 				<!-- <div><label>Code:</label> {{ $product -> code }} </div> -->
 			</td>
-			<td>{{ $product -> ean }}</td>
-			<td> {{ $product -> categoryName }} </td>
+			<td>{{ $product -> ean}}</td>
+			<td> {{ $product -> categoryName}} </td>
 			<td> 
 				<!-- Use Price List first -->
 				<!--{{$priceListItem = $product->priceListItems()->where('priceListID','=','8')->first()}}-->
@@ -109,7 +110,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$products->links()}}
+{{$products->appends(Request::input())->links()}}
 
 {{ Form::submit('Submit', array('class'=>'btn btn-large btn-primary center-block'))}}
 
