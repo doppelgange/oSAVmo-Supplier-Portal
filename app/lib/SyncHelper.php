@@ -1,4 +1,20 @@
 <?php
+//image download
+function downLoadImage($option=array()){
+	$url = $option['url'];
+	$fileName = $option['fileName'];
+	$destinationPath = $option['destinationPath'];
+	//chmod($destinationPath, 0777);
+	$filePath = $destinationPath.$fileName;  			
+       	if(file_put_contents($filePath, file_get_contents($url))){
+       		chmod($filePath,0777);
+       		return true;
+	}
+	else{
+		return false;
+	}
+}
+
 //used to 
 function syncChangeFromParser($option=array()){
 
@@ -137,6 +153,8 @@ class SyncHelper {
 			}elseif($result['status']['recordsInResponse']==0){
 				return true;
 			}else{
+				$successCount = 0;
+				$failCount = 0 ; 
 				$notes = 'Total '.$result['status']['recordsTotal']
 					.' records, sync '
 					.$result['status']['recordsInResponse'].' records on page '.$pageNo
@@ -192,7 +210,12 @@ class SyncHelper {
 					$product->volume = $erplyProduct['volume'];
 					$product->longdesc = $erplyProduct['longdesc'];
 					if (array_key_exists('images', $erplyProduct)) {
-						$product->imageLink = $erplyProduct['images'][0]['smallURL'];						
+						$product->imageLink = $erplyProduct['images'][0]['smallURL'];	
+						$imageArray['url'] = $product->imageLink;
+						$imageArray['fileName'] = $product->productID.'.jpg';
+						$imageArray['destinationPath'] = public_path().'/images/200x200/';
+						$result = downLoadImage($imageArray);
+						if ($result){$successCount ++ ;} else {$failCount ++;}					
 					}
 					$product->type = $erplyProduct['type'];
 					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
@@ -200,7 +223,7 @@ class SyncHelper {
 				    $product->save();
 				}		
 			}
-
+			$notes .= $successCount.' images have been download, '.$failCount.' failed';
 			//Start: Add action log for sync success
 			ActionLog::Create(array(
 				'module' => 'Product',
@@ -235,24 +258,33 @@ class SyncHelper {
     				}    						
     			}
 		}
-		$product = Product::where('imageLink', '!=', 'NULL')->get();
-		$records =  Product::where('imageLink', '!=', 'NULL')->count();		
-		$imageNum = 0;
-		foreach ($product as $key => $value) {
-			$url =  $value -> imageLink;
-			$productID = $value -> productID;
-		   	$img_name= $productID.".jpg";
-		   	$destinationPath = public_path().'/images/200x200/'.$img_name;	   			
-       			if(file_put_contents($destinationPath, file_get_contents($url))){
-       				$imageNum++;
-			}
-		}
-		ActionLog::Create(array(
-			'module' => 'ImageDownload',
-			'type' => 'Sync',
-			'notes' => 'There are '.$records.' records,'.$imageNum. " images have been download",
-			'user' => 'System'
-		));
+
+		// Get product Images 
+		// $product = Product::where('imageLink', '!=', 'NULL')->get();
+		// $records = count($product);		
+		// $successNum = 0;
+		// $failNum = 0;
+		// $destinationPath = public_path().'/images/200x200/';
+		// $imageArray = scandir($destinationPath);
+		// foreach ($product as $key => $value) {
+		// 	$url =  $value -> imageLink;
+		// 	$productID = $value -> productID;
+		//    	$imgName= $productID.".jpg";
+		//    	$filePath = $destinationPath.$imgName;	   			
+  //      			if(file_put_contents($filePath, file_get_contents($url))){
+  //      				$successNum++;
+		// 	}
+		// 	else{
+		// 		$failNum++;
+		// 	}
+		// }
+		// ActionLog::Create(array(
+		// 	'module' => 'ImageDownload',
+		// 	'type' => 'Sync',
+		// 	'notes' => 'There are '.$records.' records,'.$successNum. ' images have been download,'.
+		// 	$failNum.' failed',
+		// 	'user' => 'System'
+		// ));
 		return true;
 	}
 
