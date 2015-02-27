@@ -141,8 +141,8 @@ class SalesDocumentsController extends \BaseController {
         	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
         } 
         $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '<', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'desc')->first();
+            ->where('sales_documents.date', '>', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'asc')->first();
         $previousItemID= is_null($previousItem)? '#':URL::to('salesDocuments').'/'.$previousItem->id.$modeString;
         return $previousItemID;
 	}
@@ -158,8 +158,8 @@ class SalesDocumentsController extends \BaseController {
         	$nextItem=$nextItem->where('products.supplierID', '=', Auth::user()->supplierID);
         } 
         $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '>', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'asc')->first();
+            ->where('sales_documents.date', '<', $salesDocument->date)
+            ->orderBy('sales_documents.date', 'desc')->first();
         $nextItemID= is_null($nextItem)? '#':URL::to('salesDocuments').'/'.$nextItem->id.$modeString;
         return $nextItemID;
 	}

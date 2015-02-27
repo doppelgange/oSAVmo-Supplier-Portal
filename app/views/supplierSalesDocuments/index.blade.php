@@ -1,3 +1,12 @@
+{{ Form::open(array('url'=>'supplierSalesDocuments','method' => 'get','class'=>'form-inline')) }}
+	{{ Form::label('supplier', 'Supplier')}}
+    {{ Form::select('supplierID', $suppliers, $supplierID , array('class'=>'form-control')) }}
+    {{ Form::label('username', 'User Name')}}
+	{{Form::text('clientName',$q['clientName'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::label('number', 'Number')}}
+	{{Form::text('number',$q['number'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+{{ Form::close() }}
 @if (count($supplierSalesDocuments) === 0)
 	<div>There is no record for salesDocuments, you can sync to get the latest data! </div>
 @else
@@ -6,7 +15,7 @@
 	{{$supplierSalesDocuments->count()}} records in this page.
 
 </div>
-{{$supplierSalesDocuments->links()}}
+{{$supplierSalesDocuments->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -24,7 +33,7 @@
 	@foreach($supplierSalesDocuments as $supplierSalesDocument )
 	    <tr @if($supplierSalesDocument->status!='Completed') class='danger' @else class='success' @endif>
 			<td> 
-				<a href="supplierSalesDocuments/{{$supplierSalesDocument->salesDocument->id}}/edit" target="_blank"> 
+				<a href="supplierSalesDocuments/{{$supplierSalesDocument->id}}/edit?supplierID={{$supplierID}}" target="_blank"> 
 				{{ $supplierSalesDocument->salesDocument->number }} 
 				</a>
 			</td>
@@ -55,7 +64,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$supplierSalesDocuments->links()}}
+{{$supplierSalesDocuments->appends(Request::input())->links()}}
  @endif
 
 

@@ -20,7 +20,8 @@ class UsersController extends BaseController {
 			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
 		}else{
 			$users = User::all();
-			$suppliers= Supplier::getManageable(); 
+			$suppliers= Supplier::getManageableArray(); 
+			$suppliers[0] = 'All Supplier';
 		}
 		
 		$this->layout->content = View::make('users.index',array('users'=>$users,'suppliers'=>$suppliers)); 
@@ -34,7 +35,8 @@ class UsersController extends BaseController {
 	 */
 	public function create()
 	{
-		$suppliers= Supplier::getManageable(); 
+		$suppliers= Supplier::getManageableArray(); 
+		$suppliers[0] = 'All Supplier';
 	    $this->layout->content = View::make('users.create',array('suppliers'=>$suppliers));
 	}
 
@@ -74,7 +76,7 @@ class UsersController extends BaseController {
 		$user = User::find($id);
 
 		if(Auth::user()->isSupplier()){
-			$supplierName= Supplier::getManageable()[$user->supplierID]; 
+			$supplierName= Supplier::getManageableArray()[$user->supplierID]; 
 		}else{
 			$supplierName= 'All Supplier';
 		}
@@ -94,7 +96,7 @@ class UsersController extends BaseController {
 		if(Auth::user()->isSupplier()){
 			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
 		}else{
-			$suppliers= Supplier::getManageable(); 
+			$suppliers= Supplier::getManageableArray(); 
 		}
 		$user = User::find($id);
 		$this->layout->content = View::make('users.edit',array('user'=>$user,'suppliers'=>$suppliers)); 

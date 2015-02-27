@@ -1,10 +1,10 @@
 <?php
 
 class Supplier extends \Eloquent {
-	public static function getManageable(){
+	public static function getManageableArray(){
 		$suppliers= Supplier::where('manageable','=','Yes')->get(); 
     	//return $suppliers;
-    	$suppliersSelect = array('All Supplier');
+    	//$suppliersSelect = array('All Supplier');
 		foreach ($suppliers as $supplier){
 			$suppliersSelect[$supplier->supplierID] = $supplier->fullName;
 		}
