@@ -1,3 +1,5 @@
+
+
 @if (count($salesDocumentItems) === 0)
 	<div>There is no record for salesDocumentItems, you can sync to get the latest data! </div>
 @else
@@ -6,7 +8,7 @@
 	{{$salesDocumentItems->count()}} records in this page.
 
 </div>
-{{$salesDocumentItems->links()}}
+{{$salesDocumentItems->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -59,7 +61,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$salesDocumentItems->links()}}
+{{$salesDocumentItems->appends(Request::input())->links()}}
  @endif
 
 

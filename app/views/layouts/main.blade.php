@@ -61,9 +61,6 @@
 
 
     <div class="container">
-      @if(isset($headline))
-        <h1>{{$headline or ''}} <small>{{$subtext or ''}} </small></h1>
-      @endif
 
     <!-- Message from session -->
     @if(Session::has('message'))

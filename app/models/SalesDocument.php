@@ -29,6 +29,9 @@ class SalesDocument extends \Eloquent {
         return $items;
     }
 
+    public function scopeId($query,$id){
+        return $query->whereId($id);
+    }
 
 
 }
