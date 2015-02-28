@@ -258,33 +258,6 @@ class SyncHelper {
     				}    						
     			}
 		}
-
-		// Get product Images 
-		// $product = Product::where('imageLink', '!=', 'NULL')->get();
-		// $records = count($product);		
-		// $successNum = 0;
-		// $failNum = 0;
-		// $destinationPath = public_path().'/images/200x200/';
-		// $imageArray = scandir($destinationPath);
-		// foreach ($product as $key => $value) {
-		// 	$url =  $value -> imageLink;
-		// 	$productID = $value -> productID;
-		//    	$imgName= $productID.".jpg";
-		//    	$filePath = $destinationPath.$imgName;	   			
-  //      			if(file_put_contents($filePath, file_get_contents($url))){
-  //      				$successNum++;
-		// 	}
-		// 	else{
-		// 		$failNum++;
-		// 	}
-		// }
-		// ActionLog::Create(array(
-		// 	'module' => 'ImageDownload',
-		// 	'type' => 'Sync',
-		// 	'notes' => 'There are '.$records.' records,'.$successNum. ' images have been download,'.
-		// 	$failNum.' failed',
-		// 	'user' => 'System'
-		// ));
 		return true;
 	}
 
