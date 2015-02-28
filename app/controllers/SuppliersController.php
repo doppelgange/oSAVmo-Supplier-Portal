@@ -8,7 +8,8 @@ class SuppliersController extends BaseController {
     protected $layout = "layouts.main";
 
 	public function sync(){
-		if(SyncHelper::syncSuppliers()){
+		$option['days'] = Input::get('days');
+		if(SyncHelper::syncSuppliers($option)){
 			return Redirect::to('suppliers')->with('message', 'Sync supplier successfuly!');
 		}else{
 			return Redirect::to('suppliers')->with('message', 'Fail to sync supplier!');

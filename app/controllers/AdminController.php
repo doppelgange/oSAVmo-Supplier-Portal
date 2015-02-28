@@ -13,9 +13,10 @@ class AdminController extends \BaseController {
 	{
 		$message='';
 		$alertClass = 'alert-info';
+		$option['days'] = 365;
 		//Sync Supplier
-		if(Supplier::all()->count() ==0 ){
-			if(SyncHelper::syncSuppliers()){
+		if(Supplier::all()->count() ==0 ){			
+			if(SyncHelper::syncSuppliers($option)){
 				$message .='<br/>Sync suppliers successfully!';
 			}else{
 				$message .='<br/>Sync suppliers failed!';
@@ -68,7 +69,7 @@ class AdminController extends \BaseController {
 
 		//Sync Products
 		if(Product::all()->count() ==0 ){
-			if(SyncHelper::syncProducts()){
+			if(SyncHelper::syncProducts($option)){
 				$message .='<br/>Sync products successfully!';
 			}else{
 				$message .='<br/>Sync products failed!';
@@ -77,7 +78,7 @@ class AdminController extends \BaseController {
 
 		//Sync Stocks
 		if(ProductStock::all()->count()==0 ){
-			if(SyncHelper::syncProductStocks()){
+			if(SyncHelper::syncProductStocks($option)){
 				$message .='<br/>Sync stocks successfully!';
 			}else{
 				$message .='<br/>Sync stocks failed!';
