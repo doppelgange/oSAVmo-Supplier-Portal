@@ -37,18 +37,43 @@ class SupplierSalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$this->layout->headline = 'Order List';
-		if(Auth::user()->isSupplier()){
+		//dd(Input::get('q'));
+		$q['clientName']=Input::get('clientName')==null? '':Input::get('clientName');
+		$q['number']=Input::get('number')==null? '':Input::get('number');
+		$suppliers = Supplier::getManageableArray();
 
-			$supplierSalesDocuments = SupplierSalesDocument::where('supplierID','=',Auth::user()->supplierID)
-			->orderBy('created_at','desc')->paginate(10);
-			//dd($salesDocuments);
-			$this->layout->content = View::make('supplierSalesDocuments.index',array(
-				'supplierSalesDocuments'=>$supplierSalesDocuments
-			));
+		//Filter by supplier
+		if(Auth::user()->isSupplier()){
+			$supplierID = Auth::user()->supplierID;
 		}else{
-			return Redirect::to('salesDocuments');
+			if(Input::get('supplierID')==null){
+				$supplierID = array_keys($suppliers)[0];
+			}else{
+				$supplierID = Input::get('supplierID');
+			}
 		}
+		$pagecount = is_numeric(Input::get("pagecount"))? Input::get("pagecount"):10;
+		//Do the query
+		$supplierSalesDocuments = SupplierSalesDocument::where('supplierID','=',$supplierID);
+		$supplierSalesDocuments = $supplierSalesDocuments->whereHas('salesDocument', 
+			function($query) use($q){
+			    if($q['clientName']!=''){
+			    	$query->where('clientName','like','%'.$q['clientName'].'%');
+			    }
+			    if($q['number']!=''){
+			    	$query->where('number','like','%'.$q['number'].'%');
+			    }
+		});
+		$supplierSalesDocuments = $supplierSalesDocuments->orderBy('created_at','desc')
+			->paginate($pagecount);
+		//Create View
+		$this->layout->content = View::make('supplierSalesDocuments.index',array(
+			'supplierSalesDocuments'=>$supplierSalesDocuments,
+			'suppliers'=>$suppliers,
+			'supplierID'=>$supplierID,
+			'q'=>$q,
+		));
+		
 	}
 
 	/**
@@ -102,14 +127,12 @@ class SupplierSalesDocumentsController extends \BaseController {
 	 */
 	public function edit($id)
 	{
-		//$this->show($id);
-		$salesDocumentID = SalesDocument::find($id)->salesDocumentID;
-		$supplierSalesDocument = SupplierSalesDocument::where('salesDocumentID','=',$salesDocumentID)
-		->where('supplierID','=',Auth::user()->supplierID)->first();
+		$supplierSalesDocument = SupplierSalesDocument::find($id);
+
 		$this->layout->content = View::make('supplierSalesDocuments.edit',array(
 			'supplierSalesDocument'=>$supplierSalesDocument,
 			'next'=>$this->getNextItem($id,'/edit'),
-			'deliveryTypes' => DeliveryType::getDeliveryTypeSelect(),
+			'supplierID' => Input::get('supplierID'),
 			'previous'=>$this->getPreviousItem($id,'/edit'),
 		));  
 	}
@@ -218,13 +241,8 @@ class SupplierSalesDocumentsController extends \BaseController {
 	public function fulfill($id)
 	{
 		$alertClass = 'alert-success';
-		$salesDocument = SalesDocument::find($id);
-		$supplierID = Auth::user()->supplierID;
-		$supplierSalesDocument = SupplierSalesDocument::where('salesDocumentID','=',$salesDocument->salesDocumentID)
-		->where('supplierID','=',$supplierID)->first();
-
-
-		$message="Order ".$salesDocument->number.' has been fulfilled!';
+		$supplierSalesDocument = SupplierSalesDocument::find($id);
+		$message="Order ".$supplierSalesDocument->salesDocument->number.' has been fulfilled!';
 		//Set status for supplier order
 		$supplierSalesDocument->status='Completed';
 		$supplierSalesDocument->save();
@@ -239,37 +257,52 @@ class SupplierSalesDocumentsController extends \BaseController {
 
 
 	public function getPreviousItem($id,$modeString=''){
-		$salesDocument = SalesDocument::find($id);
-		// get previous product id
-	    $previousItem = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*');
-            
-        if(Auth::user()->isSupplier()){
-        	$previousItem=$previousItem->where('products.supplierID', '=', Auth::user()->supplierID);
-        } 
-        $previousItem = $previousItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '<', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'desc')->first();
-        $previousItemID= is_null($previousItem)? '#':URL::to('supplierSalesDocuments').'/'.$previousItem->id.$modeString;
+		$supplierSalesDocument = SupplierSalesDocument::find($id);
+
+		//Filer by supplier
+		if(Auth::user()->isSupplier()){
+        	$previousItem = SupplierSalesDocument::supplierID(Auth::user()->supplierID);
+        	$supplierIDString = '?supplierID='.Auth::user()->supplierID;
+        }else{
+        	if(Input::get('supplierID')==null||Input::get('supplierID')==''){
+				$previousItem = new SupplierSalesDocument();
+				$supplierIDString='';
+			}else{
+				$previousItem = SupplierSalesDocument::supplierID(Input::get('supplierID'));
+				$supplierIDString = '?supplierID='.Input::get('supplierID');
+			}
+        }
+	    $previousItem = $previousItem->whereHas('salesDocument',function($query) use($supplierSalesDocument){
+		    	$query->where('sales_documents.source', '=','eShop')
+		    		->where('date','>',$supplierSalesDocument->salesDocument->date)
+		    		->orderBy('date','asc');
+		    })->first();
+        $previousItemID= is_null($previousItem)? '#':
+        	URL::to('supplierSalesDocuments').'/'.$previousItem->id.$modeString.$supplierIDString;
         return $previousItemID;
 	}
 
 	public function getNextItem($id,$modeString=''){
-		$salesDocument = SalesDocument::find($id);
-		// get next product id
-	    $nextItem = DB::table('sales_documents')
-            ->join('sales_document_items', 'sales_documents.salesDocumentID', '=', 'sales_document_items.salesDocumentID')
-            ->join('products', 'sales_document_items.productID', '=', 'products.productID')
-            ->select('sales_documents.*');
-        if(Auth::user()->isSupplier()){
-        	$nextItem=$nextItem->where('products.supplierID', '=', Auth::user()->supplierID);
-        } 
-        $nextItem = $nextItem->where('sales_documents.source', '=','eShop')
-            ->where('sales_documents.date', '>', $salesDocument->date)
-            ->orderBy('sales_documents.date', 'asc')->first();
-        $nextItemID= is_null($nextItem)? '#':URL::to('supplierSalesDocuments').'/'.$nextItem->id.$modeString;
+		$supplierSalesDocument = SupplierSalesDocument::find($id);
+		//Filer by supplier
+		if(Auth::user()->isSupplier()){
+        	$nextItem = SupplierSalesDocument::supplierID(Auth::user()->supplierID);
+        	$supplierIDString = '?supplierID='.Auth::user()->supplierID;
+        }else{
+        	if(Input::get('supplierID')==null||Input::get('supplierID')==''){
+				$nextItem = new SupplierSalesDocument();
+				$supplierIDString='';
+			}else{
+				$nextItem = SupplierSalesDocument::supplierID(Input::get('supplierID'));
+				$supplierIDString = '?supplierID='.Input::get('supplierID');
+			}
+        }
+	    $nextItem = $nextItem->whereHas('salesDocument',function($query) use($supplierSalesDocument){
+		    	$query->where('sales_documents.source', '=','eShop')
+		    		->where('date','<',$supplierSalesDocument->salesDocument->date)
+		    		->orderBy('date','desc');
+		    })->first();
+        $nextItemID= is_null($nextItem)? '#':URL::to('supplierSalesDocuments').'/'.$nextItem->id.$modeString.$supplierIDString;
         return $nextItemID;
 	}
 

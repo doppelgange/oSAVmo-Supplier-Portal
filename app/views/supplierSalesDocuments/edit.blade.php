@@ -1,6 +1,8 @@
 <nav>
   <ul class="pager">
-    <li @if($previous=='#')class="disabled"@endif><a href="{{ $previous}}"> Previous</a></li>
+    <li @if($previous=='#')class="disabled"@endif>
+      <a href="{{ $previous}}"> Previous</a>
+    </li>
   
     <li @if($next=='#')class="disabled"@endif><a href="{{ $next }}">Next</a></li>
   </ul>

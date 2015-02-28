@@ -6,7 +6,7 @@
 	{{$salesDocuments->count()}} records in this page.
 
 </div>
-{{$salesDocuments->links()}}
+{{$salesDocuments->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -92,7 +92,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$salesDocuments->links()}}
+{{$salesDocuments->appends(Request::input())->links()}}
  @endif
 
 

@@ -10,7 +10,7 @@
 	{{$products->count()}} records in this page.
 
 </div>
-{{$products->links()}}
+{{$products->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -99,7 +99,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$products->links()}}
+{{$products->appends(Request::input())->links()}}
 <!--
 {{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
 -->

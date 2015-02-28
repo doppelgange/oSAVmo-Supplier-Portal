@@ -28,4 +28,8 @@ class SupplierSalesDocument extends \Eloquent {
         return $items;
     }
 
+    public function scopeSupplierID($query,$id){
+        return $query->where('supplierID','=',$id);
+    }
+
 }

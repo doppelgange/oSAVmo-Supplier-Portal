@@ -7,7 +7,7 @@
 	{{$actionLogs->count()}} records in this page.
 
 </div>
-{{$actionLogs->links()}}
+{{$actionLogs->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -36,5 +36,5 @@
 	@endforeach
 	</tbody>
 </table>
-{{$actionLogs->links()}}
+{{$actionLogs->appends(Request::input())->links()}}
  @endif

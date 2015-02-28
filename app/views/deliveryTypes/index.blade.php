@@ -7,7 +7,7 @@
 	{{$deliveryTypes->count()}} records in this page.
 
 </div>
-{{$deliveryTypes->links()}}
+{{$deliveryTypes->appends(Request::input())->links()}}
 <table class='table table-striped table-bordered table-hover table-condensed'>
 	<thead>
 		<tr>
@@ -30,5 +30,5 @@
 		@endforeach
 	</tbody>
 </table>
-{{$deliveryTypes->links()}}
+{{$deliveryTypes->appends(Request::input())->links()}}
 @endif

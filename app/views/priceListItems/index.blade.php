@@ -6,7 +6,7 @@
 	{{$priceListItems->count()}} records in this page.
 
 </div>
-{{$priceListItems->links()}}
+{{$priceListItems->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
@@ -43,7 +43,7 @@
 	@endforeach
 	</tbody>
 </table>
-{{$priceListItems->links()}}
+{{$priceListItems->appends(Request::input())->links()}}
  @endif
 
 

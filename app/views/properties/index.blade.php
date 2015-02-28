@@ -6,7 +6,7 @@
  {{$properties->count()}} records in this page.
 
 </div>
-{{$properties->links()}}
+{{$properties->appends(Request::input())->links()}}
 <table class='table table-striped table-bordered table-hover table-condensed'>
  <thead>
   <tr>
@@ -27,5 +27,5 @@
  @endforeach
  </tbody>
 </table>
-{{$properties->links()}}
+{{$properties->appends(Request::input())->links()}}
  @endif
