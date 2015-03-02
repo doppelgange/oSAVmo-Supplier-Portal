@@ -13,7 +13,7 @@
 </div>
 {{$products->appends(Request::input())->links()}}
 
-{{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'get')) }}
+{{ Form::open(array('url'=>'products/inventoryAdjustment','method' => 'put')) }}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
