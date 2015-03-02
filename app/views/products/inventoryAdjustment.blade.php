@@ -1,3 +1,4 @@
+
 {{ Form::open(array('url'=>'products','method' => 'get','class'=>'form-inline')) }}
 	{{ Form::label('name', 'Name/EAN/Code')}}
 	{{Form::text('q',$q,array('class'=>'form-control','placeholder'=>'Input your query'))}}
