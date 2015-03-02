@@ -5,7 +5,7 @@ function downLoadImage($option=array()){
 	$fileName = $option['fileName'];
 	$destinationPath = $option['destinationPath'];
 	$filePath = $destinationPath.$fileName;  			
-       	if(file_put_contents($filePath, file_get_contents($url))){
+       	if(file_put_contents($filePath, file_get_contents($url)) != false ){
        		chmod($filePath,0777);
        		return true;
 	}
@@ -206,9 +206,6 @@ class SyncHelper {
 					$product->grossWeight = $erplyProduct['grossWeight'];
 					$product->volume = $erplyProduct['volume'];
 					$product->longdesc = $erplyProduct['longdesc'];
-					if (array_key_exists('images', $erplyProduct)) {
-						$product->imageLink = $erplyProduct['images'][0]['smallURL'];					
-					}
 					$product->type = $erplyProduct['type'];
 					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
 				    $product->erplyLastModified = date('y-m-d h:i:s',$erplyProduct['lastModified']); 
@@ -640,8 +637,7 @@ class SyncHelper {
 					}
 					$priceListItem->save();
 					  
-				}
-					
+				}					
 			}
 
 			//Start: Add action log for sync success
@@ -712,23 +708,91 @@ class SyncHelper {
 
 	//Sync Images
 	public static function syncProductsImages($option = array()){
-		$product = Product::whereNotNull('imageLink') -> get();
-		$imageArray['destinationPath'] = public_path().'/images/200x200/';
-		$totalRecords = count($product);
-		$successCount = 0;
-		$failCount = 0 ; 
-		foreach ($product as $key => $value) {
-			$imageArray['url'] = $value->imageLink;
-			$imageArray['fileName'] = $value->productID.'.jpg';		
-			$result = downLoadImage($imageArray);
-			if ($result){$successCount ++ ;} else {$failCount ++;}	
+		$api = new EAPI();
+
+		//Set filter by supplier
+		if(array_key_exists('supplierID',$option)){
+			if($option['supplierID']!=0&&is_numeric ($option['supplierID']))
+			$erplyOptions['supplierID'] = $option['supplierID'];
 		}
-		ActionLog::Create(array(
+		 	
+		//Set filter by date
+		$erplyOptions['recordsOnPage'] = 1000;
+		//Set sync day default sync 7 days before
+		$erplyOptions['changedSince'] = syncChangeFromParser(array('data'=>$option,'module'=>'Product'));
+
+		//Update the last auto sync time log to current time
+		Property::qsave('AutoSyncTimesLog','ProductImage',time(),'Auto syncTimeLog to'.Date('Y-m-d h:i:s'));
+
+		$totalPage = 1; // Set default only one page
+		for($pageNo=1;$pageNo <= $totalPage;$pageNo++){
+			//Set Page Number
+			$erplyOptions['pageNo']=$pageNo;
+
+			$result = json_decode(
+				$api->sendRequest(
+					"getProducts", 
+					$erplyOptions
+				), 
+				true
+			);
+			$erplyProducts = $result['records'];
+			//Get the total records
+			if($result['status']['recordsTotal']!=null){
+				$totalPage = ceil($result['status']['recordsTotal']/1000);
+			}
+			//return $totalPage;
+			if($result['status']['responseStatus']!='ok'){
+				$notes = 'Page has error, no record return, Error code is '.$result['status']['errorCode'];
+			}elseif($result['status']['recordsInResponse']==0){
+				return true;
+			}else{
+				$totalImages = 0;
+				$successCount = 0;
+				$failCount= 0;
+				foreach ($erplyProducts as $erplyProduct) {
+					$update = false;
+					$product = Product::where('productID', '=', (int)$erplyProduct['productID'])->first();			
+					if (array_key_exists('images', $erplyProduct)) {
+						$productErplyImage = $erplyProduct['images'][0]['smallURL'];					
+						$productDataImage = $product->imageLink;
+						$productID = $product->productID;
+						if(!isset($productDataImage)){						
+							$update = true;
+						}
+						elseif(isset($productDataImage) && $productErplyImage != $productDataImage){							
+							$update = true;
+						}
+						$totalImages ++;
+					
+						if($update){
+							$imageArray['destinationPath'] = public_path().'/images/200x200/';
+							$imageArray['url'] = $productErplyImage;
+							$imageArray['fileName'] = $productID.'.jpg';
+							$result = downLoadImage($imageArray);
+							if($result){
+								$product->imageLink = $productErplyImage;
+								$product->save();
+								$successCount++;
+							}
+							else{
+								$failCount++;
+							}
+						}
+					}
+				}		
+			}
+			ActionLog::Create(array(
 			'module' => 'SyncImages',
 			'type' => 'Sync',
-			'notes' => 'There are '.$totalRecords.' records,'.$successCount.' images downloaded,'.$failCount.' images failed.',
-			'user' => 'System'
-		));
+			'notes' => 'There are '.$totalImages.' images in page'. $pageNo.', '
+				.$successCount.' images updated,'
+				.$failCount. ' images failed. From '
+				.Date('Y-m-d h:i:s',$erplyOptions['changedSince']) ,
+				'user' => 'System'
+			));
+		}		
+		return true;
 	}
 }
 
