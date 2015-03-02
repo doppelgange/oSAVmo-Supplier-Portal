@@ -56,7 +56,7 @@ return array(
 			'driver'    => 'mysql',
 			'host'      => 'localhost',
 			'port'		=> '3306',
-			'database'  => 'osavmotest',
+			'database'  => 'osavmo',
 			'username'  => 'osavmoadmin',
 			'password'  => '8CNnCxpzYzXf8xtR',
 			'charset'   => 'utf8',
