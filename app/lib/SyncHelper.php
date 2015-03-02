@@ -4,7 +4,6 @@ function downLoadImage($option=array()){
 	$url = $option['url'];
 	$fileName = $option['fileName'];
 	$destinationPath = $option['destinationPath'];
-	//chmod($destinationPath, 0777);
 	$filePath = $destinationPath.$fileName;  			
        	if(file_put_contents($filePath, file_get_contents($url))){
        		chmod($filePath,0777);
@@ -153,8 +152,6 @@ class SyncHelper {
 			}elseif($result['status']['recordsInResponse']==0){
 				return true;
 			}else{
-				$successCount = 0;
-				$failCount = 0 ; 
 				$notes = 'Total '.$result['status']['recordsTotal']
 					.' records, sync '
 					.$result['status']['recordsInResponse'].' records on page '.$pageNo
@@ -210,12 +207,7 @@ class SyncHelper {
 					$product->volume = $erplyProduct['volume'];
 					$product->longdesc = $erplyProduct['longdesc'];
 					if (array_key_exists('images', $erplyProduct)) {
-						$product->imageLink = $erplyProduct['images'][0]['smallURL'];	
-						$imageArray['url'] = $product->imageLink;
-						$imageArray['fileName'] = $product->productID.'.jpg';
-						$imageArray['destinationPath'] = public_path().'/images/200x200/';
-						$result = downLoadImage($imageArray);
-						if ($result){$successCount ++ ;} else {$failCount ++;}					
+						$product->imageLink = $erplyProduct['images'][0]['smallURL'];					
 					}
 					$product->type = $erplyProduct['type'];
 					$product->erplyAdded = date('y-m-d h:i:s',$erplyProduct['added']) ;
@@ -223,7 +215,6 @@ class SyncHelper {
 				    $product->save();
 				}		
 			}
-			$notes .= $successCount.' images have been download, '.$failCount.' failed';
 			//Start: Add action log for sync success
 			ActionLog::Create(array(
 				'module' => 'Product',
@@ -717,6 +708,27 @@ class SyncHelper {
 			}
 		}
 		return true;
+	}
+
+	//Sync Images
+	public static function syncProductsImages($option = array()){
+		$product = Product::whereNotNull('imageLink') -> get();
+		$imageArray['destinationPath'] = public_path().'/images/200x200/';
+		$totalRecords = count($product);
+		$successCount = 0;
+		$failCount = 0 ; 
+		foreach ($product as $key => $value) {
+			$imageArray['url'] = $value->imageLink;
+			$imageArray['fileName'] = $value->productID.'.jpg';		
+			$result = downLoadImage($imageArray);
+			if ($result){$successCount ++ ;} else {$failCount ++;}	
+		}
+		ActionLog::Create(array(
+			'module' => 'SyncImages',
+			'type' => 'Sync',
+			'notes' => 'There are '.$totalRecords.' records,'.$successCount.' images downloaded,'.$failCount.' images failed.',
+			'user' => 'System'
+		));
 	}
 }
 
