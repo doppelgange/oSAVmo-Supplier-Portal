@@ -101,7 +101,13 @@ class AdminController extends \BaseController {
 				$message .='<br/>Sync sales document failed!';
 			}
 		}
-
+		//Sync Images
+		if(SyncHelper::syncProductsImages($option)){
+			$message .='<br/>Sync Images successfully!';
+		}else{
+			$message .='<br/>Sync Images failed!';
+		}
+		
 		//Setup message to display
 		if($message ==''){
 			$message = 'No initiation operation is need at all!';
@@ -113,17 +119,6 @@ class AdminController extends \BaseController {
 		// $this->layout->content = View::make('admin.index'); 
 		return Redirect::to('admin')->with(array('message'=>$message,'alertClass'=> $alertClass));
 	}
-
-
-	public function sync(){
-		if(SyncHelper::syncSalesDocuments(array('dateFrom'=>365))){
-				$message ='<br/>Sync sales document successfully!';
-			}else{
-				$message ='<br/>Sync sales document failed!';
-			}
-		return Redirect::to('admin')->with(array('message'=>$message,'alertClass'=> $alertClass));
-	}
-
 
 	/**
 	 * Display a listing of the resource.
