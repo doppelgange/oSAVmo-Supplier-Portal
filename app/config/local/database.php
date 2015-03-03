@@ -17,7 +17,7 @@ return array(
 	| choice installed on your machine before you begin development.
 	|
 	*/
-
+	//local DB test API
 	'connections' => array(
 
 		'mysql' => array(
@@ -29,19 +29,7 @@ return array(
 			'charset'   => 'utf8',
 			'collation' => 'utf8_unicode_ci',
 			'prefix'    => '',
-		),
-
-		'pgsql' => array(
-			'driver'   => 'pgsql',
-			'host'     => 'localhost',
-			'database' => 'homestead',
-			'username' => 'homestead',
-			'password' => 'secret',
-			'charset'  => 'utf8',
-			'prefix'   => '',
-			'schema'   => 'public',
-		),
-
+		)
 	),
 
 );

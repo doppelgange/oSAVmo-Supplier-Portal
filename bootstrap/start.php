@@ -25,8 +25,10 @@ $app = new Illuminate\Foundation\Application;
 */
 
 $env = $app->detectEnvironment(array(
-
-	'local' => array('Sunnys-MacBook-Air.local'),
+	//local DB test API
+	//'local' => array('Sunnys-MacBook-Air.local'),
+	//local DB product API
+	'local-prod' => array('Sunnys-MacBook-Air.local'),
 
 ));
 
