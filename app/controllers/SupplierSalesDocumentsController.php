@@ -57,6 +57,7 @@ class SupplierSalesDocumentsController extends \BaseController {
 		$supplierSalesDocuments = SupplierSalesDocument::where('supplierID','=',$supplierID);
 		$supplierSalesDocuments = $supplierSalesDocuments->whereHas('salesDocument', 
 			function($query) use($q){
+				$query->where('source','=','eShop');
 			    if($q['clientName']!=''){
 			    	$query->where('clientName','like','%'.$q['clientName'].'%');
 			    }
@@ -153,6 +154,7 @@ class SupplierSalesDocumentsController extends \BaseController {
 		$supplierID = Auth::user()->supplierID;
 		$message="";
 		$alertClass = 'alert-info';
+
 		//Check if only fulfill one item
 		if($itemID!='*'&&$itemID!=''){
 			//Fulfill one Item
@@ -164,7 +166,7 @@ class SupplierSalesDocumentsController extends \BaseController {
 		
 			//change the supplier order status
 			if(Auth::user()->isSupplier()){
-				$supplierSalesDocumentItems = SalesDocument::find($id)->supplierSalesDocumentItems();
+				$supplierSalesDocumentItems = SupplierSalesDocument::find($id)->supplierSalesDocumentItems();
 				//dd(count($supplierSalesDocumentItems));
 			}else{
 				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
@@ -195,10 +197,8 @@ class SupplierSalesDocumentsController extends \BaseController {
 					$q->where('supplierID', '=', $supplierID);
 				})->get();
 			}else{
-				//dd($id);
 				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
 			}
-			//dd(SalesDocumentItem::where('salesDocumentID','=',$id));
 			foreach($supplierSalesDocumentItems as $salesDocumentItem) {
 				//dd($salesDocumentItem);
 				$salesDocumentItem->fulfilledAmount = $salesDocumentItem->amount;

@@ -97,6 +97,7 @@ class UsersController extends BaseController {
 			$suppliers = array(Auth::user()->supplierID =>Auth::user()->supplier->fullName);
 		}else{
 			$suppliers= Supplier::getManageableArray(); 
+			$suppliers[0] = 'All Supplier';
 		}
 		$user = User::find($id);
 		$this->layout->content = View::make('users.edit',array('user'=>$user,'suppliers'=>$suppliers)); 
