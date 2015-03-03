@@ -14,6 +14,7 @@ return array(
     'AddProductType' => $baseDir . '/app/database/migrations/2015_02_25_212852_add_product_type.php',
     'AddProductsColumns' => $baseDir . '/app/database/migrations/2015_02_23_204944_add_products_columns.php',
     'AddShopifyFiledsToProducts' => $baseDir . '/app/database/migrations/2015_02_20_102316_add_shopify_fileds_to_products.php',
+    'AddShopifypriceToPriceListItem' => $baseDir . '/app/database/migrations/2015_03_03_122957_add_shopifyprice_to_price_listItem.php',
     'AdminController' => $baseDir . '/app/controllers/AdminController.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Boris\\Boris' => $vendorDir . '/d11wtq/boris/lib/Boris/Boris.php',

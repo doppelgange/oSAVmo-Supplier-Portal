@@ -649,6 +649,69 @@ class SyncHelper {
 			));
 			//End:  Add action log for sync success
 		}
+
+		//Sync Price from shopify
+		$sh = new SAPI();
+
+		$args['URL'] = 'products/count.json';
+    		$args['METHOD'] = 'GET';
+    		$args['DATA'] = array();
+    		$count = $sh->call($args);
+		$count = $count->count;
+		$page = ceil($count / 250);
+		$recordsCount = 0;
+		for ($i=1;$i<=$page;$i++ ){
+			$args['URL'] = 'products.json';
+			$args['METHOD'] = 'GET';
+			$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
+			$call = $sh->call($args);
+			$products = $call -> products;
+			foreach($products as $key => $value){
+    				$shopifyid = $value -> id;
+    				$variants = $value -> variants;
+    				foreach ($variants as $key => $value) {
+    					$shopifyVariantID = $value -> id;
+    					$shopifyPrice= $value -> price;
+    					$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
+    					if(isset($product)){
+						$productID = $product -> productID;
+						$productItem = PriceListItem::where('productID', '=', $productID)->first();
+						if(isset($productItem)){
+							$productItem->shopifyPriceWithGST = $shopifyPrice;
+							$productItem->save();
+							$recordsCount++;
+						}
+						else
+						{
+							//Start: Add action log
+							ActionLog::Create(array(
+								'module' => 'ShopifyPriceError',
+								'type' => 'Sync',
+								'notes' => 'Sync Error, Product ID: '.$productID,
+								'user' => 'System'
+							));
+						}					
+					}
+					else{
+						//Start: Add action log
+						ActionLog::Create(array(
+							'module' => 'ShopifyPriceError',							
+							'type' => 'Sync',
+							'notes' => 'Sync Error, Shopify Variant ID: '.$shopifyVariantID,
+							'user' => 'System'
+						));
+					}
+    				}
+			}					
+    		}
+    		//Start: Add action log
+		ActionLog::Create(array(
+			'module' => 'ShopifyPrice',
+			'type' => 'Sync',
+			'notes' => $count.' products in shopify,'.$recordsCount.' products sync.', 
+			'user' => 'System'
+		));
+		//End: Add action log
 		return true;
 	}	
 
