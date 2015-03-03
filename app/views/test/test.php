@@ -11,7 +11,7 @@ $sh = new SAPI();
 try
 {
 
-    $call = $sh->call(['URL' => 'products.json', 'METHOD' => 'GET', 'DATA' => ['limit' => 5, 'published_status' => 'any']]);
+    $call = $sh->call(['URL' => 'products/437840524.json', 'METHOD' => 'GET', 'DATA' => []]);
 }
 catch (Exception $e)
 {

@@ -85,3 +85,8 @@
     
   </body>
 </html>
+@if (App::environment('local'))
+<script type="text/javascript">
+console.log('{{App::environment()}} Env!!');
+</script>
+@endif
