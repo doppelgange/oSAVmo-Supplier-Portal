@@ -84,7 +84,7 @@
 @if(count($supplierSalesDocument->salesDocumentItems) === 0)
 No Order items
 @else
-{{ Form::open(array('url'=>'supplierSalesDocuments/'.$supplierSalesDocument->salesDocument->id,'method' => 'put', 'class'=>'form-inline')) }}
+{{ Form::open(array('url'=>'supplierSalesDocuments/'.$supplierSalesDocument->id,'method' => 'put', 'class'=>'form-inline')) }}
 {{ Form::hidden('itemID', '' )}}
 {{ Form::hidden('fulfillAmount', '' )}}
 {{ Form::hidden('salesDocumentID',$supplierSalesDocument->salesDocumentID )}}
