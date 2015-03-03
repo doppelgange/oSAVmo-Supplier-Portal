@@ -712,6 +712,51 @@ class SyncHelper {
 			'user' => 'System'
 		));
 		//End: Add action log
+
+		// Adjustment between shopify and erply
+		$priceDif = PriceListItem::whereNotNull('shopifyPriceWithGST')->whereRaw('shopifyPriceWithGST<> priceWithVat')->get();
+		if(isset($priceDif)){
+			$difCount = count($priceDif);
+			$sh = new  SAPI();
+			$updateCount = 0;
+			foreach ($priceDif as $priceDifItem) {
+				$productID = $priceDifItem->productID;
+				$from = $priceDifItem->shopifyPriceWithGST;
+				$to = $priceDifItem->priceWithVat;
+				$variant = Product::where('productID','=',$productID)->first();
+				$shopifyVariantID = $variant->shopifyVariantID;
+				if(isset($shopifyVariantID)){
+					$newVariant = array('id' =>$shopifyVariantID,'price'=>$to);
+					$args['URL'] =  'variants/'.$shopifyVariantID.'.json';
+    					$args['METHOD'] = 'PUT';
+    					$args['DATA'] = array('variant' => $newVariant);
+    					$call = $sh->call($args);
+    					ActionLog::Create(array(
+						'module' => 'PriceAdjustment',							
+						'type' => 'Adjustment',
+						'notes' => 'Price adjustment success,shopify variant ID: '.$shopifyVariantID,
+						'from' => $from,
+						'to' => $to,
+						'user' => 'System'
+					));
+    					$updateCount++;
+    				}	
+			}
+			ActionLog::Create(array(
+				'module' => 'PriceAdjustment',							
+				'type' => 'Adjustment',
+				'notes' => $updateCount.' items updtaed successed',
+				'user' => 'System'
+			));
+		}
+		else{
+			ActionLog::Create(array(
+				'module' => 'PriceAdjustment',							
+				'type' => 'Adjustment',
+				'notes' => 'No adjustment required',
+				'user' => 'System'
+			));
+		}	
 		return true;
 	}	
 
