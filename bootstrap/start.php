@@ -29,6 +29,8 @@ $env = $app->detectEnvironment(array(
 	//'local' => array('Sunnys-MacBook-Air.local'),
 	//local DB product API
 	'local-prod' => array('Sunnys-MacBook-Air.local'),
+	//product DB product API  local code
+	//'prod' => array('Sunnys-MacBook-Air.local'),
 
 ));
 
