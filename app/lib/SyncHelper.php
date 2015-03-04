@@ -385,7 +385,7 @@ class SyncHelper {
 				ActionLog::Create(array(
 					'module' => 'StockAmountAdjustment',							
 					'type' => 'Adjustment',
-					'notes' => $difCount.'records found, '. $updateCount.' items updtaed successed',
+					'notes' => $difCount.' records found, '. $updateCount.' items updtaed successed',
 					'user' => 'System'
 				));
 			}
@@ -798,7 +798,7 @@ class SyncHelper {
 			ActionLog::Create(array(
 				'module' => 'PriceAdjustment',							
 				'type' => 'Adjustment',
-				'notes' => $difCount.'records found, '.$updateCount.' items updtaed successed',
+				'notes' => $difCount.' records found, '.$updateCount.' items updtaed successed',
 				'user' => 'System'
 			));
 		}
