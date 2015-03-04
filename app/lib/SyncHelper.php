@@ -714,7 +714,7 @@ class SyncHelper {
 		//End: Add action log
 
 		// Adjustment between shopify and erply
-		$priceDif = PriceListItem::whereNotNull('shopifyPriceWithGST')->whereRaw('shopifyPriceWithGST <> priceWithVat')->get();
+		$priceDif = PriceListItem::whereNotNull('shopifyPriceWithGST')->whereRaw('shopifyPriceWithGST<> priceWithVat')->get();
 		if(isset($priceDif)){
 			$difCount = count($priceDif);
 			$sh = new  SAPI();
@@ -723,7 +723,7 @@ class SyncHelper {
 				$productID = $priceDifItem->productID;
 				$from = $priceDifItem->shopifyPriceWithGST;
 				$to = $priceDifItem->priceWithVat;
-				$variant = Product::where('productID','=',$productID)->where('displayedInWebshop','=','1')->first();
+				$variant = Product::where('productID','=',$productID)->first();
 				$shopifyVariantID = $variant->shopifyVariantID;
 				if(isset($shopifyVariantID)){
 					$newVariant = array('id' =>$shopifyVariantID,'price'=>$to);
@@ -808,6 +808,7 @@ class SyncHelper {
 					$deliveryType->lastModified= $erplyDeliveryType['lastModified'];
 					$deliveryType->save();
 				}
+
 			}
 		}
 		return true;
