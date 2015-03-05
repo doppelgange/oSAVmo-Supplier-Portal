@@ -57,8 +57,8 @@
 			<td> {{ $supplierSalesDocument->salesDocument->internalNotes }} </td>
 			<td> {{ $supplierSalesDocument->salesDocument->date }} </td>
 			<td class="action-button">
-				<a href="supplierSalesDocuments/{{$supplierSalesDocument->salesDocument-> id}}/edit" target="_blank" class=""><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
-				<a href="supplierSalesDocuments/{{$supplierSalesDocument->salesDocument-> id}}/fulfill" class="submit"><span class="glyphicon glyphicon-bed" aria-hidden="true"  data-toggle="tooltip" title="Fulfill"></span></a>
+				<a href="supplierSalesDocuments/{{$supplierSalesDocument-> id}}/edit" target="_blank" class=""><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
+				<a href="supplierSalesDocuments/{{$supplierSalesDocument->id}}/fulfill" class="submit"><span class="glyphicon glyphicon-bed" aria-hidden="true"  data-toggle="tooltip" title="Fulfill"></span></a>
 			</td>
 	    </tr>
 	@endforeach
