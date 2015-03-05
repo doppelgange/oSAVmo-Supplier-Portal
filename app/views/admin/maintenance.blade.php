@@ -69,7 +69,7 @@
 
     <div class="container">
         <h1 class="logo cursive">
-        <img src="img/logo.png"/><br/>
+        <img src="images/common/logo.png"/><br/>
             Comming back soon.
         </h1>
 <!--  H1 can have 2 designs: "logo" and "logo cursive"           -->
