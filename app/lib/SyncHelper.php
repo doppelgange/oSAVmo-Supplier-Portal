@@ -316,7 +316,6 @@ class SyncHelper {
     			$count = $sh->call($args);
 			$count = $count->count;
 			$page = ceil($count / 250);
-
 			for ($i=1;$i<=$page;$i++ ){
 				$args['URL'] = 'products.json';
 				$args['METHOD'] = 'GET';
@@ -324,14 +323,14 @@ class SyncHelper {
 				$call = $sh->call($args);
 				$products = $call -> products;
 				foreach($products as $key => $value){
-    				$shopifyid = $value -> id;
-    				$variants = $value -> variants;
-    				// $numVariants = count($variants);
-    				foreach ($variants as $key => $value) {
-    					$shopifyVariantID = $value -> id;
-    					$shopifyStock = $value -> inventory_quantity;
-    					$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
-    					if(isset($product)){
+    					$shopifyid = $value -> id;
+    					$variants = $value -> variants;
+    					// $numVariants = count($variants);
+    					foreach ($variants as $key => $value) {
+    						$shopifyVariantID = $value -> id;
+    						$shopifyStock = $value -> inventory_quantity;
+    						$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
+    						if(isset($product)){
 							$productID = $product -> productID;
 							$productStocks = Productstock::where('productID', '=', $productID)->first();
 							if(isset($productStocks)){
@@ -349,10 +348,57 @@ class SyncHelper {
 				'notes' => $notes, 
 				'user' => 'System'
 			));
-			//End: Add action log
-			return true;	
+			// End: Add action log
+			// Amount Adjustment
+			$amountDif = Productstock::whereNotNull('shopifyAmountInStock')->whereRaw('shopifyAmountInStock <>(amountInStock - amountReserved)')->get();
+			if(isset($amountDif)){
+				$difCount = count($amountDif);
+				$sh = new  SAPI();
+				$updateCount = 0;
+				foreach ($amountDif as $amountDifItem) {
+					$productID = $amountDifItem->productID;
+					$amountInStock = $amountDifItem->amountInStock;
+					$amountReserved = $amountDifItem->amountReserved;
+					$amountAvailable = $amountInStock-$amountReserved;
+					$from = $amountDifItem->shopifyAmountInStock;
+					$variant = Product::where('productID','=',$productID)->where('displayedInWebshop','=','1')->first();
+					$shopifyVariantID = $variant->shopifyVariantID;
+					if(isset($shopifyVariantID)){
+						$newVariant = array('id' =>$shopifyVariantID,'inventory_quantity'=>$amountAvailable);
+						$args['URL'] =  'variants/'.$shopifyVariantID.'.json';
+    						$args['METHOD'] = 'PUT';
+    						$args['DATA'] = array('variant' => $newVariant);
+    						$call = $sh->call($args);
+    						$amountDifItem->shopifyAmountInStock=$amountAvailable;
+    						$amountDifItem->save();
+    						ActionLog::Create(array(
+							'module' => 'StockAmountAdjustment',							
+							'type' => 'Adjustment',
+							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID,
+							'from' => $from,
+							'to' => $amountAvailable,
+							'user' => 'System'
+						));
+    						$updateCount++;
+    					}	
+				}
+				ActionLog::Create(array(
+					'module' => 'StockAmountAdjustment',							
+					'type' => 'Adjustment',
+					'notes' => $difCount.' records found, '. $updateCount.' items updtaed successed',
+					'user' => 'System'
+				));
+			}
+			else{
+				ActionLog::Create(array(
+					'module' => 'StockAmountAdjustment',							
+					'type' => 'Adjustment',
+					'notes' => 'No adjustment required',
+					'user' => 'System'
+				));
+			}
+			return true;			
 		}
-
 	}
 
 
@@ -628,6 +674,11 @@ class SyncHelper {
 					}
 					if(array_key_exists('priceWithVat',$erplyPriceListItem)){
 						$priceListItem->priceWithVat= $erplyPriceListItem['priceWithVat'];
+						$originalPrice= Product::where('productID','=', $erplyPriceListItem['id'])->first()->priceWithVat;
+						$priceListItem->originalPrice = $originalPrice;
+						if($originalPrice!=0){
+							$priceListItem->discount = ($originalPrice - ($erplyPriceListItem['priceWithVat']))/$originalPrice;
+						}	
 					}
 					if(array_key_exists('ruleID',$erplyPriceListItem)){
 						$priceListItem->ruleID= $erplyPriceListItem['ruleID'];
@@ -714,7 +765,7 @@ class SyncHelper {
 		//End: Add action log
 
 		// Adjustment between shopify and erply
-		$priceDif = PriceListItem::whereNotNull('shopifyPriceWithGST')->whereRaw('shopifyPriceWithGST<> priceWithVat')->get();
+		$priceDif = PriceListItem::whereNotNull('shopifyPriceWithGST')->whereRaw('shopifyPriceWithGST <> priceWithVat')->get();
 		if(isset($priceDif)){
 			$difCount = count($priceDif);
 			$sh = new  SAPI();
@@ -723,7 +774,7 @@ class SyncHelper {
 				$productID = $priceDifItem->productID;
 				$from = $priceDifItem->shopifyPriceWithGST;
 				$to = $priceDifItem->priceWithVat;
-				$variant = Product::where('productID','=',$productID)->first();
+				$variant = Product::where('productID','=',$productID)->where('displayedInWebshop','=','1')->first();
 				$shopifyVariantID = $variant->shopifyVariantID;
 				if(isset($shopifyVariantID)){
 					$newVariant = array('id' =>$shopifyVariantID,'price'=>$to);
@@ -731,6 +782,8 @@ class SyncHelper {
     					$args['METHOD'] = 'PUT';
     					$args['DATA'] = array('variant' => $newVariant);
     					$call = $sh->call($args);
+    					$priceDifItem->shopifyPriceWithGST = $to;
+    					$priceDifItem->save();
     					ActionLog::Create(array(
 						'module' => 'PriceAdjustment',							
 						'type' => 'Adjustment',
@@ -745,7 +798,7 @@ class SyncHelper {
 			ActionLog::Create(array(
 				'module' => 'PriceAdjustment',							
 				'type' => 'Adjustment',
-				'notes' => $updateCount.' items updtaed successed',
+				'notes' => $difCount.' records found, '.$updateCount.' items updtaed successed',
 				'user' => 'System'
 			));
 		}
@@ -808,7 +861,6 @@ class SyncHelper {
 					$deliveryType->lastModified= $erplyDeliveryType['lastModified'];
 					$deliveryType->save();
 				}
-
 			}
 		}
 		return true;
