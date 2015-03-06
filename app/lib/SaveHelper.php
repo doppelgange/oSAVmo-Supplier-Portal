@@ -25,7 +25,7 @@ class SaveHelper {
 		$priceListItem->priceWithVat = $option['priceWithVat'];
 		$priceListItem->save();
 
-		$product = Product::where('productID','=',$option['id'])->first();
+		$product = Product::where('productID','=',$option['id'])->where('displayedInWebshop','=','1')->first();
 		$shopifyVariantID = $product -> shopifyVariantID;
 
 		if(isset($shopifyVariantID)){
@@ -85,7 +85,7 @@ class SaveHelper {
 			));
 			//End: Add action log for inventory Registration
 
-			$product = Product::where('productID','=',$option['item'][$i]['productID'])->first();
+			$product = Product::where('productID','=',$option['item'][$i]['productID'])->where('displayedInWebshop','=','1')->first();
 			$shopifyVariantID = $product -> shopifyVariantID;
 
 			if(isset($shopifyVariantID)){
