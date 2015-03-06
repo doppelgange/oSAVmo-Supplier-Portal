@@ -372,9 +372,9 @@ class SyncHelper {
     						$amountDifItem->shopifyAmountInStock=$amountAvailable;
     						$amountDifItem->save();
     						ActionLog::Create(array(
-							'module' => 'StockAmountAdjustment',							
+							'module' => 'ProductStock',							
 							'type' => 'Adjustment',
-							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID,
+							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$produckID,
 							'from' => $from,
 							'to' => $amountAvailable,
 							'user' => 'System'
@@ -383,7 +383,7 @@ class SyncHelper {
     					}	
 				}
 				ActionLog::Create(array(
-					'module' => 'StockAmountAdjustment',							
+					'module' => 'ProductStock',							
 					'type' => 'Adjustment',
 					'notes' => $difCount.' records found, '. $updateCount.' items updtaed successed',
 					'user' => 'System'
@@ -391,7 +391,7 @@ class SyncHelper {
 			}
 			else{
 				ActionLog::Create(array(
-					'module' => 'StockAmountAdjustment',							
+					'module' => 'ProductStock',							
 					'type' => 'Adjustment',
 					'notes' => 'No adjustment required',
 					'user' => 'System'
@@ -736,9 +736,9 @@ class SyncHelper {
 						{
 							//Start: Add action log
 							ActionLog::Create(array(
-								'module' => 'ShopifyPriceError',
+								'module' => 'PriceListItem',
 								'type' => 'Sync',
-								'notes' => 'Sync Error, Product ID: '.$productID,
+								'notes' => 'Sync from shopify Error,this item is not in erply price list, product ID: '.$productID,
 								'user' => 'System'
 							));
 						}					
@@ -746,9 +746,9 @@ class SyncHelper {
 					else{
 						//Start: Add action log
 						ActionLog::Create(array(
-							'module' => 'ShopifyPriceError',							
+							'module' => 'PriceListItem',							
 							'type' => 'Sync',
-							'notes' => 'Sync Error, Shopify Variant ID: '.$shopifyVariantID,
+							'notes' => 'Sync from shopify Error,this item is not in product table, shopifyVariantID: '.$shopifyVariantID,
 							'user' => 'System'
 						));
 					}
@@ -757,9 +757,9 @@ class SyncHelper {
     		}
     		//Start: Add action log
 		ActionLog::Create(array(
-			'module' => 'ShopifyPrice',
+			'module' => 'PriceListItem',
 			'type' => 'Sync',
-			'notes' => $count.' products in shopify,'.$recordsCount.' products sync.', 
+			'notes' => $count.' products in shopify,'.$recordsCount.' products sync successed.', 
 			'user' => 'System'
 		));
 		//End: Add action log
@@ -785,9 +785,9 @@ class SyncHelper {
     					$priceDifItem->shopifyPriceWithGST = $to;
     					$priceDifItem->save();
     					ActionLog::Create(array(
-						'module' => 'PriceAdjustment',							
+						'module' => 'PriceListItem',							
 						'type' => 'Adjustment',
-						'notes' => 'Price adjustment success,shopify variant ID: '.$shopifyVariantID,
+						'notes' => 'Price adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$productID,
 						'from' => $from,
 						'to' => $to,
 						'user' => 'System'
@@ -796,7 +796,7 @@ class SyncHelper {
     				}	
 			}
 			ActionLog::Create(array(
-				'module' => 'PriceAdjustment',							
+				'module' => 'PriceListItem',							
 				'type' => 'Adjustment',
 				'notes' => $difCount.' records found, '.$updateCount.' items updtaed successed',
 				'user' => 'System'
@@ -804,7 +804,7 @@ class SyncHelper {
 		}
 		else{
 			ActionLog::Create(array(
-				'module' => 'PriceAdjustment',							
+				'module' => 'PriceListItem',							
 				'type' => 'Adjustment',
 				'notes' => 'No adjustment required',
 				'user' => 'System'
@@ -943,7 +943,7 @@ class SyncHelper {
 				}		
 			}
 			ActionLog::Create(array(
-			'module' => 'SyncImages',
+			'module' => 'ProductImages',
 			'type' => 'Sync',
 			'notes' => 'There are '.$totalImages.' images in page'. $pageNo.', '
 				.$successCount.' images updated,'
