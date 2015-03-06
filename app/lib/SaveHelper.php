@@ -20,14 +20,10 @@ class SaveHelper {
 			true
 		);
 
-		$priceListItem = PriceListItem::where('productID','=',$option['id'])->first();
-		$priceListItem->price = $option['priceWithVat']/1.15;
-		$priceListItem->priceWithVat = $option['priceWithVat'];
-		$priceListItem->save();
-
 		$product = Product::where('productID','=',$option['id'])->where('displayedInWebshop','=','1')->first();
-		$shopifyVariantID = $product -> shopifyVariantID;
-
+		if(isset($product)){
+			$shopifyVariantID = $product -> shopifyVariantID;
+		}
 		if(isset($shopifyVariantID)){
 			$newVariant = array('id' =>$shopifyVariantID,'price'=>$option['priceWithVat']);
 			$sh = new SAPI();
@@ -36,6 +32,12 @@ class SaveHelper {
     			$args['DATA'] = array('variant' => $newVariant);
     			$call = $sh->call($args);
 		}
+
+		$priceListItem = PriceListItem::where('productID','=',$option['id'])->first();
+		$priceListItem->price = $option['priceWithVat']/1.15;
+		$priceListItem->priceWithVat = $option['priceWithVat'];
+		$priceListItem->shopifyPriceWithGST = $option['priceWithVat'];
+		$priceListItem->save();
 
 		//SyncHelper::syncPriceListItems();
 		//Start: Add action log for sync error
@@ -86,8 +88,9 @@ class SaveHelper {
 			//End: Add action log for inventory Registration
 
 			$product = Product::where('productID','=',$option['item'][$i]['productID'])->where('displayedInWebshop','=','1')->first();
-			$shopifyVariantID = $product -> shopifyVariantID;
-
+			if(isset($product)){
+				$shopifyVariantID = $product -> shopifyVariantID;
+			}		
 			if(isset($shopifyVariantID)){
 				$newVariant = array('id' =>$shopifyVariantID,'inventory_quantity'=> $option['item'][$i]['toAmount']);
 				$sh = new SAPI();
@@ -96,7 +99,6 @@ class SaveHelper {
     				$args['DATA'] = array('variant' => $newVariant);
     				$call = $sh->call($args);
 			} 
-
 		}
 		 
 		$result = json_decode(
