@@ -59,7 +59,7 @@
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container -->
 </nav>
-<div class="main" style="background-image: url('images/common/maintainance-bg.jpg')">
+<div class="main" style="background-image: url('/images/common/maintainance-bg.jpg')">
 
 <!--    Change the image source '/images/default.jpg' with your favourite image.     -->
     
@@ -69,8 +69,8 @@
 
     <div class="container">
         <h1 class="logo cursive">
-        <img src="img/logo.png"/><br/>
-            Comming back soon.
+        <img src="/images/common/logo.png"/><br/>
+            Coming back soon.
         </h1>
 <!--  H1 can have 2 designs: "logo" and "logo cursive"           -->
         
