@@ -307,6 +307,15 @@ class SyncHelper {
 			    $productStock->save();
 			}
 
+			//Start: Add action log
+			ActionLog::Create(array(
+				'module' => 'ProductStock',
+				'type' => 'Sync',
+				'notes' => $notes, 
+				'user' => 'System'
+			));
+			// End: Add action log
+
 			// get stock from shopify
 			$sh = new SAPI();
 
@@ -316,41 +325,45 @@ class SyncHelper {
     			$count = $sh->call($args);
 			$count = $count->count;
 			$page = ceil($count / 250);
+			$recordsCount = 0;
+			$a=0;
 			for ($i=1;$i<=$page;$i++ ){
 				$args['URL'] = 'products.json';
 				$args['METHOD'] = 'GET';
 				$args['DATA'] = array('published_status' => 'any','limit' => 250,'page' => $i);
 				$call = $sh->call($args);
-				$products = $call -> products;
+				$products = $call ->products;
 				foreach($products as $key => $value){
-    					$shopifyid = $value -> id;
-    					$variants = $value -> variants;
-    					// $numVariants = count($variants);
+    					$shopifyid = $value ->id;
+    					$variants = $value ->variants;
     					foreach ($variants as $key => $value) {
-    						$shopifyVariantID = $value -> id;
-    						$shopifyStock = $value -> inventory_quantity;
+    						$shopifyVariantID = $value ->id;
+    						$shopifyStock = $value ->inventory_quantity;
     						$product = Product::where('shopifyVariantID', '=', $shopifyVariantID)->first();
     						if(isset($product)){
-							$productID = $product -> productID;
-							$productStocks = Productstock::where('productID', '=', $productID)->first();
+							$productID = $product ->productID;
+							$productStocks = ProductStock::where('productID', '=', $productID)->first();
 							if(isset($productStocks)){
-								$productStocks -> shopifyAmountInStock = $shopifyStock; 
+								$productStocks ->shopifyAmountInStock = $shopifyStock; 
 								$productStocks->save();
+								$recordsCount ++;
 							}					
 						}
     					}
 				}					
     			}
+
     			//Start: Add action log
 			ActionLog::Create(array(
 				'module' => 'ProductStock',
 				'type' => 'Sync',
-				'notes' => $notes, 
+				'notes' => $count.' products in shopify,'.$recordsCount.' products sync successed.', 
 				'user' => 'System'
 			));
 			// End: Add action log
+
 			// Amount Adjustment
-			$amountDif = Productstock::whereNotNull('shopifyAmountInStock')->whereRaw('shopifyAmountInStock <>(amountInStock - amountReserved)')->get();
+			$amountDif = ProductStock::whereNotNull('shopifyAmountInStock')->whereRaw('shopifyAmountInStock <> (amountInStock - amountReserved)')->get();
 			if(isset($amountDif)){
 				$difCount = count($amountDif);
 				$sh = new  SAPI();
@@ -362,7 +375,9 @@ class SyncHelper {
 					$amountAvailable = $amountInStock-$amountReserved;
 					$from = $amountDifItem->shopifyAmountInStock;
 					$variant = Product::where('productID','=',$productID)->where('displayedInWebshop','=','1')->first();
-					$shopifyVariantID = $variant->shopifyVariantID;
+					if(isset($variant)){
+						$shopifyVariantID = $variant->shopifyVariantID;
+					}				
 					if(isset($shopifyVariantID)){
 						$newVariant = array('id' =>$shopifyVariantID,'inventory_quantity'=>$amountAvailable);
 						$args['URL'] =  'variants/'.$shopifyVariantID.'.json';
@@ -372,9 +387,9 @@ class SyncHelper {
     						$amountDifItem->shopifyAmountInStock=$amountAvailable;
     						$amountDifItem->save();
     						ActionLog::Create(array(
-							'module' => 'StockAmountAdjustment',							
+							'module' => 'ProductStock',							
 							'type' => 'Adjustment',
-							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID,
+							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$produckID,
 							'from' => $from,
 							'to' => $amountAvailable,
 							'user' => 'System'
@@ -383,7 +398,7 @@ class SyncHelper {
     					}	
 				}
 				ActionLog::Create(array(
-					'module' => 'StockAmountAdjustment',							
+					'module' => 'ProductStock',							
 					'type' => 'Adjustment',
 					'notes' => $difCount.' records found, '. $updateCount.' items updtaed successed',
 					'user' => 'System'
@@ -391,7 +406,7 @@ class SyncHelper {
 			}
 			else{
 				ActionLog::Create(array(
-					'module' => 'StockAmountAdjustment',							
+					'module' => 'ProductStock',							
 					'type' => 'Adjustment',
 					'notes' => 'No adjustment required',
 					'user' => 'System'
@@ -736,9 +751,9 @@ class SyncHelper {
 						{
 							//Start: Add action log
 							ActionLog::Create(array(
-								'module' => 'ShopifyPriceError',
+								'module' => 'PriceListItem',
 								'type' => 'Sync',
-								'notes' => 'Sync Error, Product ID: '.$productID,
+								'notes' => 'Sync from shopify Error,this item is not in erply price list, product ID: '.$productID,
 								'user' => 'System'
 							));
 						}					
@@ -746,9 +761,9 @@ class SyncHelper {
 					else{
 						//Start: Add action log
 						ActionLog::Create(array(
-							'module' => 'ShopifyPriceError',							
+							'module' => 'PriceListItem',							
 							'type' => 'Sync',
-							'notes' => 'Sync Error, Shopify Variant ID: '.$shopifyVariantID,
+							'notes' => 'Sync from shopify Error,this item is not in product table, shopifyVariantID: '.$shopifyVariantID,
 							'user' => 'System'
 						));
 					}
@@ -757,9 +772,9 @@ class SyncHelper {
     		}
     		//Start: Add action log
 		ActionLog::Create(array(
-			'module' => 'ShopifyPrice',
+			'module' => 'PriceListItem',
 			'type' => 'Sync',
-			'notes' => $count.' products in shopify,'.$recordsCount.' products sync.', 
+			'notes' => $count.' products in shopify,'.$recordsCount.' products sync successed.', 
 			'user' => 'System'
 		));
 		//End: Add action log
@@ -775,7 +790,9 @@ class SyncHelper {
 				$from = $priceDifItem->shopifyPriceWithGST;
 				$to = $priceDifItem->priceWithVat;
 				$variant = Product::where('productID','=',$productID)->where('displayedInWebshop','=','1')->first();
-				$shopifyVariantID = $variant->shopifyVariantID;
+				if(isset($variant)){
+					$shopifyVariantID = $variant->shopifyVariantID;
+				}			
 				if(isset($shopifyVariantID)){
 					$newVariant = array('id' =>$shopifyVariantID,'price'=>$to);
 					$args['URL'] =  'variants/'.$shopifyVariantID.'.json';
@@ -785,9 +802,9 @@ class SyncHelper {
     					$priceDifItem->shopifyPriceWithGST = $to;
     					$priceDifItem->save();
     					ActionLog::Create(array(
-						'module' => 'PriceAdjustment',							
+						'module' => 'PriceListItem',							
 						'type' => 'Adjustment',
-						'notes' => 'Price adjustment success,shopify variant ID: '.$shopifyVariantID,
+						'notes' => 'Price adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$productID,
 						'from' => $from,
 						'to' => $to,
 						'user' => 'System'
@@ -796,7 +813,7 @@ class SyncHelper {
     				}	
 			}
 			ActionLog::Create(array(
-				'module' => 'PriceAdjustment',							
+				'module' => 'PriceListItem',							
 				'type' => 'Adjustment',
 				'notes' => $difCount.' records found, '.$updateCount.' items updtaed successed',
 				'user' => 'System'
@@ -804,7 +821,7 @@ class SyncHelper {
 		}
 		else{
 			ActionLog::Create(array(
-				'module' => 'PriceAdjustment',							
+				'module' => 'PriceListItem',							
 				'type' => 'Adjustment',
 				'notes' => 'No adjustment required',
 				'user' => 'System'
@@ -827,26 +844,26 @@ class SyncHelper {
 				);
 			$erplyDeliveryTypes = $result['records'];
 			if(is_null($erplyDeliveryTypes)){
-	   //Start: Add Log for sync error
+	 			  //Start: Add Log for sync error
 				ActionLog::Create(array(
 					'module' => 'DeliveryType',
 					'type' => 'Sync',
 					'notes' => 'Page has error, no record returned', 
 					'user' => 'System'
 					));
-	   //End: Add Log for sync error
+	 			  //End: Add Log for sync error
 				return false;
 			}else{
-	   //Start: Add action log for sync success
+	 			  //Start: Add action log for sync success
 				ActionLog::Create(array(
 					'module' => 'DeliveryType',
 					'type' => 'Sync',
 					'notes' => 'Total '.count($erplyDeliveryTypes).' records', 
 					'user' => 'System'
 					));
-	   //End:  Add action log for sync success
+	   				//End:  Add action log for sync success
 
-	   //Save DeliveryType information
+	  			 //Save DeliveryType information
 				foreach ($erplyDeliveryTypes as $erplyDeliveryType) {
 					$deliveryType = DeliveryType::where('deliveryTypeID', '=', $erplyDeliveryType['deliveryTypeID'])
 					->first();
@@ -943,7 +960,7 @@ class SyncHelper {
 				}		
 			}
 			ActionLog::Create(array(
-			'module' => 'SyncImages',
+			'module' => 'ProductImages',
 			'type' => 'Sync',
 			'notes' => 'There are '.$totalImages.' images in page'. $pageNo.', '
 				.$successCount.' images updated,'
