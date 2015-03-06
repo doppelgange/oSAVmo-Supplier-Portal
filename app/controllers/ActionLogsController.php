@@ -12,8 +12,34 @@ class ActionLogsController extends \BaseController {
 	 */
 	public function index()
 	{
-		$actionLogs = ActionLog::orderBy('updated_at','DESC')->paginate(10);
-		$this->layout->content = View::make('actionLogs.index',array('actionLogs'=>$actionLogs)); 
+		$q['notes']=Input::get('notes')==null? '':Input::get('notes');
+		$q['module']=Input::get('module')==null? '':Input::get('module');
+
+		//Prepare the module list
+		$actionLogModule = DB::table('action_logs')->select('module')->distinct()->get();
+
+		$moduleSelect[''] = 'All';
+		foreach ($actionLogModule as $k => $v) {
+			$moduleSelect[$v->module] = $v->module;
+		}
+
+
+		$actionLogs = new ActionLog;
+
+		if($q['notes']!=''){
+			$actionLogs=$actionLogs->where('notes','like','%'.$q['module'].'%');
+		}
+		if($q['module']!=''){
+			$actionLogs=$actionLogs->where('module','=',$q['module']);
+		}
+
+		$actionLogs=$actionLogs->orderBy('updated_at','DESC')->paginate(10);
+		$this->layout->content = View::make('actionLogs.index',array(
+			'actionLogs'=>$actionLogs,
+			'moduleSelect' =>$moduleSelect,
+			'q'=>$q,
+
+		)); 
 	}
 
 	/**

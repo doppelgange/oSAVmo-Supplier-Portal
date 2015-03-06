@@ -1,3 +1,12 @@
+
+{{ Form::open(array('url'=>'actionLogs','method' => 'get','class'=>'form-inline')) }}
+	{{ Form::label('module', 'Module')}}
+	{{Form::select('module',$moduleSelect,$q['module'], array('class'=>'form-control'))}}
+	{{ Form::label('notes', 'Notes')}}
+	{{Form::text('notes',$q['notes'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+{{ Form::close() }}
+
 @if (count($actionLogs) === 0)
 	<div>There is no record for actionLogs, you can sync to get the latest data! </div>
 @else
