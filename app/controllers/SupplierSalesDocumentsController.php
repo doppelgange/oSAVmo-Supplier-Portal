@@ -40,14 +40,18 @@ class SupplierSalesDocumentsController extends \BaseController {
 		//dd(Input::get('q'));
 		$q['clientName']=Input::get('clientName')==null? '':Input::get('clientName');
 		$q['number']=Input::get('number')==null? '':Input::get('number');
-		$suppliers = Supplier::getManageableArray();
-
+		$q['status']=Input::get('status')==null? '':Input::get('status');
+		$statusList = array('All'=>'All',
+			'Outstanding'=>'Outstanding',
+			'Partial'=>'Partial',
+			'Completed'=>'Completed');
+		$supplierList = Supplier::getManageableArray();
 		//Filter by supplier
 		if(Auth::user()->isSupplier()){
 			$supplierID = Auth::user()->supplierID;
 		}else{
 			if(Input::get('supplierID')==null){
-				$supplierID = array_keys($suppliers)[0];
+				$supplierID = array_keys($supplierList)[0];
 			}else{
 				$supplierID = Input::get('supplierID');
 			}
@@ -64,14 +68,31 @@ class SupplierSalesDocumentsController extends \BaseController {
 			    if($q['number']!=''){
 			    	$query->where('number','like','%'.$q['number'].'%');
 			    }
+			    if($q['status']!=''){
+			    	$query->where('number','like','%'.$q['number'].'%');
+			    }
+			    switch ($q['status']) {
+				    case '':
+				        break;
+				    case 'All':
+				        break;
+				    case 'Outstanding':
+				        $query->where('status','<>','Completed');
+				        break;
+				    default:
+				        $query->where('status','=',$q['status']);
+				        break;
+				}
+
 		});
 		$supplierSalesDocuments = $supplierSalesDocuments->orderBy('created_at','desc')
 			->paginate($pagecount);
 		//Create View
 		$this->layout->content = View::make('supplierSalesDocuments.index',array(
 			'supplierSalesDocuments'=>$supplierSalesDocuments,
-			'suppliers'=>$suppliers,
+			'supplierList'=>$supplierList,
 			'supplierID'=>$supplierID,
+			'statusList'=>$statusList,
 			'q'=>$q,
 		));
 		
@@ -155,62 +176,46 @@ class SupplierSalesDocumentsController extends \BaseController {
 		$message="";
 		$alertClass = 'alert-info';
 
+		$supplierSalesDocument = SupplierSalesDocument::find($id);
+
 		//Check if only fulfill one item
 		if($itemID!='*'&&$itemID!=''){
 			//Fulfill one Item
 			$fulfilledItem = SalesDocumentItem::find($itemID);
 			$fulfilledItem->fulfilledAmount += $fulfillAmount;
 			$fulfilledItem->save();
+
 			$message.=$fulfillAmount." ".$fulfilledItem->product->name." has been fulfilled, total fulfilled amount is ".$fulfilledItem->fulfilledAmount.'. ';
 			$alertClass = 'alert-success';
 		
-			//change the supplier order status
-			if(Auth::user()->isSupplier()){
-				$supplierSalesDocumentItems = SupplierSalesDocument::find($id)->supplierSalesDocumentItems();
-				//dd(count($supplierSalesDocumentItems));
-			}else{
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
-			}
-			
+			//change the supplier order status			
 			$isAllFulfilled = true;
-			foreach ($supplierSalesDocumentItems as $supplierSalesDocumentItem) {
+			foreach ($supplierSalesDocument->supplierSalesDocumentItems() as $supplierSalesDocumentItem) {
 				if($supplierSalesDocumentItem->fulfilledAmount<$supplierSalesDocumentItem->amount){
-					//dd($supplierSalesDocumentItem);
 					$isAllFulfilled = false;
 				}
 			}
+			//Update supplier order status
 			if($isAllFulfilled){
-
-				$supplierSalesDocument = SupplierSalesDocument::where('salesDocumentID','=',$salesDocumentID)
-				->where('supplierID','=',$supplierID)->first();
 				$supplierSalesDocument->status = 'Completed';
-				$supplierSalesDocument->save();
-
-				$message.=' All the items of this order are fulfilled!';
+				$message.=' Order is fully fulfilled!';
+			}else{
+				$supplierSalesDocument->status = 'Partial';
+				$message.=' Order is partial fulfilled!';
 			};
+			$supplierSalesDocument->save();
+
 		}elseif($itemID=='*'){
 
-			//Fulfill selected item
-			if(Auth::user()->isSupplier()){
-				//dd($supplierID);
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->whereHas('product', function($q) use ($supplierID){
-					$q->where('supplierID', '=', $supplierID);
-				})->get();
-			}else{
-				$supplierSalesDocumentItems = SalesDocumentItem::where('salesDocumentID','=',$salesDocumentID)->get();
-			}
-			foreach($supplierSalesDocumentItems as $salesDocumentItem) {
+			foreach($supplierSalesDocument->supplierSalesDocumentItems() as $salesDocumentItem) {
 				//dd($salesDocumentItem);
 				$salesDocumentItem->fulfilledAmount = $salesDocumentItem->amount;
 				$salesDocumentItem->save();
 			}
 			//Set the supplier sales document status
-			$supplierSalesDocument = SupplierSalesDocument::where('salesDocumentID','=',$salesDocumentID)
-			->where('supplierID','=',$supplierID)->first();
 			$supplierSalesDocument->status = 'Completed';
 			$supplierSalesDocument->save();
-
-			$message.=' All the items of this order are fulfilled!';
+			$message.=' Order is fulfilled!';
 		}
 		
 		

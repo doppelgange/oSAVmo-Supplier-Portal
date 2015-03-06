@@ -1,6 +1,10 @@
 {{ Form::open(array('url'=>'supplierSalesDocuments','method' => 'get','class'=>'form-inline')) }}
+@if(!Auth::user()->isSupplier())
 	{{ Form::label('supplier', 'Supplier')}}
-    {{ Form::select('supplierID', $suppliers, $supplierID , array('class'=>'form-control')) }}
+    {{ Form::select('supplierID', $supplierList, $supplierID , array('class'=>'form-control')) }}
+@endif
+    {{ Form::label('status', 'Status')}}
+    {{ Form::select('status', $statusList, $q['status'] , array('class'=>'form-control')) }}
     {{ Form::label('username', 'User Name')}}
 	{{Form::text('clientName',$q['clientName'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
 	{{ Form::label('number', 'Number')}}
@@ -22,7 +26,7 @@
 			<th> No.</th>
 			<th> Customer Name </th>
 			<th> Total Price</th>
-			<th> Delivery </th>
+			<th> Status </th>
 			<th> Customer Notes </th>
 			<th style="width:85px"> Order Date </th>
 			<!-- <th style="width:85px"> Last Modified </th> -->
@@ -31,7 +35,12 @@
 	</thead>
 	<tbody>
 	@foreach($supplierSalesDocuments as $supplierSalesDocument )
-	    <tr @if($supplierSalesDocument->status!='Completed') class='danger' @else class='success' @endif>
+	    <tr 
+	    @if($supplierSalesDocument->status=='') class='danger' 
+		@elseif($supplierSalesDocument->status=='Partial') class='warning'
+	    @else class='success' 
+	    @endif
+	    >
 			<td> 
 				<a href="supplierSalesDocuments/{{$supplierSalesDocument->id}}/edit?supplierID={{$supplierID}}" target="_blank"> 
 				{{ $supplierSalesDocument->salesDocument->number }} 
@@ -54,7 +63,7 @@
 			<td>
 			 {{ $supplierSalesDocument->status }}
 			</td>
-			<td> {{ $supplierSalesDocument->salesDocument->internalNotes }} </td>
+			<td class="col-md-3"> {{ $supplierSalesDocument->salesDocument->internalNotes }} </td>
 			<td> {{ $supplierSalesDocument->salesDocument->date }} </td>
 			<td class="action-button">
 				<a href="supplierSalesDocuments/{{$supplierSalesDocument-> id}}/edit" target="_blank" class=""><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
@@ -66,6 +75,3 @@
 </table>
 {{$supplierSalesDocuments->appends(Request::input())->links()}}
  @endif
-
-
-

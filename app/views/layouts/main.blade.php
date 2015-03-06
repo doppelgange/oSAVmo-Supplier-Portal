@@ -19,7 +19,7 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">   
             <li>{{ HTML::link('products', 'Products') }}</li>
-            <li>{{ HTML::link('supplierSalesDocuments', 'Supplier Order') }}</li>
+            <li>{{ HTML::link('supplierSalesDocuments?status=Outstanding', 'Order') }}</li>
             <li>{{ HTML::link('users', 'Users') }}</li>
             @if(Auth::check())
             <li>{{ HTML::link('users/'.Auth::user()->id, Auth::user()->lastname.' ('.(Auth::user()->supplierID==0?'All Suppliers':Auth::user()->supplier->fullName).')')}}</li>
