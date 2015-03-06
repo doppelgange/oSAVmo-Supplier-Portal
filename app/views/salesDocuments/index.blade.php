@@ -1,3 +1,13 @@
+
+{{ Form::open(array('url'=>'salesDocuments','method' => 'get','class'=>'form-inline')) }}
+    {{ Form::label('username', 'User Name')}}
+	{{Form::text('clientName',$q['clientName'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::label('number', 'Number')}}
+	{{Form::text('number',$q['number'],array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+{{ Form::close() }}
+
+
 @if (count($salesDocuments) === 0)
 	<div>There is no record for salesDocuments, you can sync to get the latest data! </div>
 @else
@@ -72,7 +82,7 @@
 			 {{ $salesDocument -> deliveryTypeName }}
 			</td>
 			<td> {{ $salesDocument -> address }} </td>
-			<td> {{ $salesDocument -> internalNotes }} </td>
+			<td  style="max-width:600px;word-break:break-all;"> {{ $salesDocument -> internalNotes }} </td>
 			<td> {{ $salesDocument -> date }} </td>
 			<td> {{ $salesDocument -> lastModified }} </td>
 			<td> {{ $salesDocument -> lastModifierUsername }} </td>
