@@ -34,11 +34,23 @@ class SalesDocumentsController extends \BaseController {
 	 */
 	public function index()
 	{
+ 		$q['clientName']=Input::get('clientName')==null? '':Input::get('clientName');
+		$q['number']=Input::get('number')==null? '':Input::get('number');
+		$pagecount = is_numeric(Input::get("pagecount"))? Input::get("pagecount"):10;
 
-		$salesDocuments = SalesDocument::where('sales_documents.source', '=','eShop')
-		->orderBy('sales_documents.date', 'desc')->paginate(10);
+		$salesDocuments = SalesDocument::where('sales_documents.source', '=','eShop');
+		if($q['clientName']!=''){
+			$salesDocuments=$salesDocuments->where('clientName','like','%'.$q['clientName'].'%');
+		}
+		if($q['number']!=''){
+			$salesDocuments=$salesDocuments->where('number','like','%'.$q['number'].'%');
+		}
+		$salesDocuments = $salesDocuments->orderBy('sales_documents.date', 'desc')
+			->paginate($pagecount);
+
 		$this->layout->content = View::make('salesDocuments.index',array(
-			'salesDocuments'=>$salesDocuments
+			'salesDocuments'=>$salesDocuments,
+			'q'=>$q
 		));
 	}
 
