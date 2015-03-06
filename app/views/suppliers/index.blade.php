@@ -1,24 +1,24 @@
+{{ Form::open(array('url'=>'suppliers','method' => 'get','class'=>'form-inline')) }}
+	{{ Form::label('name', 'Name')}}
+	{{Form::text('q',$q,array('class'=>'form-control','placeholder'=>'Input your query'))}}
+	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+{{ Form::close() }}
+
 @if (count($suppliers) === 0)
 	<div>There is no record for suppliers, you can sync to get the latest data! </div>
 @else
-
+Total {{$suppliers->getTotal()}} records are found. 
+	{{$suppliers->count()}} records in this page.
+	
 {{ Form::open(array('url'=>'suppliers/batch-amend')) }}
-
+{{$suppliers->appends(Request::input())->links()}}
 <table class="table table-striped table-bordered table-hover table-condensed">
 	<thead>
 		<tr>
 			<th> id </th>
-			<th> erplyID </th>
-			<th> supplierID </th>
-			<!-- <th> supplierType </th> -->
-			<th> fullName </th>
-			<th> companyName </th>
-			<!-- <th> groupID </th>
-			<th> groupName </th>-->
-			<th> erplyLastModified </th>
-			<th> erplyAdded </th> 
-			<!-- <th> created_at </th>
-			<th> updated_at </th> -->
+			{{-- <th> supplierID </th> --}}
+			<th> Type </th>
+			<th> Name </th>
 			<th> Manageable </th>
 			<th> Action</th>
 		</tr>
@@ -27,17 +27,9 @@
 	@foreach($suppliers as $supplier)
 	    <tr @if($supplier->manageable == 'Yes') class="success" @endif>
 	    	<td>{{ $supplier->id }}</td>
-	    	<td>{{ $supplier->erplyID }}</td>
-	    	<td>{{ $supplier->supplierID }}</td>
-	    	<!-- <td>{{ $supplier->supplierType }}</td> -->
+	    	{{-- <td>{{ $supplier->supplierID }}</td> --}}
+	    	<td>{{ $supplier->supplierType }}</td>
 	    	<td>{{ $supplier->fullName }}</td>
-	    	<td>{{ $supplier->companyName }}</td>
-	    	<!-- <td>{{ $supplier->groupID }}</td>
-	    	<td>{{ $supplier->groupName }}</td> -->
-	    	<td>{{ $supplier->erplyLastModified }}</td>
-	    	<td>{{ $supplier->erplyAdded }}</td>
-	    	<!-- <td>{{ $supplier->created_at }}</td>
-	    	<td>{{ $supplier->updated_at }}</td> -->
 	    	<td> {{ Form::select('manageable['.$supplier->id.']',array('Yes'=>'Yes','No'=>'No'),$supplier->manageable, array('class'=>'form-control'))}} 
 
 	    	{{ Form::hidden('erplyID['.$supplier->id.']', $supplier->erplyID) }}
@@ -50,7 +42,7 @@
 	@endforeach
 	</tbody>
 </table>
-
+{{$suppliers->appends(Request::input())->links()}}
 {{ Form::submit('Save Amendment', array('class'=>'btn btn-large btn-primary center-block'))}}
 
 
