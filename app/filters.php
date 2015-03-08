@@ -88,3 +88,38 @@ Route::filter('csrf', function()
 		throw new Illuminate\Session\TokenMismatchException;
 	}
 });
+
+/*
+|--------------------------------------------------------------------------
+| Wechat Protection Filter
+|--------------------------------------------------------------------------
+|
+| The Wechat filter is responsible for checking resuquest is from wechat
+|
+*/
+Route::filter('wechat', function()
+{
+    // 获取到微信请求里包含的几项内容
+    $signature = Input::get('signature');
+    $timestamp = Input::get('timestamp');
+    $nonce     = Input::get('nonce');
+
+    if(is_null($signature)||is_null($timestamp)||is_null($nonce)){
+        return false;
+    }
+    	
+    
+    // oSAVmo 是我在微信后台手工添加的 oSAVmo 的值
+    $token = 'oSAVmo';
+    
+    // 加工出自己的 signature
+    $our_signature = array($token, $timestamp, $nonce);
+    sort($our_signature, SORT_STRING);
+    $our_signature = implode($our_signature);
+    $our_signature = sha1($our_signature);
+    
+    // 用自己的 signature 去跟请求里的 signature 对比
+    if ($our_signature != $signature) {
+        return false;
+    }
+});

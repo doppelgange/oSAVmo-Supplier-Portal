@@ -21,6 +21,9 @@ Route::resource('admin','AdminController');
 Route::get('users/login', 'UsersController@login');
 Route::get('users/logout', 'UsersController@logout');
 Route::post('users/signin', 'UsersController@signin');
+//Wechat 
+//Admin Wechat
+Route::resource('wechat', 'WechatController');
 
 Route::group(array('before' => 'auth'), function()
 {
