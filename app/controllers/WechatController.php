@@ -47,7 +47,7 @@ class WechatController extends \BaseController {
 	 */
 	public function store()
 	{	
-		$message = file_get_contents(php://input);
+		$message ='test';// file_get_contents(php://input);
 		ActionLog::Create(array(
 			'module' => 'wechat',							
 			'type' => 'test',
