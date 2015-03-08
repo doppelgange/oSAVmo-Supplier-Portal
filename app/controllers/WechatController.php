@@ -4,7 +4,7 @@ class WechatController extends \BaseController {
 
 	public function __construct()
     {
-        $this->beforeFilter('wechat', array('on' => 'get|post'));
+        //$this->beforeFilter('wechat', array('on' => 'get|post'));
     }
 
 	//protected $layout = "layouts.main";
@@ -16,8 +16,16 @@ class WechatController extends \BaseController {
 	 */
 	public function index()
 	{
-		// return Input::get('echostr');
-		return 'index';
+		//return Input::get('echostr');
+		ActionLog::Create(array(
+			'module' => 'wechat',							
+			'type' => 'test',
+			'notes' => 'get index page'.json_encode(Input::all()),
+			'from' =>'',
+			'to' => '',
+			'user' => 'wechat'
+		));
+		return json_encode(Input::all());
 	}
 
 	/**
@@ -38,7 +46,16 @@ class WechatController extends \BaseController {
 	 * @return Response
 	 */
 	public function store()
-	{
+	{	
+		ActionLog::Create(array(
+			'module' => 'wechat',							
+			'type' => 'test',
+			'notes' => 'post store page'.json_encode(Input::all()),
+			'from' =>'',
+			'to' => '',
+			'user' => 'wechat'
+		));
+
 		return 'store';
 	}
 
