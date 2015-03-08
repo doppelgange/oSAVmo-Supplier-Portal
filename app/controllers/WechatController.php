@@ -47,10 +47,11 @@ class WechatController extends \BaseController {
 	 */
 	public function store()
 	{	
+		$message = file_get_contents(php://input);
 		ActionLog::Create(array(
 			'module' => 'wechat',							
 			'type' => 'test',
-			'notes' => 'post store page'.json_encode(Input::all()),
+			'notes' => 'post store page'.$message,
 			'from' =>'',
 			'to' => '',
 			'user' => 'wechat'
