@@ -16,7 +16,8 @@ class WechatController extends \BaseController {
 	 */
 	public function index()
 	{
-		return Input::get('echostr');;
+		// return Input::get('echostr');
+		return 'index';
 	}
 
 	/**
@@ -38,7 +39,7 @@ class WechatController extends \BaseController {
 	 */
 	public function store()
 	{
-		//
+		return 'store';
 	}
 
 	/**
