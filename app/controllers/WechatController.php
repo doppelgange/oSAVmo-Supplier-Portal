@@ -25,7 +25,7 @@ class WechatController extends \BaseController {
 			'to' => '',
 			'user' => 'wechat'
 		));
-		return 'index';
+		return Input::get('echostr');
 	}
 
 	/**
