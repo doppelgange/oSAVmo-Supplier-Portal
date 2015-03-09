@@ -63,7 +63,7 @@ class WechatController extends \BaseController {
 		ActionLog::Create(array(
 			'module' => 'wechat',							
 			'type' => 'message',
-			'notes' => $message->MsgType.' Message from'.$message->FromUserName,
+			'notes' => $message->MsgType.' Message from'.json_encode($message),
 			'from' =>'',
 			'to' => $message->Content,
 			'user' => 'wechat'
