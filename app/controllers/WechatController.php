@@ -4,7 +4,7 @@ class WechatController extends \BaseController {
 
 	public function __construct()
     {
-        //$this->beforeFilter('wechat', array('on' => 'get|post'));
+        $this->beforeFilter('wechat', array('on' => 'get|post'));
     }
 
 	//protected $layout = "layouts.main";
