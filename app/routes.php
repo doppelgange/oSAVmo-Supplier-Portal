@@ -67,6 +67,8 @@ Route::group(array('before' => 'auth'), function()
 
 	//Admin properties
 	Route::resource('properties', 'PropertiesController');
+	//Wechat messages
+	Route::resource('wxMessages', 'WxMessagesController');
 
 	//Supporting Data - deliveryTypes
 	Route::get('deliveryTypes/sync', 'DeliveryTypesController@sync');
