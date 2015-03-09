@@ -11,7 +11,7 @@ class WxMessagesController extends \BaseController {
 	 */
 	public function index()
 	{
-		$wxMessages = WxMessage::paginate(10);
+		$wxMessages = WxMessage::orderBy('id','desc')->paginate(20);
   		$this->layout->content = View::make('wxMessages.index',array('wxMessages'=>$wxMessages));
 	}
 
