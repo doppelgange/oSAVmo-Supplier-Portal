@@ -42,23 +42,84 @@ class ProductsController extends \BaseController {
 	public function index()
 	{
 		//Check search criteria
+		$q['queries']=Input::get('queries')==null? '':Input::get('queries');
+		$q['supplier']=Input::get('supplier')==null? '':Input::get('supplier');
+		$q['eshop']=Input::get('eshop')==null? '':Input::get('eshop');
+		$q['stockFrom']=Input::get('stockFrom')==null? '':Input::get('stockFrom');
+		$q['stockTo']=Input::get('stockTo')==null? '':Input::get('stockTo');
+		$q['priceFrom']=Input::get('priceFrom')==null? '':Input::get('priceFrom');
+		$q['priceTo']=Input::get('priceTo')==null? '':Input::get('priceTo');
+		$q['hasImage']=Input::get('hasImage')==null? '':Input::get('hasImage');
 
-		$q=Input::get('q')==null? '':Input::get('q');
+		$supplierList = Supplier::getManageableArray();
+		$supplierList['']='All';
+		//Filter by supplier
+
+
 		$pagecount = is_numeric(Input::get("pagecount"))? Input::get("pagecount"):10;
 
 		//Init query
 		$products =Product::where('active', '=','1');
+
 		//Filter by supplier
 		if(Auth::user()->isSupplier()){
 			$products = $products->where('supplierID','=',Auth::user()->supplierID);
+		}else{
+			if($q['supplier']!=''){
+				$products = $products->where('supplierID','=',$q['supplier']);
+			}
 		}
+		//Filter by eshop
+		if($q['eshop']!=''){
+			$products = $products->where('displayedInWebshop','=',$q['eshop']);
+		}
+
+		//Filter by has image
+		switch ($q['hasImage']) {
+				    case '':
+				        break;
+				    case '0':
+				    	$products = $products->whereNull('imageLink');
+				        break;
+				    case '1':
+				        $products = $products->whereNotNull('imageLink');
+				        break;
+				    default:
+				        break;
+				}
 		//Filter by query
-		if($q!=''){
-			$products = $products->where('name', 'like','%'.$q.'%')
-				->orWhere('nameCN', 'like','%'.$q.'%')
-				->orWhere('ean', 'like','%'.$q.'%')
-				->orWhere('code', 'like','%'.$q.'%');
+		if($q['queries']!=''){
+			$products = $products->where('name', 'like','%'.$q['queries'].'%')
+				->orWhere('nameCN', 'like','%'.$q['queries'].'%')
+				->orWhere('ean', 'like','%'.$q['queries'].'%')
+				->orWhere('code', 'like','%'.$q['queries'].'%');
 		}
+
+		//Filter by stock
+		if($q['stockFrom']!=''){
+			$products = $products->whereHas('productStocks',function($query) use($q) {
+				$query->where('amountInStock','>=',$q['stockFrom']);
+			});
+		}
+		if($q['stockTo']!=''){
+			$products = $products->whereHas('productStocks',function($query) use($q) {
+				$query->where('amountInStock','<=',$q['stockTo']);
+			});
+		}
+
+		//Filter by price
+		if($q['priceFrom']!=''){
+			$products = $products->whereHas('priceListItems',function($query) use($q) {
+				$query->where('priceWithVat','>=',$q['priceFrom']);
+			});
+		}
+		if($q['priceTo']!=''){
+			$products = $products->whereHas('priceListItems',function($query) use($q) {
+				$query->where('priceWithVat','<=',$q['priceTo']);
+			});
+		}
+
+
 		//Paginate
 		$products = $products->orderBy('name','asc')
 			->paginate($pagecount);
@@ -67,7 +128,9 @@ class ProductsController extends \BaseController {
 		$this->layout->content = View::make('products.inventoryAdjustment',
 			array(
 				'products'=>$products,
-				'q'=>$q)
+				'q'=>$q,
+				'supplierList' =>$supplierList
+				)
 		); 
 	}
 

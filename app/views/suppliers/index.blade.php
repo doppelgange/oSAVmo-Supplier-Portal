@@ -20,7 +20,7 @@ Total {{$suppliers->getTotal()}} records are found.
 			<th> Type </th>
 			<th> Name </th>
 			<th> Manageable </th>
-			<th> Action</th>
+			{{-- <th> Action</th> --}}
 		</tr>
 	</thead>
 	<tbody>
@@ -34,10 +34,10 @@ Total {{$suppliers->getTotal()}} records are found.
 
 	    	{{ Form::hidden('erplyID['.$supplier->id.']', $supplier->erplyID) }}
 	    	</td>
-	    	<td class="action-button">
+	    	{{-- <td class="action-button">
 				<a href="suppliers/{{$supplier-> id}}/edit" target="_blank"><span class="glyphicon glyphicon-edit" aria-hidden="true" data-toggle="tooltip" title="Amend"></span></a>
 				<a href="suppliers/{{$supplier-> id}}" target="_blank"><span class="glyphicon glyphicon glyphicon-new-window" aria-hidden="true"  data-toggle="tooltip" title="Detail"></span></a>
-			</td>
+			</td> --}}
 	    </tr>
 	@endforeach
 	</tbody>

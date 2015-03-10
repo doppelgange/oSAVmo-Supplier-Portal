@@ -36,6 +36,7 @@
               <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Admin <span class="caret"></span></a>
               <ul class="dropdown-menu" role="menu">
                 <li class="divider"></li>
+                <li>{{ HTML::link('wxMessages', 'Wechat') }}</li>
                 <li>{{ HTML::link('priceListItems', 'Price') }}</li>
                 <li>{{ HTML::link('salesDocuments', 'Order(Admin)') }}</li>
                 <li>{{ HTML::link('salesDocumentItems', 'Order Item')}}</li>
