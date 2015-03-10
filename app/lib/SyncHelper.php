@@ -389,7 +389,7 @@ class SyncHelper {
     						ActionLog::Create(array(
 							'module' => 'ProductStock',							
 							'type' => 'Adjustment',
-							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$produckID,
+							'notes' => 'Stock Amount adjustment success,shopify variant ID: '.$shopifyVariantID.', product ID: '.$productID,
 							'from' => $from,
 							'to' => $amountAvailable,
 							'user' => 'System'

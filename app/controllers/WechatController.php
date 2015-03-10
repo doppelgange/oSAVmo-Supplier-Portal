@@ -16,7 +16,16 @@ class WechatController extends \BaseController {
 	 */
 	public function index()
 	{
-		return Input::get('echostr');;
+		//return Input::get('echostr');
+		ActionLog::Create(array(
+			'module' => 'wechat',							
+			'type' => 'test',
+			'notes' => 'get index page',
+			'from' =>'',
+			'to' => '',
+			'user' => 'wechat'
+		));
+		return Input::get('echostr');
 	}
 
 	/**
@@ -37,8 +46,30 @@ class WechatController extends \BaseController {
 	 * @return Response
 	 */
 	public function store()
-	{
-		//
+	{	
+		$message = file_get_contents('php://input');
+		// 把 xml 数据转换成 PHP 的对象
+		$message = simplexml_load_string($message, 'SimpleXMLElement', LIBXML_NOCDATA);	
+		WxMessage::create(array(
+		'toUserName'=> $message->ToUserName,
+		'fromUserName'=> $message->FromUserName,
+		'createTime'=> $message->CreateTime,
+		'msgType'=> $message->MsgType,
+		'content'=> $message->Content,
+		'msgId'=> $message->MsgId,
+		));
+
+
+		ActionLog::Create(array(
+			'module' => 'wechat',							
+			'type' => 'message',
+			'notes' => $message->MsgType.' Message from'.json_encode($message),
+			'from' =>'',
+			'to' => $message->Content,
+			'user' => 'wechat'
+		));
+
+		return 'success';
 	}
 
 	/**

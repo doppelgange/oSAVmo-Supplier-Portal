@@ -62,3 +62,11 @@ body {
 	margin-right:0.1em;
 	margin-left:0.1em;
 }
+
+/*Search Criteria Rwo*/
+
+.form-inline .fi-col-1{width:10%;}
+.form-inline .fi-col-2{width:20%;}
+.form-inline .fi-col-3{width:30%;}
+.form-inline .fi-col-4{width:40%;}
+.form-inline .fi-col-5{width:50%;}

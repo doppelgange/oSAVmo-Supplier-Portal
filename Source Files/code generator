@@ -4,3 +4,8 @@ php artisan generate:resource price_list_item --fields="priceListID:integer, typ
 php artisan generate:resource delivery_type --fields="deliveryTypeID:integer, code:string, name:string, added:timestamp, lastModified:timestamp"
 
 php artisan generate:resource supplier_sales_documents  --fields="supplierID:integer, salesDocumentID:integer, status:string, amount:decimal(10,0), netTotal:decimal(10,2), vatTotal:decimal(10,2), total:decimal(10,2), supplierNotes:text, lastModified:timestamp, lastModifierUsername:string"
+
+
+
+php artisan generate:resource wx_message --fields="ToUserName:string, FromUserName:string, CreateTime:integer, MsgType:string, Content:text, MsgId:integer, PicUrl:string, MediaId:integer, ThumbMediaId:integer, Url:string, Title:string, Description:string"
+
