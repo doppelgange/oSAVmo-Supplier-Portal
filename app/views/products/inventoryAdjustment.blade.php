@@ -1,9 +1,42 @@
 
 {{ Form::open(array('url'=>'products','method' => 'get','class'=>'form-inline')) }}
-	{{ Form::label('name', 'Name/EAN/Code')}}
-	{{Form::text('q',$q,array('class'=>'form-control','placeholder'=>'Input your query'))}}
+<div class="row">
+	<div class="col-md-4">
+		{{ Form::label('name', 'Name/EAN/Code',array('class'=>'fi-col-4'))}}
+		{{Form::text('queries',$q['queries'],array('class'=>'form-control'))}}
+	</div>
+	<div class="col-md-4">
+	{{ Form::label('eshop', 'eShop',array('class'=>'fi-col-3'))}}
+	{{Form::select('eshop',array(''=>'All','1'=>'Yes','0'=>'No'),$q['eshop'],array('class'=>'form-control'))}}
+	</div>
+	<div class="col-md-4">
+	{{ Form::label('supplier', 'Supplier',array('class'=>'fi-col-3'))}}
+	{{ Form::select('supplier', $supplierList, $q['supplier'] , array('class'=>'form-control')) }}
+	</div>
+</div>
+
+<div class="row" style="margin-top:5px;">
+	<div class="col-md-4">
+		{{ Form::label('priceRange', 'Price Range',array('class'=>'fi-col-4'))}}
+		{{Form::number('priceFrom',$q['priceFrom'],array('class'=>'form-control fi-col-2','step'=>'0.01'))}} ~ 
+		{{Form::number('priceTo',$q['priceTo'],array('class'=>'form-control fi-col-2','step'=>'0.01'))}}
+	</div>
+	<div class="col-md-4">
+		{{ Form::label('stockRange', 'Stock Range',array('class'=>'fi-col-3'))}}
+		{{Form::number('stockFrom',$q['stockFrom'],array('class'=>'form-control fi-col-2','step'=>'1'))}} ~
+		{{Form::number('stockTo',$q['stockTo'],array('class'=>'form-control fi-col-2','step'=>'1'))}} 
+	</div>
+	<div class="col-md-4">
+		{{ Form::label('hasImage', 'Has Image',array('class'=>'fi-col-3'))}}
+		{{Form::select('hasImage',array(''=>'All','1'=>'Yes','0'=>'No'),$q['hasImage'],array('class'=>'form-control fi-col-2','step'=>'1'))}}
+	</div>
+	<div class="col-md-4">
 	{{ Form::submit('Search', array('class'=>'btn btn-large btn-primary'))}}
+	</div>
+</div>
+	
 {{ Form::close() }}
+
 @if (count($products) === 0)
 	<div>There is no record for products, you can sync to get the latest data! </div>
 @else
