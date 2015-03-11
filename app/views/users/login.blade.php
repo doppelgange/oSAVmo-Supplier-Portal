@@ -1,8 +1,9 @@
+
+<div class="clearfix headline">
+    <div class='login-logo col-sm-6'></div>
+    <h2 class="text-left col-sm-6">Supplier Portal</h2>
+</div>
 {{ Form::open(array('url'=>'users/signin', 'class'=>'form-signin  form-horizontal')) }}
-    <div class="clearfix headline">
-        <div class='login-logo col-sm-5'></div>
-        <h2 class="form-signin-heading text-center col-sm-5">Supplier Portal</h2>
-    </div>
  	<div class="form-group">
  	{{ Form::label('email', 'Email',array('class'=>'col-sm-4 control-label'));}}
         <div class="col-sm-6">
