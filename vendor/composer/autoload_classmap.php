@@ -548,7 +548,7 @@ return array(
     'GuzzleHttp\\UriTemplate' => $vendorDir . '/guzzlehttp/guzzle/src/UriTemplate.php',
     'GuzzleHttp\\Url' => $vendorDir . '/guzzlehttp/guzzle/src/Url.php',
     'GuzzleHttp\\tests\\Exception\\XmlParseExceptionTest' => $vendorDir . '/guzzlehttp/guzzle/tests/Exception/XmlParseExceptionTest.php',
-    'Helpers' => $baseDir . '/app/lib/customizedFunctions.php',
+    'Helpers' => $baseDir . '/app/lib/Helpers.php',
     'HomeController' => $baseDir . '/app/controllers/HomeController.php',
     'HourlySyncFromErply' => $baseDir . '/app/commands/HourlySyncFromErply.php',
     'IlluminateQueueClosure' => $vendorDir . '/laravel/framework/src/Illuminate/Queue/IlluminateQueueClosure.php',

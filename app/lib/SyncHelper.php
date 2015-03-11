@@ -519,7 +519,15 @@ class SyncHelper {
 						}
 						$salesDocument->confirmed = $erplySalesDocument['confirmed'];
 						$salesDocument->notes = trim($erplySalesDocument['notes'], ",");
-						$salesDocument->internalNotes = trim($erplySalesDocument['internalNotes'], ",");
+
+						//Replace the internal notes
+						$erplyinternalNotes = urldecode(trim($erplySalesDocument['internalNotes'], ","));
+						$pattern = '/(\d\[name\]=)(.*?)(\\\n)(.*?)(\d\[value\]=)(\d{1,2}\/\d{1,2}\/\d{4} \d{1,2}:\d{1,2})(\\\n)?/i';
+						$replace = '$2 : $6 <br/> ';
+						$erplyinternalNotes = preg_replace($pattern,$replace, $erplyinternalNotes);
+
+
+						$salesDocument->internalNotes = $erplyinternalNotes;
 						$salesDocument->netTotal = $erplySalesDocument['netTotal'];
 						$salesDocument->vatTotal = $erplySalesDocument['vatTotal'];
 						$salesDocument->rounding = $erplySalesDocument['rounding'];
