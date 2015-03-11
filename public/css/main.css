@@ -25,18 +25,16 @@ body {
 }
 
 .login-logo{
-	width: 400px;
-	height: 200px;
-	width: 300px;
 	height: 100px;
 	margin: auto;
 	background-image: url(../images/common/logo.png);
 	background-size: 300px auto;
-	background-position: 0 0;
+	background-position: right;
+	background-repeat: no-repeat;
 }
 
 .headline{
-	height: 140px;
+	padding-top: 10%;
 	margin: 0px;
 }
 .headline h2{margin: 0px;
@@ -70,3 +68,39 @@ body {
 .form-inline .fi-col-3{width:30%;}
 .form-inline .fi-col-4{width:40%;}
 .form-inline .fi-col-5{width:50%;}
+
+
+/*Nav Brand*/
+.navbar-brand{
+	padding: 5px;
+}
+.navbar-brand img{height: 40px; width: auto;}
+
+/*footer*/
+/* Sticky footer styles
+-------------------------------------------------- */
+html {
+  position: relative;
+  min-height: 100%;
+}
+body {
+  /* Margin bottom by footer height */
+  margin-bottom: 60px;
+}
+.footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+
+
+/* Custom page CSS
+-------------------------------------------------- */
+/* Not required for template or sticky footer method. */
+
+.footer > .container {
+  padding: 20px;
+}
