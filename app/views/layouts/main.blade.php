@@ -26,7 +26,7 @@
                 <li>{{ HTML::link('supplierSalesDocuments?status=Outstanding', 'Order') }}</li>
                 <li>{{ HTML::link('users', 'Users') }}</li>
                 @if(Auth::check()&&!Auth::user()->isSupplier())
-                <li>{{ HTML::link('salesDocuments', 'Order(Admin)') }}</li>
+                <li>{{ HTML::link('salesDocuments', 'Sale Order') }}</li>
                 <li>{{ HTML::link('suppliers', 'Suppliers') }}</li>
                 <li>{{ HTML::link('actionLogs', 'Logs') }}</li>
                 <li class="dropdown">
